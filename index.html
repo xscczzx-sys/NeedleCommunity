@@ -15,6 +15,55 @@
         }
         
         body {
+
+        /* Lightning effect on German's name in card */
+        .card.creator-card .member-name {
+            color: #ffeb3b;
+            text-shadow: 
+                0 0 10px #ffeb3b,
+                0 0 20px rgba(255, 235, 59, 0.8),
+                0 0 30px rgba(255, 235, 59, 0.6);
+            animation: lightningText 2s ease-in-out infinite;
+        }
+        
+        @keyframes lightningText {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px #ffeb3b,
+                    0 0 20px rgba(255, 235, 59, 0.8),
+                    0 0 30px rgba(255, 235, 59, 0.6);
+            }
+            50% {
+                text-shadow: 
+                    0 0 15px #ffeb3b,
+                    0 0 25px rgba(255, 235, 59, 1),
+                    0 0 40px rgba(255, 235, 59, 0.8);
+                color: #fff44f;
+            }
+        }
+        
+        /* Lightning effect on footer creator name */
+        .footer span {
+            color: #ffeb3b;
+            text-shadow: 
+                0 0 10px #ffeb3b,
+                0 0 15px rgba(255, 235, 59, 0.8);
+            animation: lightningFooter 2s ease-in-out infinite;
+        }
+        
+        @keyframes lightningFooter {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px #ffeb3b,
+                    0 0 15px rgba(255, 235, 59, 0.8);
+            }
+            50% {
+                text-shadow: 
+                    0 0 15px #ffeb3b,
+                    0 0 25px rgba(255, 235, 59, 1);
+                color: #fff44f;
+            }
+        }
             font-family: 'Inter', sans-serif;
             background: #f5e6ff;
             color: #2d1b4e;
@@ -404,34 +453,75 @@
             }
         }
 
-        /* Lightning effect for German's card */
-        .card.creator-card {
-            border: 2px solid #ffeb3b;
-            box-shadow: 
-                0 0 10px #ffeb3b,
-                0 0 20px rgba(255, 235, 59, 0.6),
-                0 0 30px rgba(255, 235, 59, 0.4),
-                inset 0 0 10px rgba(255, 235, 59, 0.2);
-            animation: lightningBorder 3s ease-in-out infinite;
+        /* Lightning effect for creator's name */
+        .creator-name {
+            color: #ffeb3b !important;
+            font-weight: 700 !important;
+            text-shadow: 
+                0 0 5px #ffeb3b,
+                0 0 10px rgba(255, 235, 59, 0.8),
+                0 0 15px rgba(255, 235, 59, 0.6);
+            animation: nameLightning 2s ease-in-out infinite;
         }
         
-        @keyframes lightningBorder {
+        @keyframes nameLightning {
             0%, 100% {
-                box-shadow: 
-                    0 0 10px #ffeb3b,
-                    0 0 20px rgba(255, 235, 59, 0.6),
-                    0 0 30px rgba(255, 235, 59, 0.4),
-                    inset 0 0 10px rgba(255, 235, 59, 0.2);
+                text-shadow: 
+                    0 0 5px #ffeb3b,
+                    0 0 10px rgba(255, 235, 59, 0.8),
+                    0 0 15px rgba(255, 235, 59, 0.6);
+                color: #ffeb3b;
             }
             50% {
-                box-shadow: 
-                    0 0 15px #ffeb3b,
-                    0 0 30px rgba(255, 235, 59, 0.8),
-                    0 0 40px rgba(255, 235, 59, 0.6),
-                    inset 0 0 15px rgba(255, 235, 59, 0.3);
-                border-color: #fff44f;
+                text-shadow: 
+                    0 0 10px #ffeb3b,
+                    0 0 20px rgba(255, 235, 59, 1),
+                    0 0 25px rgba(255, 235, 59, 0.8);
+                color: #fff44f;
             }
         }
+
+        /* Lightning effect for creator name */
+        .member-name.creator-name {
+            color: #ffeb3b;
+            text-shadow: 
+                0 0 10px #ffeb3b,
+                0 0 20px rgba(255, 235, 59, 0.6);
+            animation: lightningText 3s ease-in-out infinite;
+        }
+        
+        @keyframes lightningText {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px #ffeb3b,
+                    0 0 20px rgba(255, 235, 59, 0.6);
+            }
+            50% {
+                text-shadow: 
+                    0 0 15px #ffeb3b,
+                    0 0 30px rgba(255, 235, 59, 0.8);
+            }
+        }
+        
+        /* Lightning effect for footer */
+        .footer {
+            border-top: 2px solid #ffeb3b;
+            padding-top: 2rem;
+            animation: lightningFooter 3s ease-in-out infinite;
+        }
+        
+        @keyframes lightningFooter {
+            0%, 100% {
+                border-top-color: #ffeb3b;
+                box-shadow: 0 -5px 15px rgba(255, 235, 59, 0.3) inset;
+            }
+            50% {
+                border-top-color: #fff44f;
+                box-shadow: 0 -5px 25px rgba(255, 235, 59, 0.5) inset;
+            }
+        }
+
+        
         
         /* Empty State */
         .empty-state {
@@ -538,7 +628,7 @@
         </div>
         
         <div class="footer">
-            Created by <span>German</span>
+            Created by <span class="creator-name">German</span>
         </div>
     </div>
 
@@ -751,7 +841,7 @@
                     .slice(0, 4);
 
                 return `
-                    <div class="card ${member.name === 'German' ? 'creator-card' : ''}">
+                    <div class="card">
                         <div class="card-content">
                             ${pokemon.length > 0 ? `
                                 <div class="pokemon-images">
@@ -763,7 +853,7 @@
                                 </div>
                             ` : ''}
                             
-                            <div class="member-name">${member.name}</div>
+                            <div class="member-name ${member.name === 'German' ? 'creator-name' : ''}">${member.name}</div>
                             
                             ${pokemon.length > 0 ? `
                                 <div class="section">
@@ -795,6 +885,36 @@
         setInterval(fetchSheetData, 30000);
 
         // Search functionality
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J
+        document.addEventListener('keydown', function(e) {
+            // F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+I (Developer Tools)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+C (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+        });
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
             
