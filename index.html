@@ -509,7 +509,7 @@
         </div>
         
         <div class="footer">
-            Created by: <span>Germansize</span>
+            Created by <span>Germansize</span>
         </div>
     </div>
 
@@ -546,6 +546,51 @@
             return pokemonColors[pokemonName] || '#e6d5ff';
         }
         
+
+        // Function to get text color for Pokémon badge based on type
+        function getPokemonBadgeColor(pokemon) {
+            const pokemonName = pokemon.toLowerCase().trim();
+            const colors = {
+                // Water types - blue text
+                'wooper': '#0066cc', 'maril': '#0066cc', 'squirtle': '#0066cc', 'wartortle': '#0066cc', 
+                'blastoise': '#0066cc', 'lapras': '#0066cc', 'vaporeon': '#0066cc', 'mantine': '#0066cc',
+                'dewgong': '#0066cc', 'wailmer': '#0066cc', 'psyduck': '#0066cc', 'milotic': '#0066cc',
+                'frigibax': '#0066cc', 'snom': '#0066cc', 'glaceon': '#0066cc', 'amaura': '#0066cc',
+                'aurorus': '#0066cc',
+                // Fire types - orange/red text
+                'vulpix': '#cc3300', 'growlithe': '#cc3300', 'charizard': '#cc3300', 'ninetales': '#cc3300',
+                'lampent': '#cc3300', 'litwick': '#cc3300', 
+                // Grass types - green text
+                'oddish': '#00aa00', 'chikorita': '#00aa00', 'sprigatito': '#00aa00', 'tangela': '#00aa00',
+                'leafeon': '#00aa00', 'snivy': '#00aa00', 'toedscool': '#00aa00', 'rayquaza': '#00aa00',
+                // Electric types - yellow text
+                'joltik': '#cc9900', 'blitzle': '#cc9900', 'zapdos': '#cc9900', 'pikachu': '#cc9900',
+                'tynamo': '#cc9900',
+                // Psychic types - purple/pink text
+                'mimikyu': '#9933cc', 'espeon': '#9933cc', 'clefairy': '#9933cc', 'togepi': '#9933cc',
+                'igglybuff': '#9933cc', 'diancie': '#9933cc', 'reuniclus': '#9933cc', 'sylveon': '#9933cc',
+                'dedenne': '#9933cc', 'impadimp': '#9933cc', 'gothita': '#9933cc', 'ditto': '#9933cc',
+                // Dragon types - dark purple
+                'dratini': '#663399', 'dragonair': '#663399', 'giratina': '#663399',
+                // Ground/Dark types - brown/dark
+                'cubone': '#663300', 'shuckle': '#663300', 'mankey': '#663300', 'sudowoodo': '#663300',
+                'lycanroc': '#663300', 'absol': '#331111', 'umbreon': '#331111', 'garbodor': '#444444',
+                'trubbish': '#444444', 'greavard': '#444444',
+                // Normal types - gray
+                'miltank': '#999999', 'lucario': '#999999',
+                // Flying/Bird types - sky blue
+                'hoothoot': '#6699ff',
+                // Psychic/Fairy - pink
+                'mew': '#ff66cc',
+                // Fighting types - brown
+                'riolu': '#cc6633',
+                // Rock/Ground - tan
+                'ceruledge': '#ff3366', 'shroodle': '#cc9999', 'pyukumuku': '#ff99cc',
+                // Default
+                'default': '#9933cc'
+            };
+            return colors[pokemonName] || colors['default'];
+        }
         let data = [];
 
         // Pokémon name to ID mapping
@@ -676,9 +721,8 @@
                     .filter(a => a)
                     .slice(0, 4);
 
-                const cardColor = pokemon.length > 0 ? getPokemonCardColor(pokemon[0]) : '#e6d5ff';
                 return `
-                    <div class="card" style="background: ${cardColor} !important;">
+                    <div class="card">
                         <div class="card-content">
                             ${pokemon.length > 0 ? `
                                 <div class="pokemon-images">
@@ -696,7 +740,7 @@
                                 <div class="section">
                                     <div class="section-title">Favorite Pokémon</div>
                                     <div class="badges">
-                                        ${pokemon.map(p => `<span class="badge">${p}</span>`).join('')}
+                                        ${pokemon.map(p => `<span class="badge" style="color: ${getPokemonBadgeColor(p)}; font-weight: 600;">${p}</span>`).join('')}
                                     </div>
                                 </div>
                             ` : ''}
