@@ -403,6 +403,35 @@
                 box-shadow: 0 0 10px rgba(124, 58, 237, 0.15);
             }
         }
+
+        /* Lightning effect for German's card */
+        .card.creator-card {
+            border: 2px solid #ffeb3b;
+            box-shadow: 
+                0 0 10px #ffeb3b,
+                0 0 20px rgba(255, 235, 59, 0.6),
+                0 0 30px rgba(255, 235, 59, 0.4),
+                inset 0 0 10px rgba(255, 235, 59, 0.2);
+            animation: lightningBorder 3s ease-in-out infinite;
+        }
+        
+        @keyframes lightningBorder {
+            0%, 100% {
+                box-shadow: 
+                    0 0 10px #ffeb3b,
+                    0 0 20px rgba(255, 235, 59, 0.6),
+                    0 0 30px rgba(255, 235, 59, 0.4),
+                    inset 0 0 10px rgba(255, 235, 59, 0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 0 15px #ffeb3b,
+                    0 0 30px rgba(255, 235, 59, 0.8),
+                    0 0 40px rgba(255, 235, 59, 0.6),
+                    inset 0 0 15px rgba(255, 235, 59, 0.3);
+                border-color: #fff44f;
+            }
+        }
         
         /* Empty State */
         .empty-state {
@@ -509,7 +538,7 @@
         </div>
         
         <div class="footer">
-            Created by <span>Germansize</span>
+            Created by <span>German</span>
         </div>
     </div>
 
@@ -722,7 +751,7 @@
                     .slice(0, 4);
 
                 return `
-                    <div class="card">
+                    <div class="card ${member.name === 'German' ? 'creator-card' : ''}">
                         <div class="card-content">
                             ${pokemon.length > 0 ? `
                                 <div class="pokemon-images">
