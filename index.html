@@ -799,19 +799,36 @@
             return `https://img.pokemondb.net/sprites/scarlet-violet/normal/${pokemonName}.png`;
         }
 
-        // Image fallback handler
+        // Image fallback handler with PokeAPI ultimate fallback
         function setupImageFallbacks() {
             const versions = ['scarlet-violet', 'sword-shield', 'lets-go-pikachu-eevee', 'diamond-pearl', 'emerald'];
             
             document.querySelectorAll('.pokemon-img img').forEach(img => {
                 img.addEventListener('error', function() {
-                    const currentVersion = this.src.split('/sprites/')[1].split('/')[0];
-                    const versionIndex = versions.indexOf(currentVersion);
+                    const currentSrc = this.src;
                     
-                    if (versionIndex < versions.length - 1) {
-                        const pokemonName = this.src.split('/').pop().replace('.png', '');
-                        const nextVersion = versions[versionIndex + 1];
-                        this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${pokemonName}.png`;
+                    // If it's a pokemondb URL, try next version
+                    if (currentSrc.includes('pokemondb.net')) {
+                        const currentVersion = currentSrc.split('/sprites/')[1].split('/')[0];
+                        const versionIndex = versions.indexOf(currentVersion);
+                        
+                        if (versionIndex < versions.length - 1) {
+                            const pokemonName = currentSrc.split('/').pop().replace('.png', '');
+                            const nextVersion = versions[versionIndex + 1];
+                            this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${pokemonName}.png`;
+                            return;
+                        } else {
+                            // All pokemondb versions failed, try PokeAPI
+                            const pokemonName = currentSrc.split('/').pop().replace('.png', '');
+                            const pokemonId = pokemonIds[pokemonName] || 25;
+                            this.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+                            return;
+                        }
+                    }
+                    
+                    // If it's already PokeAPI, give up
+                    if (currentSrc.includes('PokeAPI')) {
+                        this.parentElement.style.display = 'none';
                     }
                 });
             });
