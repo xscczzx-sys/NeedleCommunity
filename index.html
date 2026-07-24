@@ -170,7 +170,7 @@
             background: rgba(220, 180, 255, 0.6);
             border: 1px solid rgba(124, 58, 237, 0.4);
             border-radius: 12px;
-            color: #3d2363;
+            color: #d946ef;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             animation: searchPulse 3s ease-in-out infinite;
@@ -317,9 +317,9 @@
         /* Member Name */
         .member-name {
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.7rem;
-            color: white;
+            color: #c2185b;
             letter-spacing: 0.5px;
             animation: nameGlow 2s ease-in-out infinite;
         }
@@ -509,7 +509,7 @@
         </div>
         
         <div class="footer">
-            Created by <span>German</span>
+            Created by: <span>Germansize</span>
         </div>
     </div>
 
@@ -517,6 +517,34 @@
         // Google Sheet details
         const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
         const GID = '0';
+
+        // Pokémon color mapping for card backgrounds
+        const pokemonColors = {
+            'wooper': '#87ceeb', 'mimikyu': '#e8e8ff', 'frigibax': '#add8e6', 'gothita': '#8b7bb8',
+            'greavard': '#a9a9a9', 'joltik': '#ffeb3b', 'shroodle': '#d4a5a5', 'impadimp': '#9370db',
+            'dedenne': '#ffb6c1', 'aurorus': '#b0e0e6', 'vulpix': '#ffa500', 'growlithe': '#ff8c00',
+            'dratini': '#9370db', 'dragonair': '#9370db', 'umbreon': '#2f4f4f', 'absol': '#696969',
+            'amaura': '#87ceeb', 'chikorita': '#90ee90', 'clefairy': '#ffb6c1', 'oddish': '#90ee90',
+            'zapdos': '#ffeb3b', 'shuckle': '#daa520', 'pikachu': '#ffeb3b', 'ninetales': '#ffa500',
+            'ditto': '#dda0dd', 'sprigatito': '#90ee90', 'hoothoot': '#cd853f', 'trubbish': '#708090',
+            'garbodor': '#708090', 'mankey': '#d2691e', 'maril': '#87ceeb', 'blitzle': '#ffeb3b',
+            'milotic': '#87ceeb', 'tynamo': '#ffeb3b', 'snivy': '#90ee90', 'snom': '#87ceeb',
+            'glaceon': '#87ceeb', 'vaporeon': '#87ceeb', 'espeon': '#dda0dd', 'miltank': '#ffe4b5',
+            'cubone': '#d2b48c', 'tangela': '#90ee90', 'leafeon': '#90ee90', 'wailmer': '#87ceeb',
+            'lampent': '#ff6347', 'litwick': '#ff6347', 'sylveon': '#ffb6c1', 'giratina': '#708090',
+            'charizard': '#ff8c00', 'rayquaza': '#90ee90', 'ceruledge': '#ff1493', 'squirtle': '#87ceeb',
+            'wartortle': '#87ceeb', 'blastoise': '#87ceeb', 'mantine': '#87ceeb', 'dewgong': '#87ceeb',
+            'psyduck': '#ffeb3b', 'munchlax': '#daa520', 'lapras': '#87ceeb', 'mew': '#ffb6c1',
+            'riolu': '#ffa500', 'lucario': '#696969', 'lycanroc': '#d2691e', 'togepi': '#ffb6c1',
+            'igglybuff': '#ffb6c1', 'diancie': '#ffb6c1', 'reuniclus': '#dda0dd', 'wigglytuff': '#ffb6c1',
+            'herdier': '#d2b48c', 'lillipup': '#d2b48c', 'toedscool': '#90ee90', 'sudowoodo': '#8b4513',
+            'pyukumuku': '#ffb6c1'
+        };
+
+        function getPokemonCardColor(pokemon) {
+            const pokemonName = pokemon.toLowerCase().replace(/\\s+/g, '-');
+            return pokemonColors[pokemonName] || '#e6d5ff';
+        }
         
         let data = [];
 
@@ -648,8 +676,9 @@
                     .filter(a => a)
                     .slice(0, 4);
 
+                const cardColor = pokemon.length > 0 ? getPokemonCardColor(pokemon[0]) : '#e6d5ff';
                 return `
-                    <div class="card">
+                    <div class="card" style="background: ${cardColor} !important;">
                         <div class="card-content">
                             ${pokemon.length > 0 ? `
                                 <div class="pokemon-images">
