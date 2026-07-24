@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needle Community Pokémon Favorites</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0a1a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated background with purple tones */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: bgShift 8s ease-in-out infinite;
+        }
+        
+        @keyframes bgShift {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .fancy-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+            color: white;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .fancy-title .needle {
+            display: inline;
+            font-weight: 700;
+            background: linear-gradient(90deg, #7c3aed, #a855f7, #7c3aed);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 3s ease infinite, titlePulse 2s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+        }
+        
+        .fancy-title .community {
+            display: inline;
+            font-weight: 300;
+            color: #a78bfa;
+            animation: titleFloat 3s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+        
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% center;
+            }
+            50% {
+                background-position: 100% center;
+            }
+            100% {
+                background-position: 0% center;
+            }
+        }
+        
+        @keyframes titlePulse {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(124, 58, 237, 0.3), 0 0 20px rgba(124, 58, 237, 0.2);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(124, 58, 237, 0.6), 0 0 40px rgba(168, 85, 247, 0.4);
+            }
+        }
+        
+        @keyframes titleFloat {
+            0%, 100% {
+                transform: translateY(0px);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+        
+        .decorative-line {
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #7c3aed, #a855f7, transparent);
+            margin: 1.5rem auto;
+            position: relative;
+            animation: lineGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes lineGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(124, 58, 237, 0.8), 0 0 50px rgba(168, 85, 247, 0.5);
+            }
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #c4b5fd;
+            font-weight: 300;
+        }
+
+        
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            padding-left: 3rem;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: rgba(20, 10, 40, 0.8);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 12px;
+            color: #e0e0e0;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: searchPulse 3s ease-in-out infinite;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #7c3aed;
+            background: rgba(20, 10, 40, 1);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), inset 0 0 15px rgba(124, 58, 237, 0.1);
+        }
+        
+        @keyframes searchPulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(124, 58, 237, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+            }
+        }
+        
+        .search-box input::placeholder {
+            color: #a78bfa;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a855f7;
+            opacity: 0.8;
+            animation: searchIconSpin 3s linear infinite;
+        }
+        
+        @keyframes searchIconSpin {
+            0%, 100% {
+                transform: translateY(-50%) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-50%) rotate(10deg);
+            }
+        }
+        
+        /* Grid & Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+        
+        .card {
+            background: rgba(20, 10, 40, 0.5);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 12px;
+            padding: 1.2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: 0;
+        }
+        
+        .card:hover {
+            border-color: #7c3aed;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.15), inset 0 0 20px rgba(124, 58, 237, 0.1);
+            background: rgba(20, 10, 40, 0.7);
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Pokemon Images */
+        .pokemon-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(10, 5, 20, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        
+        .pokemon-img {
+            width: 100%;
+            aspect-ratio: 1;
+            background: rgba(10, 5, 20, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: pokemonGlow 3s ease-in-out infinite;
+        }
+        
+        .pokemon-img img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        
+        .pokemon-img:hover {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.15);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4), inset 0 0 15px rgba(124, 58, 237, 0.1);
+        }
+        
+        .pokemon-img:hover img {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pokemonGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(124, 58, 237, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+            }
+        }
+        
+        /* Member Name */
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+            color: white;
+            letter-spacing: 0.5px;
+            animation: nameGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes nameGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(124, 58, 237, 0);
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+            }
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: 0.8rem;
+        }
+        
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #a78bfa;
+            margin-bottom: 0.6rem;
+            animation: sectionTitlePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes sectionTitlePulse {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+            }
+        }
+        
+        /* Badges */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        
+        .badge {
+            padding: 0.3rem 0.8rem;
+            background: transparent;
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #c4b5fd;
+            transition: all 0.3s ease;
+            cursor: default;
+            animation: badgeGlow 2s ease-in-out infinite;
+        }
+        
+        .badge:hover {
+            border-color: #a855f7;
+            background: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+        }
+        
+        .badge.artist {
+            color: #a78bfa;
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+        
+        .badge.artist:hover {
+            border-color: #c4b5fd;
+            background: rgba(168, 85, 247, 0.1);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+        
+        @keyframes badgeGlow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(124, 58, 237, 0);
+            }
+            50% {
+                box-shadow: 0 0 10px rgba(124, 58, 237, 0.15);
+            }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: transparent;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .empty-state h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .empty-state p {
+            color: #a78bfa;
+            font-size: 0.95rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 4rem;
+            font-size: 0.8rem;
+            color: #7c6bb0;
+            letter-spacing: 1px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+        
+        .footer span {
+            color: #a78bfa;
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pokemon-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="fancy-title">
+                <span class="needle">Pokeneedle</span>
+                <span class="community">Community</span>
+            </h1>
+            <div class="decorative-line"></div>
+            <p>Pokémon Favorites Showcase</p>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search by name, Pokémon, or artist..."
+                >
+            </div>
+        </div>
+        
+        <div class="grid" id="grid">
+            <!-- Cards will be generated here -->
+        </div>
+        
+        <div class="footer">
+            Created by <span>German</span>
+        </div>
+    </div>
+
+    <script>
+        // Google Sheet details
+        const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
+        const GID = '0';
+        
+        let data = [];
+
+        // Pokémon name to ID mapping
+        const pokemonIds = {
+            'wooper': 194, 'mimikyu': 778, 'frigibax': 958, 'gothita': 633, 'greavard': 955,
+            'joltik': 595, 'shroodle': 950, 'impadimp': 876, 'dedenne': 702, 'aurorus': 460,
+            'vulpix': 37, 'growlithe': 58, 'dratini': 147, 'dragonair': 148, 'umbreon': 197,
+            'absol': 359, 'amaura': 698, 'chikorita': 152, 'clefairy': 35, 'oddish': 69,
+            'zapdos': 145, 'shuckle': 213, 'pikachu': 25, 'ninetales': 38, 'ditto': 132,
+            'sprigatito': 906, 'hoothoot': 163, 'trubbish': 568, 'garbodor': 569,
+            'mankey': 56, 'maril': 183, 'blitzle': 522, 'milotic': 350,
+            'tynamo': 602, 'snivy': 495, 'snom': 873, 'glaceon': 471,
+            'vaporeon': 134, 'espeon': 196, 'miltank': 241, 'cubone': 104, 'tangela': 69,
+            'leafeon': 470, 'wailmer': 320, 'lampent': 561, 'litwick': 607, 'sylveon': 700,
+            'giratina': 487, 'charizard': 6, 'rayquaza': 384, 'ceruledge': 911, 'squirtle': 7,
+            'wartortle': 8, 'blastoise': 9, 'mantine': 226, 'dewgong': 87, 'psyduck': 54,
+            'munchlax': 446, 'lapras': 131, 'mew': 151, 'riolu': 406, 'lucario': 445,
+            'lycanroc': 745, 'togepi': 175, 'igglybuff': 174, 'diancie': 719, 'reuniclus': 579,
+            'wigglytuff': 40, 'herdier': 507, 'lillipup': 506, 'toedscool': 285, 'sudowoodo': 185,
+            'pyukumuku': 771
+        };
+
+        // Fetch using Google Visualization API
+        async function fetchSheetData() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                // Remove the Google JSON wrapper
+                const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+                const json = JSON.parse(jsonStr);
+                
+                parseGoogleData(json);
+                renderCards(data);
+                setupImageFallbacks();
+                console.log('Data loaded successfully:', data.length, 'members');
+            } catch (error) {
+                console.error('Error fetching sheet:', error);
+                document.getElementById('grid').innerHTML = `
+                    <div class="empty-state">
+                        <h2>Error Loading Data</h2>
+                        <p>Could not fetch data from Google Sheet. Make sure it's shared publicly.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Parse data from Google Visualization API
+        function parseGoogleData(json) {
+            data = [];
+            
+            if (!json.table || !json.table.rows) {
+                console.error('Invalid sheet format');
+                return;
+            }
+            
+            json.table.rows.forEach(row => {
+                const name = row.c[0]?.v || '';
+                const pokemon = row.c[1]?.v || '';
+                const artists = row.c[2]?.v || '';
+                
+                if (name) {
+                    data.push({
+                        name: name,
+                        pokemon: pokemon,
+                        artists: artists
+                    });
+                }
+            });
+        }
+
+        function getPokemonImageUrl(name) {
+            const pokemonName = name.toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/♀/g, '-f')
+                .replace(/♂/g, '-m')
+                .replace(/[:']/g, '');
+            return `https://img.pokemondb.net/sprites/scarlet-violet/normal/${pokemonName}.png`;
+        }
+
+        // Image fallback handler
+        function setupImageFallbacks() {
+            const versions = ['scarlet-violet', 'sword-shield', 'lets-go-pikachu-eevee', 'diamond-pearl', 'emerald'];
+            
+            document.querySelectorAll('.pokemon-img img').forEach(img => {
+                img.addEventListener('error', function() {
+                    const currentVersion = this.src.split('/sprites/')[1].split('/')[0];
+                    const versionIndex = versions.indexOf(currentVersion);
+                    
+                    if (versionIndex < versions.length - 1) {
+                        const pokemonName = this.src.split('/').pop().replace('.png', '');
+                        const nextVersion = versions[versionIndex + 1];
+                        this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${pokemonName}.png`;
+                    }
+                });
+            });
+        }
+
+        function renderCards(members) {
+            const grid = document.getElementById('grid');
+            
+            if (members.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No Results Found</h2>
+                        <p>Try searching with different terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = members.map(member => {
+                const pokemon = member.pokemon
+                    .split(',')
+                    .map(p => p.trim())
+                    .filter(p => p)
+                    .slice(0, 6);
+                
+                const artists = member.artists
+                    .split(',')
+                    .map(a => a.trim())
+                    .filter(a => a)
+                    .slice(0, 4);
+
+                return `
+                    <div class="card">
+                        <div class="card-content">
+                            ${pokemon.length > 0 ? `
+                                <div class="pokemon-images">
+                                    ${pokemon.slice(0, 3).map(p => `
+                                        <div class="pokemon-img" title="${p}">
+                                            <img src="${getPokemonImageUrl(p)}" alt="${p}" class="sprite">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="member-name">${member.name}</div>
+                            
+                            ${pokemon.length > 0 ? `
+                                <div class="section">
+                                    <div class="section-title">Favorite Pokémon</div>
+                                    <div class="badges">
+                                        ${pokemon.map(p => `<span class="badge">${p}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${artists.length > 0 ? `
+                                <div class="section">
+                                    <div class="section-title">Favorite Artists</div>
+                                    <div class="badges">
+                                        ${artists.map(a => `<span class="badge artist">${a}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Fetch data on page load
+        fetchSheetData();
+
+        // Auto-refresh every 30 seconds
+        setInterval(fetchSheetData, 30000);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            const filtered = data.filter(member => {
+                const nameMatch = member.name.toLowerCase().includes(query);
+                const pokemonMatch = member.pokemon.toLowerCase().includes(query);
+                const artistMatch = member.artists.toLowerCase().includes(query);
+                return nameMatch || pokemonMatch || artistMatch;
+            });
+
+            renderCards(filtered);
+            setupImageFallbacks();
+        });
+    </script>
+</body>
+</html>
