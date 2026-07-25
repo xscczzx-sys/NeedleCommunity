@@ -1175,16 +1175,13 @@
             const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
             parseGoogleData(json);
 
-            // Step 1: Show skeleton cards immediately
-            renderSkeletons();
-
-            // Step 2: Load reactions in background
-            loadReactions().then(() => loadAllReactUI());
-
-            // Step 3: Load each card individually as its images resolve
-            await renderCardsProgressively();
-
+            // Render cards immediately
+            renderCards(data);
             initCarousels();
+
+            // Load reactions and images in background
+            loadReactions().then(() => loadAllReactUI());
+            loadUnknownPokemonImages();
 
         } catch(e) {
             document.getElementById('grid').innerHTML = `<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
