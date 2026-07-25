@@ -163,20 +163,51 @@
 
         /* ── POKEMON IMAGES ── */
         .pokemon-images {
-            display: flex; gap: 0.5rem; flex-wrap: wrap;
-            margin-bottom: 1rem; padding: 0.7rem;
-            background: var(--bg2); border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            background: var(--bg2);
+            border-radius: 12px;
             border: 1px solid var(--border);
+            height: 100px;
+        }
+        /* Single pokemon - big centered */
+        .pokemon-images.single {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+        .pokemon-images.single .pokemon-img { width: 85px; height: 85px; }
+        /* Carousel track - static by default */
+        .pokemon-track {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.7rem;
+            will-change: transform;
+        }
+        /* Infinite scroll - only when card is active */
+        .pokemon-track.scrolling {
+            animation: infiniteScroll var(--scroll-duration, 6s) linear infinite;
+        }
+        @keyframes infiniteScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(var(--scroll-dist, -300px)); }
         }
         .pokemon-img {
-            flex: 1; min-width: 55px; aspect-ratio: 1;
-            background: var(--badge-bg); border-radius: 8px;
+            min-width: 85px; width: 85px; height: 85px; flex-shrink: 0;
+            background: var(--badge-bg); border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border); overflow: hidden;
-            transition: all 0.3s;
+            border: 1px solid var(--border); overflow: hidden; transition: border-color 0.3s;
         }
         .pokemon-img:hover { border-color: #7c3aed; }
-        .pokemon-img img { width: 80%; height: 80%; object-fit: contain; }
+        .pokemon-img img { width: 85%; height: 85%; object-fit: contain; }
+        /* Card click selected state */
+        .card { cursor: pointer; }
+        .card.active {
+            border-color: #7c3aed !important;
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
+        }
 
         /* ── MEMBER NAME ── */
         .member-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; color: #c2185b; }
@@ -425,6 +456,70 @@
     }
 
     // SETUP: Go to https://console.firebase.google.com
+
+    // ── CAROUSEL - click to activate infinite scroll ─────────────────
+    const carouselTimers = {};
+    let activeCard = null;
+
+    function initCarousels() {
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.react-btn')) return;
+
+                const slug = this.dataset.slug;
+                const track = document.getElementById(`track-${slug}`);
+                if (!track) return;
+
+                const isActive = this.classList.contains('active');
+
+                // Deactivate previous card
+                if (activeCard && activeCard !== this) {
+                    activeCard.classList.remove('active');
+                    const prevSlug = activeCard.dataset.slug;
+                    const prevTrack = document.getElementById(`track-${prevSlug}`);
+                    if (prevTrack) {
+                        cancelAnimationFrame(carouselTimers[prevSlug]);
+                        prevTrack.style.transform = 'translateX(0)';
+                    }
+                }
+
+                if (isActive) {
+                    // Deactivate
+                    this.classList.remove('active');
+                    cancelAnimationFrame(carouselTimers[slug]);
+                    track.style.transform = 'translateX(0)';
+                    activeCard = null;
+                } else {
+                    // Activate - start infinite smooth scroll
+                    this.classList.add('active');
+                    activeCard = this;
+
+                    const pokemon = track.querySelectorAll('.pokemon-img');
+                    if (pokemon.length <= 1) return;
+
+                    // Duplicate for seamless loop
+                    if (!track.dataset.duped) {
+                        track.innerHTML += track.innerHTML;
+                        track.dataset.duped = '1';
+                    }
+
+                    const itemWidth = 85 + 8;
+                    const totalWidth = itemWidth * (pokemon.length);
+                    let pos = 0;
+
+                    function scroll() {
+                        pos += 0.6;
+                        if (pos >= totalWidth) pos = 0;
+                        track.style.transform = `translateX(-${pos}px)`;
+                        carouselTimers[slug] = requestAnimationFrame(scroll);
+                    }
+                    carouselTimers[slug] = requestAnimationFrame(scroll);
+                }
+            });
+        });
+    }
+    // ── END CAROUSEL ─────────────────────────────────────────────────
+
     // 1. Create project "pokeneedle"
     // 2. Build > Realtime Database > Create > Start in test mode
     // 3. Copy your DB URL and replace the one below
@@ -493,6 +588,7 @@
             parseGoogleData(json);
             renderCards(data);
             await loadUnknownPokemonImages();
+            initCarousels();
             await loadReactions();
             loadAllReactUI();
         } catch(e) {
@@ -524,14 +620,16 @@
             const isCreator = m.name === 'German';
             const slug = m.name.replace(/\s+/g,'-');
             return `
-            <div class="card ${isCreator ? 'creator-card' : ''}">
+            <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}">
                 <div class="card-body">
                 ${pokemon.length ? `
-                <div class="pokemon-images">
-                    ${pokemon.slice(0,3).map(p=>`
-                    <div class="pokemon-img" title="${p}">
-                        <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="this.dataset.loaded='false';this.src='';loadUnknownPokemonImages()">
-                    </div>`).join('')}
+                <div class="pokemon-images ${pokemon.length === 1 ? 'single' : ''}" id="carousel-${slug}">
+                    <div class="pokemon-track" id="track-${slug}">
+                        ${pokemon.map(p=>`
+                        <div class="pokemon-img" title="${p}">
+                            <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="this.dataset.loaded='false';this.src='';loadUnknownPokemonImages()">
+                        </div>`).join('')}
+                    </div>
                 </div>` : ''}
                 <div class="member-name ${isCreator ? 'creator-name' : ''}">${m.name}</div>
                 ${pokemon.length ? `
@@ -571,6 +669,7 @@
         );
         renderCards(filtered);
         loadUnknownPokemonImages();
+        initCarousels();
         loadAllReactUI();
     });
 
