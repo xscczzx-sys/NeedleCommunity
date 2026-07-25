@@ -258,9 +258,39 @@
         }
         .pokemon-img:hover { border-color: #7c3aed; }
         .pokemon-img img { width: 85%; height: 85%; object-fit: contain; }
-        /* Card click selected state */
-        .card { cursor: pointer; }
+        /* ── CARD SILHOUETTE BACKGROUND ── */
+        .card {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-silhouette {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 160px;
+            height: 160px;
+            opacity: 0.06;
+            filter: grayscale(100%) brightness(0);
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.3s;
+        }
+        body.theme-dark .card-silhouette,
+        body.theme-darker .card-silhouette {
+            filter: grayscale(100%) brightness(10);
+            opacity: 0.05;
+        }
+        .card:hover .card-silhouette {
+            opacity: 0.1;
+        }
+        .card-body { position: relative; z-index: 1; }
+        .reaction-bar { position: relative; z-index: 1; }
+        /* Card active/selected state */
         .card.active {
+            border-color: #7c3aed !important;
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
+        }
             border-color: #7c3aed !important;
             box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
         }
@@ -789,8 +819,11 @@
         const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
         const isCreator = m.name === 'German';
         const slug = m.name.replace(/\s+/g,'-');
+        const firstPokemon = pokemon[0] || '';
+        const silhouetteUrl = firstPokemon ? getPokemonImageUrl(firstPokemon, m.name) : '';
         return `
         <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}">
+            ${silhouetteUrl ? `<img class="card-silhouette" src="${silhouetteUrl}" alt="">` : ''}
             <div class="card-body">
             ${pokemon.length ? `
             <div class="pokemon-images ${pokemon.length === 1 ? 'single' : ''}" id="carousel-${slug}">
