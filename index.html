@@ -536,13 +536,6 @@
         const lower = raw.toLowerCase().trim();
         const isShiny = /shiny/i.test(lower);
 
-        // Detect special forms
-        const isAlteredGiratina = /giratina.*altered|altered.*giratina/i.test(name);
-        const isOriginGiratina = /giratina.*origin|origin.*giratina/i.test(name);
-
-        if (isAlteredGiratina) return `https://img.pokemondb.net/sprites/home/normal/giratina-altered.png`;
-        if (isOriginGiratina) return `https://img.pokemondb.net/sprites/home/normal/giratina-origin.png`;
-
         // Detect mega forms
         const isMegaX = /mega.*\bx\b/.test(lower);
         const isMegaY = /mega.*\by\b/.test(lower);
@@ -554,6 +547,8 @@
             .replace(/mega/gi, '')
             .replace(/\bx\b/gi, '')
             .replace(/\by\b/gi, '')
+            .replace(/altered/gi, '')
+            .replace(/origin/gi, '')
             .replace(/\s+/g, '-')
             .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
             .replace(/-+/g, '-').replace(/^-|-$/g, '')
@@ -563,6 +558,14 @@
     }
 
     function getPokemonImageUrl(name, memberName = '') {
+        // Special Giratina forms — check FIRST before anything else
+        if (/giratina.*origin|origin.*giratina/i.test(name)) {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10007.png`;
+        }
+        if (/giratina.*altered|altered.*giratina/i.test(name)) {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/487.png`;
+        }
+
         const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(name);
 
         // Build pokemondb form suffix
