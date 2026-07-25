@@ -504,16 +504,8 @@
     }
 
     function getPokemonBadgeColor(name) {
-        const n = name.toLowerCase().trim()
-            .replace(/shiny/gi,'').replace(/\s+/g,'-')
-            .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g,'')
-            .replace(/-+/g,'-').replace(/^-|-$/g,'')
-            .split('-')[0];
-
-        // Check cache first (populated during prefetch)
-        if (pokemonTypeCache[n]) return pokemonTypeCache[n];
-
-        // Fallback manual colors while cache loads
+        const { base } = cleanPokemonName(name);
+        if (pokemonTypeCache[base]) return pokemonTypeCache[base];
         const fallback = {
             'wooper':'#6890F0','mimikyu':'#705898','frigibax':'#6890F0',
             'gothita':'#705898','greavard':'#705848','joltik':'#F8D030',
@@ -528,38 +520,69 @@
             'marill':'#6890F0','blitzle':'#F8D030','milotic':'#6890F0',
             'sylveon':'#EE99AC','giratina':'#705898','charizard':'#F08030',
             'rayquaza':'#7038F8','squirtle':'#6890F0','lapras':'#6890F0',
-            'eevee':'#A8A878','sylveon':'#EE99AC','leafeon':'#78C850',
-            'glaceon':'#98D8D8','espeon':'#F85888','vaporeon':'#6890F0',
-            'togepi':'#EE99AC','lycanroc':'#B8A038','miltank':'#A8A878',
-            'cubone':'#E0C068','tangela':'#78C850','mew':'#F85888',
+            'eevee':'#A8A878','leafeon':'#78C850','glaceon':'#98D8D8',
+            'espeon':'#F85888','vaporeon':'#6890F0','togepi':'#EE99AC',
+            'lycanroc':'#B8A038','miltank':'#A8A878','cubone':'#E0C068',
+            'tangela':'#78C850','mew':'#F85888',
         };
-        return fallback[n] || '#9933cc';
+        return fallback[base] || '#9933cc';
     }
 
     // ── POKEMON IMAGE - Dynamic lookup, handles shiny automatically ──
     const imageCache = {};
 
 
-    function getPokemonImageUrl(name, memberName = '') {
-        const isShiny = /shiny/i.test(name);
-        const clean = name.toLowerCase()
+    function cleanPokemonName(raw) {
+        const lower = raw.toLowerCase().trim();
+        const isShiny = /shiny/i.test(lower);
+
+        // Detect mega forms
+        const isMegaX = /mega.*\bx\b/.test(lower);
+        const isMegaY = /mega.*\by\b/.test(lower);
+        const isMega  = /mega/.test(lower);
+
+        // Extract base name — remove keywords
+        const base = lower
             .replace(/shiny/gi, '')
+            .replace(/mega/gi, '')
+            .replace(/\bx\b/gi, '')
+            .replace(/\by\b/gi, '')
             .replace(/\s+/g, '-')
-            .replace(/♀/g, '-f').replace(/♂/g, '-m')
             .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
             .replace(/-+/g, '-').replace(/^-|-$/g, '')
             .split('-')[0];
 
-        // Check manual ID map (instant)
-        const id = pokemonIds[clean];
+        return { base, isShiny, isMega, isMegaX, isMegaY };
+    }
+
+    function getPokemonImageUrl(name, memberName = '') {
+        const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(name);
+
+        // Build pokemondb form suffix
+        if (isMegaX) {
+            const url = `https://img.pokemondb.net/sprites/home/normal/${base}-mega-x.png`;
+            return url;
+        }
+        if (isMegaY) {
+            return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-y.png`;
+        }
+        if (isMega && isShiny) {
+            return `https://img.pokemondb.net/sprites/home/shiny/${base}-mega.png`;
+        }
+        if (isMega) {
+            return `https://img.pokemondb.net/sprites/home/normal/${base}-mega.png`;
+        }
+
+        // Check manual ID map
+        const id = pokemonIds[base];
         if (id) {
             return isShiny
                 ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`
                 : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
         }
 
-        // Check prefetched cache for unknown pokemon
-        const cacheKey = (isShiny ? 'shiny_' : '') + clean;
+        // Check prefetched cache
+        const cacheKey = (isShiny ? 'shiny_' : '') + base;
         if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') {
             return imageCache[cacheKey];
         }
@@ -817,38 +840,31 @@
     async function prefetchMemberImages(m) {
         const pokemon = m.pokemon.split(/[,\/]/).map(p => p.trim()).filter(p => p);
         const promises = pokemon.map(async p => {
-            const isShiny = /shiny/i.test(p);
-            const clean = p.toLowerCase()
-                .replace(/shiny/gi, '')
-                .replace(/\s+/g, '-')
-                .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
-                .replace(/-+/g, '-').replace(/^-|-$/g, '')
-                .split('-')[0];
+            const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(p);
+            if (!base) return;
 
-            if (!clean) return;
+            // Mega forms use pokemondb directly - no prefetch needed
+            if (isMega || isMegaX || isMegaY) return;
 
-            const cacheKey = (isShiny ? 'shiny_' : '') + clean;
+            const cacheKey = (isShiny ? 'shiny_' : '') + base;
+            if (imageCache[cacheKey] || pokemonIds[base]) {
+                // Fetch type color if not cached
+                if (!pokemonTypeCache[base]) fetchPokemonTypeColor(base);
+                return;
+            }
 
-            // Fetch image + type color in one API call if not in manual map
-            if (!pokemonIds[clean] && !imageCache[cacheKey]) {
-                try {
-                    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${clean}`);
-                    const d = await res.json();
-                    // Cache image
-                    const url = isShiny
-                        ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
-                        : d.sprites?.other?.['official-artwork']?.front_default;
-                    imageCache[cacheKey] = url || 'missing';
-                    // Cache type color
-                    const primaryType = d.types[0]?.type?.name;
-                    pokemonTypeCache[clean] = typeColors[primaryType] || '#9933cc';
-                } catch(e) {
-                    imageCache[cacheKey] = 'missing';
-                    pokemonTypeCache[clean] = '#9933cc';
-                }
-            } else if (pokemonIds[clean] && !pokemonTypeCache[clean]) {
-                // Known ID but no type color yet — fetch type only
-                fetchPokemonTypeColor(clean);
+            try {
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${base}`);
+                const d = await res.json();
+                const url = isShiny
+                    ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
+                    : d.sprites?.other?.['official-artwork']?.front_default;
+                imageCache[cacheKey] = url || 'missing';
+                const primaryType = d.types[0]?.type?.name;
+                pokemonTypeCache[base] = typeColors[primaryType] || '#9933cc';
+            } catch(e) {
+                imageCache[cacheKey] = 'missing';
+                pokemonTypeCache[base] = '#9933cc';
             }
         });
         await Promise.all(promises);
@@ -872,9 +888,12 @@
                     ${pokemon.map(p=>`
                     <div class="pokemon-img" title="${p}">
                         <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="
-                            this.parentElement.style.display='none';
+                            const src=this.src;
+                            if(src.includes('home/normal')){this.src=src.replace('home/normal','sword-shield/normal');}
+                            else if(src.includes('home/shiny')){this.src=src.replace('home/shiny','sword-shield/normal');}
+                            else{this.parentElement.style.display='none';
                             const c=this.closest('.pokemon-images');
-                            if(c){const v=c.querySelectorAll('.pokemon-img:not([style*=none])');if(v.length===1)c.classList.add('auto-single');}
+                            if(c){const v=c.querySelectorAll('.pokemon-img:not([style*=none])');if(v.length===1)c.classList.add('auto-single');}}
                         ">
                     </div>`).join('')}
                 </div>
