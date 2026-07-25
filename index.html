@@ -820,16 +820,28 @@
         // Image fallback handler with extended version support
         function setupImageFallbacks() {
             const versions = [
-                'sword-shield',             // Gen 8 - best pokemon coverage
-                'home',                     // Home sprites - wider coverage
-                'ultra-sun-ultra-moon',     // Gen 7 - good coverage
+                'home',                     // Home - widest coverage, try first!
+                'sword-shield',             // Gen 8
+                'ultra-sun-ultra-moon',     // Gen 7
                 'sun-moon',                 // Gen 7
+                'X-Y',                      // Gen 6
+                'omega-ruby-alpha-sapphire', // Gen 6 remakes
+                'black-2-white-2',          // Gen 5
+                'black-white',              // Gen 5 - has Blitzle
+                'diamond-pearl',            // Gen 4
+                'platinum',                 // Gen 4
+                'heartgold-soulsilver',     // Gen 4 remakes - has Mankey, Raticate
+                'emerald',                  // Gen 3
+                'ruby-sapphire',            // Gen 3
+                'firered-leafgreen',        // Gen 3 remakes - has Gen 1
+                'crystal',                  // Gen 2 - has Mankey, Raticate
+                'gold-silver',              // Gen 2
+                'yellow',                   // Gen 1 - has all Gen 1
+                'blue',                     // Gen 1 - has all Gen 1
+                'red',                      // Gen 1 - has all Gen 1
                 'scarlet-violet',           // Gen 9
                 'legends-arceus',           // Legends
-                'brilliant-diamond-shining-pearl', // Gen 4 remakes
-                "let's-go-pikachu-eevee",   // Gen 1 remakes
-                'diamond-pearl',            // Gen 4
-                'emerald'                   // Gen 3
+                'brilliant-diamond-shining-pearl' // Gen 4 remakes
             ];
             
             document.querySelectorAll('.pokemon-img img').forEach(img => {
