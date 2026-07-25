@@ -265,6 +265,55 @@
             box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
         }
 
+        /* ── SKELETON LOADING ── */
+        .skeleton {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+        .skeleton-img {
+            width: 100%; height: 100px;
+            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .skeleton-name {
+            width: 55%; height: 16px;
+            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+        .skeleton-line {
+            width: 80%; height: 11px;
+            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .skeleton-line.short { width: 55%; }
+        .skeleton-react {
+            width: 45%; height: 30px;
+            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 20px;
+            margin-top: auto;
+            padding-top: 0.8rem;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         /* ── MEMBER NAME ── */
         .member-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; color: #c2185b; }
         .creator-name {
@@ -649,16 +698,138 @@
             const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
             parseGoogleData(json);
 
-            // Pre-fetch ALL unknown pokemon images before rendering
-            await prefetchAllImages();
+            // Step 1: Show skeleton cards immediately
+            renderSkeletons();
 
-            renderCards(data);
+            // Step 2: Load reactions in background
+            loadReactions().then(() => loadAllReactUI());
+
+            // Step 3: Load each card individually as its images resolve
+            await renderCardsProgressively();
+
             initCarousels();
-            await loadReactions();
-            loadAllReactUI();
+
         } catch(e) {
             document.getElementById('grid').innerHTML = `<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
         }
+    }
+
+    // Show skeleton placeholders immediately
+    function renderSkeletons() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = data.map((m, i) => `
+            <div class="skeleton" id="skeleton-${i}">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-name"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-react"></div>
+            </div>
+        `).join('');
+    }
+
+    // Render each card as soon as its images are ready
+    async function renderCardsProgressively() {
+        const promises = data.map(async (m, i) => {
+            // Pre-fetch unknown images for this specific member
+            await prefetchMemberImages(m);
+
+            // Replace skeleton with real card
+            const skeleton = document.getElementById(`skeleton-${i}`);
+            if (skeleton) {
+                skeleton.outerHTML = renderCard(m);
+            }
+
+            // Load reactions for this card
+            const counts = reactions[m.name] || { heart: 0, wow: 0 };
+            const myList = [];
+            ['heart','wow'].forEach(type => {
+                if (localStorage.getItem('pokeneedle_my_' + m.name + '_' + type)) myList.push(type);
+            });
+            updateReactUI(m.name, m.name.replace(/\s+/g,'-'));
+        });
+
+        await Promise.all(promises);
+    }
+
+    // Pre-fetch images for a single member
+    async function prefetchMemberImages(m) {
+        const pokemon = m.pokemon.split(/[,\/]/).map(p => p.trim()).filter(p => p);
+        const promises = pokemon.map(async p => {
+            const isShiny = /shiny/i.test(p);
+            const clean = p.toLowerCase()
+                .replace(/shiny/gi, '')
+                .replace(/\s+/g, '-')
+                .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
+                .replace(/-+/g, '-').replace(/^-|-$/g, '')
+                .split('-')[0];
+
+            if (!clean || pokemonIds[clean]) return; // skip if in manual map
+
+            const cacheKey = (isShiny ? 'shiny_' : '') + clean;
+            if (imageCache[cacheKey]) return; // already cached
+
+            try {
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${clean}`);
+                const d = await res.json();
+                const url = isShiny
+                    ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
+                    : d.sprites?.other?.['official-artwork']?.front_default;
+                imageCache[cacheKey] = url || 'missing';
+            } catch(e) {
+                imageCache[cacheKey] = 'missing';
+            }
+        });
+        await Promise.all(promises);
+    }
+
+    // Render a single card HTML
+    function renderCard(m) {
+        const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p).slice(0,6);
+        const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
+        const isCreator = m.name === 'German';
+        const slug = m.name.replace(/\s+/g,'-');
+        return `
+        <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}">
+            <div class="card-body">
+            ${pokemon.length ? `
+            <div class="pokemon-images ${pokemon.length === 1 ? 'single' : ''}" id="carousel-${slug}">
+                <div class="pokemon-track" id="track-${slug}">
+                    ${pokemon.map(p=>`
+                    <div class="pokemon-img" title="${p}">
+                        <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="
+                            this.parentElement.style.display='none';
+                            const c=this.closest('.pokemon-images');
+                            if(c){const v=c.querySelectorAll('.pokemon-img:not([style*=none])');if(v.length===1)c.classList.add('auto-single');}
+                        ">
+                    </div>`).join('')}
+                </div>
+            </div>` : ''}
+            <div class="member-name ${isCreator ? 'creator-name' : ''}">${m.name}</div>
+            ${pokemon.length ? `
+            <div class="section">
+                <div class="section-title">Favorite Pokémon</div>
+                <div class="badges">
+                    ${pokemon.map(p=>`<span class="badge" style="color:${getPokemonBadgeColor(p)};font-weight:600">${p}</span>`).join('')}
+                </div>
+            </div>` : ''}
+            ${artists.length ? `
+            <div class="section">
+                <div class="section-title">Favorite Artists</div>
+                <div class="badges">
+                    ${artists.map(a=>`<span class="badge artist">${a}</span>`).join('')}
+                </div>
+            </div>` : ''}
+            </div>
+            <div class="reaction-bar">
+                <button class="react-btn" id="react-heart-${slug}" onclick="toggleReact('${m.name}','heart')">
+                    <span class="emoji">❤️</span><span class="count" id="count-heart-${slug}">0</span>
+                </button>
+                <button class="react-btn" id="react-wow-${slug}" onclick="toggleReact('${m.name}','wow')">
+                    <span class="emoji">🤩</span><span class="count" id="count-wow-${slug}">0</span>
+                </button>
+            </div>
+        </div>`;
     }
 
     // Pre-fetch all unknown pokemon BEFORE rendering so images are ready
@@ -724,62 +895,11 @@
             grid.innerHTML = `<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">No results found.</div>`;
             return;
         }
-        grid.innerHTML = members.map(m => {
-            const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p).slice(0,6);
-            const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
-            const isCreator = m.name === 'German';
-            const slug = m.name.replace(/\s+/g,'-');
-            return `
-            <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}">
-                <div class="card-body">
-                ${pokemon.length ? `
-                <div class="pokemon-images ${pokemon.length === 1 ? 'single' : ''}" id="carousel-${slug}">
-                    <div class="pokemon-track" id="track-${slug}">
-                        ${pokemon.map(p=>`
-                        <div class="pokemon-img" title="${p}">
-                            <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="
-                            this.parentElement.style.display='none';
-                            this.dataset.loaded='false';
-                            loadUnknownPokemonImages();
-                            const container = this.closest('.pokemon-images');
-                            if (container) {
-                                const visible = container.querySelectorAll('.pokemon-img:not([style*=none])');
-                                if (visible.length === 1) container.classList.add('auto-single');
-                            }
-                        ">
-                        </div>`).join('')}
-                    </div>
-                </div>` : ''}
-                <div class="member-name ${isCreator ? 'creator-name' : ''}">${m.name}</div>
-                ${pokemon.length ? `
-                <div class="section">
-                    <div class="section-title">Favorite Pokémon</div>
-                    <div class="badges">
-                        ${pokemon.map(p=>`<span class="badge" style="color:${getPokemonBadgeColor(p)};font-weight:600">${p}</span>`).join('')}
-                    </div>
-                </div>` : ''}
-                ${artists.length ? `
-                <div class="section">
-                    <div class="section-title">Favorite Artists</div>
-                    <div class="badges">
-                        ${artists.map(a=>`<span class="badge artist">${a}</span>`).join('')}
-                    </div>
-                </div>` : ''}
-                </div>
-                <div class="reaction-bar">
-                    <button class="react-btn" id="react-heart-${slug}" onclick="toggleReact('${m.name}','heart')">
-                        <span class="emoji">❤️</span><span class="count" id="count-heart-${slug}">0</span>
-                    </button>
-                    <button class="react-btn" id="react-wow-${slug}" onclick="toggleReact('${m.name}','wow')">
-                        <span class="emoji">🤩</span><span class="count" id="count-wow-${slug}">0</span>
-                    </button>
-                </div>
-            </div>`;
-        }).join('');
+        grid.innerHTML = members.map(m => renderCard(m)).join('');
     }
 
     // ── SEARCH ───────────────────────────────────────────────────────
-    document.getElementById('searchInput').addEventListener('input', e => {
+    document.getElementById('searchInput').addEventListener('input', async e => {
         const q = e.target.value.toLowerCase();
         const filtered = data.filter(m =>
             m.name.toLowerCase().includes(q) ||
