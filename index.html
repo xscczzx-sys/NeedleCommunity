@@ -800,7 +800,20 @@
                 .replace(/^-|-$/g, '')          // remove leading/trailing dashes
                 .split('-')[0];                 // get only first word (before any dash)
             
-            // Use normal sprites for everyone
+            // Special forms for German's card
+            if (memberName === 'German') {
+                if (pokemonName === 'charizard') {
+                    return `https://img.pokemondb.net/sprites/bank/normal/charizard-mega-x.png`;
+                }
+                if (pokemonName === 'rayquaza') {
+                    return `https://img.pokemondb.net/sprites/home/shiny/rayquaza-mega.png`;
+                }
+                if (pokemonName === 'giratina') {
+                    return `https://img.pokemondb.net/sprites/home/normal/giratina-origin.png`;
+                }
+            }
+            
+            // Use normal sprites for everyone else
             return `https://img.pokemondb.net/sprites/sword-shield/normal/${pokemonName}.png`;
         }
 
@@ -820,31 +833,31 @@
             ];
             
             document.querySelectorAll('.pokemon-img img').forEach(img => {
+                let attemptCount = 0;
+                
                 img.addEventListener('error', function() {
                     const currentSrc = this.src;
+                    let pokemonName = currentSrc.split('/').pop().replace('.png', '');
                     
-                    // If it's a pokemondb URL, try next version
-                    if (currentSrc.includes('pokemondb.net')) {
-                        const currentVersion = currentSrc.split('/sprites/')[1]?.split('/')[0];
-                        const versionIndex = currentVersion ? versions.indexOf(currentVersion) : -1;
-                        
-                        if (versionIndex >= 0 && versionIndex < versions.length - 1) {
-                            const pokemonName = currentSrc.split('/').pop().replace('.png', '');
-                            const nextVersion = versions[versionIndex + 1];
-                            this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${pokemonName}.png`;
-                            return;
-                        } else if (versionIndex === -1 || versionIndex === versions.length - 1) {
-                            // All pokemondb versions failed, try PokeAPI
-                            const pokemonName = currentSrc.split('/').pop().replace('.png', '');
-                            const pokemonId = pokemonIds[pokemonName] || 25;
-                            this.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
-                            return;
-                        }
+                    // Extract base pokemon name (remove -mega, -origin, etc)
+                    const baseName = pokemonName.split('-').slice(0, 1).join('-');
+                    
+                    // If it's a special form that failed, try normal version first
+                    if (pokemonName.includes('mega') || pokemonName.includes('origin') || pokemonName.includes('shiny')) {
+                        this.src = `https://img.pokemondb.net/sprites/sword-shield/normal/${baseName}.png`;
+                        attemptCount = 0;
+                        return;
                     }
                     
-                    // If it's already PokeAPI, give up
-                    if (currentSrc.includes('PokeAPI') || currentSrc.includes('githubusercontent')) {
-                        this.parentElement.style.display = 'none';
+                    // Try next version in the list
+                    if (attemptCount < versions.length) {
+                        const nextVersion = versions[attemptCount];
+                        this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${baseName}.png`;
+                        attemptCount++;
+                    } else {
+                        // All versions failed, try PokeAPI
+                        const pokemonId = pokemonIds[baseName] || 25;
+                        this.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
                     }
                 });
             });
