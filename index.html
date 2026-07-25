@@ -790,18 +790,36 @@
             });
         }
 
-        function getPokemonImageUrl(name) {
+        function getPokemonImageUrl(name, memberName = '') {
             const pokemonName = name.toLowerCase()
                 .replace(/\s+/g, '-')
                 .replace(/♀/g, '-f')
                 .replace(/♂/g, '-m')
                 .replace(/[:']/g, '');
+            
+            // Special cases for German's Pokémon with special forms
+            if (memberName === 'German') {
+                if (pokemonName === 'charizard') {
+                    return `https://img.pokemondb.net/sprites/bank/normal/charizard-mega-x.png`;
+                }
+                if (pokemonName === 'rayquaza') {
+                    return `https://img.pokemondb.net/sprites/home/shiny/rayquaza-mega.png`;
+                }
+                if (pokemonName === 'giratina') {
+                    return `https://img.pokemondb.net/sprites/home/normal/giratina-origin.png`;
+                }
+            }
+            
             return `https://img.pokemondb.net/sprites/scarlet-violet/normal/${pokemonName}.png`;
         }
 
-        // Image fallback handler with PokeAPI ultimate fallback
+        // Image fallback handler with extended version support
         function setupImageFallbacks() {
-            const versions = ['scarlet-violet', 'sword-shield', 'lets-go-pikachu-eevee', 'diamond-pearl', 'emerald'];
+            const versions = [
+                'scarlet-violet', 'sword-shield', 'lets-go-pikachu-eevee', 
+                'legends-arceus', 'brilliant-diamond-shining-pearl',
+                'sun-moon', 'ultra-sun-ultra-moon', 'diamond-pearl', 'emerald'
+            ];
             
             document.querySelectorAll('.pokemon-img img').forEach(img => {
                 img.addEventListener('error', function() {
@@ -867,7 +885,7 @@
                                 <div class="pokemon-images">
                                     ${pokemon.slice(0, 3).map(p => `
                                         <div class="pokemon-img" title="${p}">
-                                            <img src="${getPokemonImageUrl(p)}" alt="${p}" class="sprite" onerror="this.parentElement.style.display='none';">
+                                            <img src="${getPokemonImageUrl(p, member.name)}" alt="${p}" class="sprite" onerror="this.parentElement.style.display='none';">
                                         </div>
                                     `).join('')}
                                 </div>
