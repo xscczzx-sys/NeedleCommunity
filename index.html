@@ -792,25 +792,15 @@
 
         function getPokemonImageUrl(name, memberName = '') {
             const pokemonName = name.toLowerCase()
-                .replace(/\s+/g, '-')
-                .replace(/♀/g, '-f')
-                .replace(/♂/g, '-m')
-                .replace(/[:']/g, '');
+                .replace(/\s+/g, '-')           // spaces to dashes
+                .replace(/♀/g, '-f')            // female symbol
+                .replace(/♂/g, '-m')            // male symbol
+                .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')  // remove special chars
+                .replace(/-+/g, '-')            // clean up multiple dashes
+                .replace(/^-|-$/g, '')          // remove leading/trailing dashes
+                .split('-')[0];                 // get only first word (before any dash)
             
-            // Special cases for German's Pokémon with special forms
-            if (memberName === 'German') {
-                if (pokemonName === 'charizard') {
-                    return `https://img.pokemondb.net/sprites/bank/normal/charizard-mega-x.png`;
-                }
-                if (pokemonName === 'rayquaza') {
-                    return `https://img.pokemondb.net/sprites/home/shiny/rayquaza-mega.png`;
-                }
-                if (pokemonName === 'giratina') {
-                    return `https://img.pokemondb.net/sprites/home/normal/giratina-origin.png`;
-                }
-            }
-            
-            // Start with sword-shield which has best overall coverage
+            // Use normal sprites for everyone
             return `https://img.pokemondb.net/sprites/sword-shield/normal/${pokemonName}.png`;
         }
 
