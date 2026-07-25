@@ -335,14 +335,93 @@
         return colors[n] || '#9933cc';
     }
 
+    // ── POKEMON IMAGE - Dynamic lookup, handles shiny automatically ──
+    const imageCache = {};
+
     function getPokemonImageUrl(name, memberName = '') {
-        const n = name.toLowerCase()
-            .replace(/\s+/g,'-').replace(/♀/g,'-f').replace(/♂/g,'-m')
-            .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g,'')
-            .replace(/-+/g,'-').replace(/^-|-$/g,'').split('-')[0];
-        const id = pokemonIds[n];
-        if (id) return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-        return `https://img.pokemondb.net/sprites/sword-shield/normal/${n}.png`;
+        // Detect shiny keyword
+        const isShiny = /shiny/i.test(name);
+
+        const clean = name.toLowerCase()
+            .replace(/shiny/gi, '')           // remove "shiny" word
+            .replace(/\s+/g, '-')
+            .replace(/♀/g, '-f').replace(/♂/g, '-m')
+            .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
+            .replace(/-+/g, '-').replace(/^-|-$/g, '')
+            .split('-')[0];
+
+        // Check manual ID map first (instant)
+        const id = pokemonIds[clean];
+        if (id) {
+            if (isShiny) {
+                return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`;
+            }
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+        }
+
+        // Unknown — dynamic loader will handle it
+        return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
+    }
+
+    // Dynamically fetch unknown Pokemon from PokeAPI by name
+    async function loadUnknownPokemonImages() {
+        const imgs = document.querySelectorAll('.pokemon-img img');
+        const promises = [];
+
+        imgs.forEach(img => {
+            if (img.src.includes('/0.png') || img.dataset.loaded === 'false') {
+                const rawName = img.alt; // original name from sheet
+                const isShiny = /shiny/i.test(rawName);
+
+                const pokemonName = rawName.toLowerCase()
+                    .replace(/shiny/gi, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
+                    .replace(/-+/g, '-').replace(/^-|-$/g, '')
+                    .split('-')[0];
+
+                const cacheKey = (isShiny ? 'shiny_' : '') + pokemonName;
+
+                if (!pokemonName || imageCache[cacheKey] === 'missing') {
+                    img.parentElement.style.display = 'none';
+                    return;
+                }
+
+                if (imageCache[cacheKey]) {
+                    img.src = imageCache[cacheKey];
+                    return;
+                }
+
+                const p = fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        let url;
+                        if (isShiny) {
+                            url = data.sprites?.other?.['official-artwork']?.front_shiny
+                                || data.sprites?.front_shiny
+                                || data.sprites?.other?.['official-artwork']?.front_default;
+                        } else {
+                            url = data.sprites?.other?.['official-artwork']?.front_default
+                                || data.sprites?.front_default;
+                        }
+
+                        if (url) {
+                            imageCache[cacheKey] = url;
+                            img.src = url;
+                        } else {
+                            imageCache[cacheKey] = 'missing';
+                            img.parentElement.style.display = 'none';
+                        }
+                    })
+                    .catch(() => {
+                        imageCache[cacheKey] = 'missing';
+                        img.parentElement.style.display = 'none';
+                    });
+                promises.push(p);
+            }
+        });
+
+        await Promise.all(promises);
     }
 
     // ── SYNCED REACTIONS via Firebase Realtime DB ────────────────────
@@ -414,6 +493,7 @@
             const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
             parseGoogleData(json);
             renderCards(data);
+            await loadUnknownPokemonImages();
             await loadReactions();
             loadAllReactUI();
         } catch(e) {
@@ -451,7 +531,7 @@
                 <div class="pokemon-images">
                     ${pokemon.slice(0,3).map(p=>`
                     <div class="pokemon-img" title="${p}">
-                        <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="this.parentElement.style.display='none'">
+                        <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="this.dataset.loaded='false';this.src='';loadUnknownPokemonImages()">
                     </div>`).join('')}
                 </div>` : ''}
                 <div class="member-name ${isCreator ? 'creator-name' : ''}">${m.name}</div>
@@ -491,6 +571,7 @@
             m.artists.toLowerCase().includes(q)
         );
         renderCards(filtered);
+        loadUnknownPokemonImages();
         loadAllReactUI();
     });
 
