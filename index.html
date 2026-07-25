@@ -536,6 +536,13 @@
         const lower = raw.toLowerCase().trim();
         const isShiny = /shiny/i.test(lower);
 
+        // Detect special forms
+        const isAlteredGiratina = /giratina.*altered|altered.*giratina/i.test(name);
+        const isOriginGiratina = /giratina.*origin|origin.*giratina/i.test(name);
+
+        if (isAlteredGiratina) return `https://img.pokemondb.net/sprites/home/normal/giratina-altered.png`;
+        if (isOriginGiratina) return `https://img.pokemondb.net/sprites/home/normal/giratina-origin.png`;
+
         // Detect mega forms
         const isMegaX = /mega.*\bx\b/.test(lower);
         const isMegaY = /mega.*\by\b/.test(lower);
