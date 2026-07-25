@@ -392,7 +392,10 @@
         'pinsir':127,'tauros':128,'gyarados':130,'aerodactyl':142,
         'snorlax':143,'articuno':144,'moltres':146,'dragonite':149,'mewtwo':150,
         'pidgey':16,'pidgeotto':17,'pidgeot':18,'lopunny':428,'buneary':427,
-        'exeggutor':103,'exeggcute':102,'deino':633
+        'exeggutor':103,'exeggcute':102,'deino':633,
+        'eevee':133,'flareon':136,'jolteon':135,'vaporeon':134,'espeon':196,
+        'umbreon':197,'leafeon':470,'glaceon':471,'sylveon':700,
+        'maushold':925,'tandemaus':924,'tande':924,'tauros':128,'miltank':241
     };
 
     function getPokemonBadgeColor(name) {
@@ -425,28 +428,31 @@
     // ── POKEMON IMAGE - Dynamic lookup, handles shiny automatically ──
     const imageCache = {};
 
-    function getPokemonImageUrl(name, memberName = '') {
-        // Detect shiny keyword
-        const isShiny = /shiny/i.test(name);
 
+    function getPokemonImageUrl(name, memberName = '') {
+        const isShiny = /shiny/i.test(name);
         const clean = name.toLowerCase()
-            .replace(/shiny/gi, '')           // remove "shiny" word
+            .replace(/shiny/gi, '')
             .replace(/\s+/g, '-')
             .replace(/♀/g, '-f').replace(/♂/g, '-m')
             .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
             .replace(/-+/g, '-').replace(/^-|-$/g, '')
             .split('-')[0];
 
-        // Check manual ID map first (instant)
+        // Check manual ID map (instant)
         const id = pokemonIds[clean];
         if (id) {
-            if (isShiny) {
-                return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`;
-            }
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+            return isShiny
+                ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`
+                : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
         }
 
-        // Unknown — dynamic loader will handle it
+        // Check prefetched cache for unknown pokemon
+        const cacheKey = (isShiny ? 'shiny_' : '') + clean;
+        if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') {
+            return imageCache[cacheKey];
+        }
+
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
     }
 
@@ -642,14 +648,62 @@
             const text = await res.text();
             const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
             parseGoogleData(json);
+
+            // Pre-fetch ALL unknown pokemon images before rendering
+            await prefetchAllImages();
+
             renderCards(data);
-            await loadUnknownPokemonImages();
             initCarousels();
             await loadReactions();
             loadAllReactUI();
         } catch(e) {
             document.getElementById('grid').innerHTML = `<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
         }
+    }
+
+    // Pre-fetch all unknown pokemon BEFORE rendering so images are ready
+    async function prefetchAllImages() {
+        const allPokemon = new Set();
+
+        data.forEach(m => {
+            m.pokemon.split(/[,\/]/).map(p => p.trim()).filter(p => p).forEach(p => {
+                const isShiny = /shiny/i.test(p);
+                const clean = p.toLowerCase()
+                    .replace(/shiny/gi, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
+                    .replace(/-+/g, '-').replace(/^-|-$/g, '')
+                    .split('-')[0];
+
+                if (clean && !pokemonIds[clean]) {
+                    allPokemon.add((isShiny ? 'shiny_' : '') + clean);
+                }
+            });
+        });
+
+        // Fetch all unknown pokemon in parallel
+        const promises = [...allPokemon].map(async entry => {
+            const isShiny = entry.startsWith('shiny_');
+            const name = isShiny ? entry.replace('shiny_', '') : entry;
+            if (imageCache[entry]) return;
+
+            try {
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+                const d = await res.json();
+                let url;
+                if (isShiny) {
+                    url = d.sprites?.other?.['official-artwork']?.front_shiny
+                        || d.sprites?.other?.['official-artwork']?.front_default;
+                } else {
+                    url = d.sprites?.other?.['official-artwork']?.front_default;
+                }
+                imageCache[entry] = url || 'missing';
+            } catch(e) {
+                imageCache[entry] = 'missing';
+            }
+        });
+
+        await Promise.all(promises);
     }
 
     function parseGoogleData(json) {
@@ -671,7 +725,7 @@
             return;
         }
         grid.innerHTML = members.map(m => {
-            const pokemon = m.pokemon.split(',').map(p=>p.trim()).filter(p=>p).slice(0,6);
+            const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p).slice(0,6);
             const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
             const isCreator = m.name === 'German';
             const slug = m.name.replace(/\s+/g,'-');
