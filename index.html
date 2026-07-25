@@ -189,6 +189,24 @@
             width: 100%;
             height: 100%;
         }
+        /* When only one visible image remains after failed loads */
+        .pokemon-images.auto-single {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            height: 160px;
+        }
+        .pokemon-images.auto-single .pokemon-img {
+            width: 140px;
+            height: 140px;
+            background: transparent;
+            border: none;
+        }
+        .pokemon-images.auto-single .pokemon-img img {
+            width: 100%;
+            height: 100%;
+        }
         /* Carousel track - static by default */
         .pokemon-track {
             display: flex;
@@ -637,7 +655,16 @@
                     <div class="pokemon-track" id="track-${slug}">
                         ${pokemon.map(p=>`
                         <div class="pokemon-img" title="${p}">
-                            <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="this.dataset.loaded='false';this.src='';loadUnknownPokemonImages()">
+                            <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="
+                            this.parentElement.style.display='none';
+                            this.dataset.loaded='false';
+                            loadUnknownPokemonImages();
+                            const container = this.closest('.pokemon-images');
+                            if (container) {
+                                const visible = container.querySelectorAll('.pokemon-img:not([style*=none])');
+                                if (visible.length === 1) container.classList.add('auto-single');
+                            }
+                        ">
                         </div>`).join('')}
                     </div>
                 </div>` : ''}
