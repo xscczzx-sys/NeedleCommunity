@@ -295,7 +295,174 @@
             box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
         }
 
-        /* ── SKELETON LOADING ── */
+        /* ── TAB NAVIGATION ── */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 0 auto 1.5rem;
+            padding: 0 1rem;
+        }
+        .tab-btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            border: 1.5px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .tab-btn:hover { border-color: #7c3aed; color: var(--text); }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(124,58,237,0.3);
+        }
+
+        /* ── BIRTHDAY LIST VIEW ── */
+        .birthday-list {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+        .birthday-month-section {
+            margin-bottom: 2rem;
+        }
+        .birthday-month-title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+        }
+        .birthday-entries {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.6rem;
+        }
+        .birthday-entry {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.2s;
+        }
+        .birthday-entry:hover { border-color: #7c3aed; transform: translateY(-2px); }
+        .birthday-entry.today {
+            border-color: #a855f7;
+            background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(168,85,247,0.1));
+            box-shadow: 0 0 12px rgba(168,85,247,0.2);
+        }
+        .birthday-entry .day-badge {
+            min-width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(124,58,237,0.15);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #9333ea;
+        }
+        .birthday-entry.today .day-badge {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            border-color: transparent;
+        }
+        .birthday-entry .entry-info { flex: 1; }
+        .birthday-entry .entry-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .birthday-entry .entry-pokemon {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+        }
+        .birthday-banner {
+            max-width: 1400px;
+            margin: 0 auto 1.5rem;
+            padding: 0 1.5rem;
+        }
+        .birthday-today {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 0.8rem;
+            animation: birthdayPulse 2s ease-in-out infinite;
+        }
+        @keyframes birthdayPulse {
+            0%,100% { box-shadow: 0 0 20px rgba(168,85,247,0.4); }
+            50%      { box-shadow: 0 0 35px rgba(168,85,247,0.7); }
+        }
+        .birthday-today h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .birthday-today p  { font-size: 0.85rem; opacity: 0.9; }
+        .birthday-upcoming {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .birthday-upcoming-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--section-title);
+            text-transform: uppercase;
+            margin-right: 0.3rem;
+        }
+        .birthday-chip {
+            background: var(--badge-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.78rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .birthday-chip .days {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        /* Birthday badge on card */
+        .birthday-badge {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            font-size: 1.2rem;
+            z-index: 2;
+            animation: birthdayBounce 1s ease-in-out infinite;
+            filter: drop-shadow(0 0 4px rgba(168,85,247,0.6));
+        }
+        @keyframes birthdayBounce {
+            0%,100% { transform: translateY(0) rotate(-5deg); }
+            50%      { transform: translateY(-4px) rotate(5deg); }
+        }
         .skeleton {
             background: var(--card-bg);
             border: 1.5px solid var(--border);
@@ -409,15 +576,26 @@
     <p class="subtitle">Pokémon Favorites Showcase</p>
 </div>
 
-<div class="search-wrap">
-    <div class="search-box">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="searchInput" placeholder="Search by name, Pokémon, or artist...">
+<div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('pokemon')" id="tab-pokemon">⭐ Fav Pokémon</button>
+    <button class="tab-btn" onclick="switchTab('birthdays')" id="tab-birthdays">🎂 Birthdays</button>
+</div>
+
+<div id="view-pokemon">
+    <div class="search-wrap">
+        <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="searchInput" placeholder="Search by name, Pokémon, or artist...">
+        </div>
+    </div>
+    <div id="birthday-banner" class="birthday-banner"></div>
+    <div class="grid" id="grid">
+        <div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Loading...</div>
     </div>
 </div>
 
-<div class="grid" id="grid">
-    <div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Loading...</div>
+<div id="view-birthdays" style="display:none;">
+    <div class="birthday-list" id="birthday-list"></div>
 </div>
 
 <div class="footer">Created by <span>German</span></div>
@@ -426,6 +604,82 @@
     // ── CONFIG ──────────────────────────────────────────────────────
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
     const GID = '0';
+    const BIRTHDAY_GID = '1'; // Update this after creating the Birthday sheet tab
+
+    // Birthday data
+    const birthdays = [
+        {name:'Malakai',month:1,day:1},{name:'Davi',month:1,day:8},
+        {name:'LouBear',month:1,day:10},{name:'Moon',month:1,day:12},
+        {name:'Tamsyn',month:1,day:13},{name:'Wizhorse',month:1,day:21},
+        {name:'Brock',month:1,day:29},{name:'Hayley',month:2,day:7},
+        {name:'Heidi',month:2,day:13},{name:'Catarina',month:2,day:16},
+        {name:'Ombeod',month:3,day:1},{name:'Kristy',month:3,day:7},
+        {name:'Ren',month:3,day:9},{name:'Bella',month:3,day:12},
+        {name:'Namelessss',month:3,day:12},{name:'Minnie',month:3,day:16},
+        {name:'Lexi',month:3,day:15},{name:'Chrissy',month:3,day:19},
+        {name:'Krystal',month:3,day:21},{name:'Kayla M',month:3,day:31},
+        {name:'Rin',month:4,day:3},{name:'Jess',month:4,day:4},
+        {name:'Mario',month:4,day:5},{name:'Taylor',month:4,day:27},
+        {name:'Sarah',month:4,day:30},{name:'Juliet',month:5,day:3},
+        {name:'Manda',month:5,day:22},{name:'Rockii',month:6,day:9},
+        {name:'Kayla',month:6,day:11},{name:'Boesman',month:6,day:14},
+        {name:'Adam',month:6,day:22},{name:'Noogz',month:6,day:24},
+        {name:'Beaa',month:6,day:23},{name:'Tyler B',month:6,day:28},
+        {name:'Gummy',month:6,day:29},{name:'Miffy',month:6,day:29},
+        {name:'Elly',month:6,day:30},{name:'Mads',month:7,day:13},
+        {name:'Victoria',month:7,day:17},{name:'Rae',month:7,day:18},
+        {name:'Rosie',month:7,day:19},{name:'OGAnt',month:7,day:27},
+        {name:'Pokeducks',month:7,day:28},{name:'Jobsss',month:7,day:29},
+        {name:'Campie',month:7,day:29},{name:'MK',month:7,day:30},
+        {name:'Sand',month:7,day:31},{name:'Mini',month:8,day:6},
+        {name:'Alice',month:8,day:8},{name:'Skillar',month:8,day:18},
+        {name:'Aoife Princess',month:8,day:23},{name:'Monique',month:8,day:24},
+        {name:'Kaitlyn',month:8,day:25},{name:'Flem',month:9,day:7},
+        {name:'Meganlilley',month:9,day:7},{name:'Hokey',month:9,day:23},
+        {name:'Lillyara',month:9,day:24},{name:'Soberman',month:9,day:28},
+        {name:'J',month:10,day:1},{name:'Kees',month:10,day:8},
+        {name:'Slime',month:10,day:14},{name:'Cadbrielle',month:10,day:23},
+        {name:'AG',month:10,day:24},{name:'Kspin',month:10,day:26},
+        {name:'Mushroombat',month:10,day:31},{name:'Braeden',month:11,day:2},
+        {name:'Aaron',month:11,day:4},{name:'Jayda',month:11,day:7},
+        {name:'Ro',month:11,day:10},{name:'Skullqueen',month:11,day:11},
+        {name:'Mouse',month:11,day:13},{name:'Formula',month:11,day:17},
+        {name:'M61',month:11,day:24},{name:'Nic',month:11,day:25},
+        {name:'Emma',month:12,day:8},{name:'German',month:12,day:12},
+        {name:'Bethechange',month:12,day:18},{name:'Audette',month:12,day:18},
+        {name:'Chrisrutter5',month:12,day:21},{name:'Rachel',month:12,day:23},
+        {name:'Clare',month:12,day:28}
+    ];
+
+    const monthNames = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+
+    function getBirthdayInfo(name) {
+        const n = name.toLowerCase();
+        return birthdays.find(b => b.name.toLowerCase() === n ||
+               n.includes(b.name.toLowerCase()) ||
+               b.name.toLowerCase().includes(n));
+    }
+
+    function getTodayBirthdays() {
+        const now = new Date();
+        return birthdays.filter(b => b.month === now.getMonth()+1 && b.day === now.getDate());
+    }
+
+    function getUpcomingBirthdays(days = 7) {
+        const now = new Date();
+        const upcoming = [];
+        for (let i = 1; i <= days; i++) {
+            const d = new Date(now);
+            d.setDate(now.getDate() + i);
+            birthdays.forEach(b => {
+                if (b.month === d.getMonth()+1 && b.day === d.getDate()) {
+                    upcoming.push({...b, daysUntil: i});
+                }
+            });
+        }
+        return upcoming;
+    }
     // JSONBin for synced reactions (free, no auth needed for public bins)
     // We'll create the bin on first load
     const JSONBIN_API = 'https://api.jsonbin.io/v3/b';
@@ -663,7 +917,135 @@
 
     // SETUP: Go to https://console.firebase.google.com
 
-    // ── CAROUSEL - click to activate infinite scroll ─────────────────
+    // ── TAB SWITCHING ─────────────────────────────────────────────────
+    function switchTab(tab) {
+        document.getElementById('view-pokemon').style.display = tab === 'pokemon' ? '' : 'none';
+        document.getElementById('view-birthdays').style.display = tab === 'birthdays' ? '' : 'none';
+        document.getElementById('tab-pokemon').classList.toggle('active', tab === 'pokemon');
+        document.getElementById('tab-birthdays').classList.toggle('active', tab === 'birthdays');
+        if (tab === 'birthdays') renderBirthdayList();
+    }
+
+    // ── BIRTHDAY LIST VIEW ────────────────────────────────────────────
+    function renderBirthdayList() {
+        const container = document.getElementById('birthday-list');
+        if (!container) return;
+
+        const now = new Date();
+        const todayMonth = now.getMonth() + 1;
+        const todayDay = now.getDate();
+
+        const monthEmojis = ['🐴','💘','🌿','🌼','♉️','🌟','❄️','🍓','⚡️','🎃','🍏','🎉'];
+        
+        const monthColors = {
+            1:  'linear-gradient(135deg, #4a90d9, #6ab0f5)', // January - ice blue
+            2:  'linear-gradient(135deg, #e8527a, #f48fb1)', // February - valentine pink
+            3:  'linear-gradient(135deg, #43a047, #81c784)', // March - spring green
+            4:  'linear-gradient(135deg, #f9a825, #ffd54f)', // April - blossom yellow
+            5:  'linear-gradient(135deg, #8e24aa, #ce93d8)', // May - purple
+            6:  'linear-gradient(135deg, #00897b, #4db6ac)', // June - teal
+            7:  'linear-gradient(135deg, #1565c0, #42a5f5)', // July - ocean blue
+            8:  'linear-gradient(135deg, #e64a19, #ff8a65)', // August - sunset orange
+            9:  'linear-gradient(135deg, #6a1b9a, #ab47bc)', // September - deep purple
+            10: 'linear-gradient(135deg, #bf360c, #ff7043)', // October - halloween orange
+            11: 'linear-gradient(135deg, #558b2f, #aed581)', // November - olive green
+            12: 'linear-gradient(135deg, #c62828, #ef9a9a)', // December - christmas red
+        };
+
+        const monthBorderColors = {
+            1:'#6ab0f5',2:'#f48fb1',3:'#81c784',4:'#ffd54f',
+            5:'#ce93d8',6:'#4db6ac',7:'#42a5f5',8:'#ff8a65',
+            9:'#ab47bc',10:'#ff7043',11:'#aed581',12:'#ef9a9a'
+        };
+
+        const noEntryMessages = [
+            '✨ A mystery trainer!',
+            '🔍 Not in the Pokédex yet!',
+            '🌀 Yet to be discovered!',
+            '🎴 No cards revealed yet!',
+            '🌙 Their favourites are a secret!',
+            '🌸 Still choosing their team!',
+            '🎲 Roll to find out!',
+            '🗺️ On a Pokémon journey!',
+        ];
+
+        const grouped = {};
+        birthdays.forEach(b => {
+            if (!grouped[b.month]) grouped[b.month] = [];
+            grouped[b.month].push(b);
+        });
+
+        let html = '';
+        for (let m = 1; m <= 12; m++) {
+            if (!grouped[m]) continue;
+            const entries = grouped[m].sort((a,b) => a.day - b.day);
+            const isCurrentMonth = m === todayMonth;
+            html += `
+            <div class="birthday-month-section">
+                <div class="birthday-month-title" style="background: ${monthColors[m]}; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                    ${monthEmojis[m-1]} ${monthNames[m-1]} ${isCurrentMonth ? '← This month!' : ''}
+                </div>
+                <div class="birthday-entries">
+                    ${entries.map((b, idx) => {
+                        const isToday = b.month === todayMonth && b.day === todayDay;
+                        const member = data.find(d =>
+                            d.name.toLowerCase() === b.name.toLowerCase() ||
+                            d.name.toLowerCase().includes(b.name.toLowerCase()) ||
+                            b.name.toLowerCase().includes(d.name.toLowerCase())
+                        );
+                        const firstPokemon = member
+                            ? member.pokemon.split(/[,\/]/)[0].trim()
+                            : '';
+                        const emptyMsg = noEntryMessages[idx % noEntryMessages.length];
+                        const borderColor = monthBorderColors[m];
+                        return `
+                        <div class="birthday-entry ${isToday ? 'today' : ''}" style="border-color: ${isToday ? '#a855f7' : borderColor}40;">
+                            <div class="day-badge" style="background: ${monthColors[m]}; color: white; border: none;">${b.day}</div>
+                            <div class="entry-info">
+                                <div class="entry-name">${isToday ? '🎂 ' : ''}${b.name}</div>
+                                ${firstPokemon 
+                                    ? `<div class="entry-pokemon" style="color:${getPokemonBadgeColor(firstPokemon)}">⭐ ${firstPokemon}</div>`
+                                    : `<div class="entry-pokemon" style="opacity:0.5;font-style:italic;">${emptyMsg}</div>`
+                                }
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+    }
+        const banner = document.getElementById('birthday-banner');
+        if (!banner) return;
+
+        const today = getTodayBirthdays();
+        const upcoming = getUpcomingBirthdays(7);
+        let html = '';
+
+        if (today.length > 0) {
+            const names = today.map(b => b.name).join(' & ');
+            html += `
+            <div class="birthday-today">
+                <h3>🎂 Happy Birthday ${names}! 🎉</h3>
+                <p>Wishing you an amazing day filled with Pokémon and joy! 🎈</p>
+            </div>`;
+        }
+
+        if (upcoming.length > 0) {
+            const chips = upcoming.map(b => `
+                <div class="birthday-chip">
+                    🎂 ${b.name}
+                    <span class="days">in ${b.daysUntil}d</span>
+                </div>`).join('');
+            html += `
+            <div class="birthday-upcoming">
+                <span class="birthday-upcoming-label">🎈 Coming up</span>
+                ${chips}
+            </div>`;
+        }
+
+        banner.innerHTML = html;
+    }
     const carouselTimers = {};
     let activeCard = null;
 
@@ -888,9 +1270,17 @@
         const slug = m.name.replace(/\s+/g,'-');
         const firstPokemon = pokemon[0] || '';
         const silhouetteUrl = firstPokemon ? getPokemonImageUrl(firstPokemon, m.name) : '';
+
+        // Check if birthday
+        const bday = getBirthdayInfo(m.name);
+        const now = new Date();
+        const isToday = bday && bday.month === now.getMonth()+1 && bday.day === now.getDate();
+        const bdayStr = bday ? `${monthNames[bday.month-1]} ${bday.day}` : '';
+
         return `
-        <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}">
+        <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}" title="${bdayStr ? '🎂 ' + m.name + ' - ' + bdayStr : ''}">
             ${silhouetteUrl ? `<img class="card-silhouette" src="${silhouetteUrl}" alt="">` : ''}
+            ${isToday ? `<div class="birthday-badge">🎂</div>` : bday ? `<div class="birthday-badge" style="opacity:0.4;font-size:0.9rem;animation:none;">🎂</div>` : ''}
             <div class="card-body">
             ${pokemon.length ? `
             <div class="pokemon-images ${pokemon.length === 1 ? 'single' : ''}" id="carousel-${slug}">
@@ -1016,6 +1406,7 @@
     });
 
     // ── INIT ─────────────────────────────────────────────────────────
+    renderBirthdayBanner();
     fetchSheetData();
     setInterval(fetchSheetData, 30000);
 
