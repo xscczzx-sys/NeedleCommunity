@@ -477,31 +477,63 @@
         'maushold':925,'tandemaus':924,'tande':924,'tauros':128,'miltank':241
     };
 
+    // ── POKEMON TYPE COLORS ──────────────────────────────────────────
+    const typeColors = {
+        normal: '#A8A878', fire: '#F08030', water: '#6890F0', electric: '#F8D030',
+        grass: '#78C850', ice: '#98D8D8', fighting: '#C03028', poison: '#A040A0',
+        ground: '#E0C068', flying: '#A890F0', psychic: '#F85888', bug: '#A8B820',
+        rock: '#B8A038', ghost: '#705898', dragon: '#7038F8', dark: '#705848',
+        steel: '#B8B8D0', fairy: '#EE99AC'
+    };
+
+    const pokemonTypeCache = {}; // name -> color
+
+    async function fetchPokemonTypeColor(name) {
+        if (pokemonTypeCache[name]) return pokemonTypeCache[name];
+        try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+            const d = await res.json();
+            const primaryType = d.types[0]?.type?.name;
+            const color = typeColors[primaryType] || '#9933cc';
+            pokemonTypeCache[name] = color;
+            return color;
+        } catch(e) {
+            pokemonTypeCache[name] = '#9933cc';
+            return '#9933cc';
+        }
+    }
+
     function getPokemonBadgeColor(name) {
-        const n = name.toLowerCase().trim();
-        const colors = {
-            'wooper':'#0066cc','maril':'#0066cc','marill':'#0066cc','squirtle':'#0066cc',
-            'wartortle':'#0066cc','blastoise':'#0066cc','lapras':'#0066cc','vaporeon':'#0066cc',
-            'mantine':'#0066cc','dewgong':'#0066cc','wailmer':'#0066cc','psyduck':'#0066cc',
-            'milotic':'#0066cc','frigibax':'#0066cc','snom':'#0066cc','glaceon':'#0066cc',
-            'amaura':'#0066cc','aurorus':'#0066cc',
-            'vulpix':'#cc3300','growlithe':'#cc3300','charizard':'#cc3300','ninetales':'#cc3300',
-            'lampent':'#cc3300','litwick':'#cc3300',
-            'oddish':'#00aa00','chikorita':'#00aa00','sprigatito':'#00aa00','tangela':'#00aa00',
-            'leafeon':'#00aa00','snivy':'#00aa00','toedscool':'#00aa00','rayquaza':'#00aa00',
-            'joltik':'#cc9900','blitzle':'#cc9900','zapdos':'#cc9900','pikachu':'#cc9900','tynamo':'#cc9900',
-            'mimikyu':'#9933cc','espeon':'#9933cc','clefairy':'#9933cc','togepi':'#9933cc',
-            'igglybuff':'#9933cc','diancie':'#9933cc','reuniclus':'#9933cc','sylveon':'#9933cc',
-            'dedenne':'#9933cc','impadimp':'#9933cc','gothita':'#9933cc','ditto':'#9933cc',
-            'dratini':'#663399','dragonair':'#663399','giratina':'#663399',
-            'cubone':'#663300','shuckle':'#663300','mankey':'#663300','sudowoodo':'#663300',
-            'lycanroc':'#663300','absol':'#331111','umbreon':'#331111',
-            'garbodor':'#444444','trubbish':'#444444','greavard':'#444444',
-            'miltank':'#999999','lucario':'#999999','hoothoot':'#6699ff',
-            'mew':'#ff66cc','riolu':'#cc6633','ceruledge':'#ff3366',
-            'shroodle':'#cc9999','pyukumuku':'#ff99cc'
+        const n = name.toLowerCase().trim()
+            .replace(/shiny/gi,'').replace(/\s+/g,'-')
+            .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g,'')
+            .replace(/-+/g,'-').replace(/^-|-$/g,'')
+            .split('-')[0];
+
+        // Check cache first (populated during prefetch)
+        if (pokemonTypeCache[n]) return pokemonTypeCache[n];
+
+        // Fallback manual colors while cache loads
+        const fallback = {
+            'wooper':'#6890F0','mimikyu':'#705898','frigibax':'#6890F0',
+            'gothita':'#705898','greavard':'#705848','joltik':'#F8D030',
+            'shroodle':'#A040A0','impadimp':'#A040A0','dedenne':'#F8D030',
+            'aurorus':'#98D8D8','vulpix':'#F08030','growlithe':'#F08030',
+            'dratini':'#7038F8','dragonair':'#7038F8','umbreon':'#705848',
+            'absol':'#705848','amaura':'#98D8D8','chikorita':'#78C850',
+            'clefairy':'#EE99AC','oddish':'#78C850','zapdos':'#F8D030',
+            'shuckle':'#C03028','pikachu':'#F8D030','ninetales':'#F08030',
+            'ditto':'#A890F0','sprigatito':'#78C850','hoothoot':'#A8A878',
+            'trubbish':'#A040A0','garbodor':'#A040A0','mankey':'#C03028',
+            'marill':'#6890F0','blitzle':'#F8D030','milotic':'#6890F0',
+            'sylveon':'#EE99AC','giratina':'#705898','charizard':'#F08030',
+            'rayquaza':'#7038F8','squirtle':'#6890F0','lapras':'#6890F0',
+            'eevee':'#A8A878','sylveon':'#EE99AC','leafeon':'#78C850',
+            'glaceon':'#98D8D8','espeon':'#F85888','vaporeon':'#6890F0',
+            'togepi':'#EE99AC','lycanroc':'#B8A038','miltank':'#A8A878',
+            'cubone':'#E0C068','tangela':'#78C850','mew':'#F85888',
         };
-        return colors[n] || '#9933cc';
+        return fallback[n] || '#9933cc';
     }
 
     // ── POKEMON IMAGE - Dynamic lookup, handles shiny automatically ──
@@ -782,7 +814,6 @@
         await Promise.all(promises);
     }
 
-    // Pre-fetch images for a single member
     async function prefetchMemberImages(m) {
         const pokemon = m.pokemon.split(/[,\/]/).map(p => p.trim()).filter(p => p);
         const promises = pokemon.map(async p => {
@@ -794,20 +825,30 @@
                 .replace(/-+/g, '-').replace(/^-|-$/g, '')
                 .split('-')[0];
 
-            if (!clean || pokemonIds[clean]) return; // skip if in manual map
+            if (!clean) return;
 
             const cacheKey = (isShiny ? 'shiny_' : '') + clean;
-            if (imageCache[cacheKey]) return; // already cached
 
-            try {
-                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${clean}`);
-                const d = await res.json();
-                const url = isShiny
-                    ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
-                    : d.sprites?.other?.['official-artwork']?.front_default;
-                imageCache[cacheKey] = url || 'missing';
-            } catch(e) {
-                imageCache[cacheKey] = 'missing';
+            // Fetch image + type color in one API call if not in manual map
+            if (!pokemonIds[clean] && !imageCache[cacheKey]) {
+                try {
+                    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${clean}`);
+                    const d = await res.json();
+                    // Cache image
+                    const url = isShiny
+                        ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
+                        : d.sprites?.other?.['official-artwork']?.front_default;
+                    imageCache[cacheKey] = url || 'missing';
+                    // Cache type color
+                    const primaryType = d.types[0]?.type?.name;
+                    pokemonTypeCache[clean] = typeColors[primaryType] || '#9933cc';
+                } catch(e) {
+                    imageCache[cacheKey] = 'missing';
+                    pokemonTypeCache[clean] = '#9933cc';
+                }
+            } else if (pokemonIds[clean] && !pokemonTypeCache[clean]) {
+                // Known ID but no type color yet — fetch type only
+                fetchPokemonTypeColor(clean);
             }
         });
         await Promise.all(promises);
@@ -815,7 +856,7 @@
 
     // Render a single card HTML
     function renderCard(m) {
-        const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p).slice(0,6);
+        const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p);
         const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
         const isCreator = m.name === 'German';
         const slug = m.name.replace(/\s+/g,'-');
