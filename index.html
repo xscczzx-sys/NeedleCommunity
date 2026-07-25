@@ -816,9 +816,16 @@
         // Image fallback handler with extended version support
         function setupImageFallbacks() {
             const versions = [
-                'scarlet-violet', 'sword-shield', 'lets-go-pikachu-eevee', 
-                'legends-arceus', 'brilliant-diamond-shining-pearl',
-                'sun-moon', 'ultra-sun-ultra-moon', 'diamond-pearl', 'emerald'
+                'scarlet-violet',           // Gen 9
+                'sword-shield',             // Gen 8 - most pokemon
+                'ultra-sun-ultra-moon',     // Gen 7 - good coverage
+                'sun-moon',                 // Gen 7
+                'legends-arceus',           // Legends
+                'brilliant-diamond-shining-pearl', // Gen 4 remakes
+                'let's-go-pikachu-eevee',   // Gen 1 remakes
+                'diamond-pearl',            // Gen 4
+                'emerald',                  // Gen 3
+                'bank'                      // Bank sprites (fallback)
             ];
             
             document.querySelectorAll('.pokemon-img img').forEach(img => {
@@ -827,15 +834,15 @@
                     
                     // If it's a pokemondb URL, try next version
                     if (currentSrc.includes('pokemondb.net')) {
-                        const currentVersion = currentSrc.split('/sprites/')[1].split('/')[0];
-                        const versionIndex = versions.indexOf(currentVersion);
+                        const currentVersion = currentSrc.split('/sprites/')[1]?.split('/')[0];
+                        const versionIndex = currentVersion ? versions.indexOf(currentVersion) : -1;
                         
-                        if (versionIndex < versions.length - 1) {
+                        if (versionIndex >= 0 && versionIndex < versions.length - 1) {
                             const pokemonName = currentSrc.split('/').pop().replace('.png', '');
                             const nextVersion = versions[versionIndex + 1];
                             this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${pokemonName}.png`;
                             return;
-                        } else {
+                        } else if (versionIndex === -1 || versionIndex === versions.length - 1) {
                             // All pokemondb versions failed, try PokeAPI
                             const pokemonName = currentSrc.split('/').pop().replace('.png', '');
                             const pokemonId = pokemonIds[pokemonName] || 25;
@@ -845,7 +852,7 @@
                     }
                     
                     // If it's already PokeAPI, give up
-                    if (currentSrc.includes('PokeAPI')) {
+                    if (currentSrc.includes('PokeAPI') || currentSrc.includes('githubusercontent')) {
                         this.parentElement.style.display = 'none';
                     }
                 });
