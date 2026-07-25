@@ -140,8 +140,15 @@
             padding: 1.2rem;
             transition: all 0.3s;
             backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
         }
         .card:hover { background: var(--card-hover); border-color: #7c3aed; transform: translateY(-4px); box-shadow: 0 10px 30px rgba(124,58,237,0.15); }
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* Creator card */
         .creator-card {
@@ -194,7 +201,7 @@
         .badge.artist { color: var(--text-muted); }
 
         /* ── REACTIONS ── */
-        .reaction-bar { display: flex; gap: 0.5rem; margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--divider); }
+        .reaction-bar { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--divider); }
         .react-btn {
             display: flex; align-items: center; gap: 0.3rem;
             padding: 0.28rem 0.65rem; border-radius: 20px;
@@ -439,6 +446,7 @@
             const slug = m.name.replace(/\s+/g,'-');
             return `
             <div class="card ${isCreator ? 'creator-card' : ''}">
+                <div class="card-body">
                 ${pokemon.length ? `
                 <div class="pokemon-images">
                     ${pokemon.slice(0,3).map(p=>`
@@ -461,6 +469,7 @@
                         ${artists.map(a=>`<span class="badge artist">${a}</span>`).join('')}
                     </div>
                 </div>` : ''}
+                </div>
                 <div class="reaction-bar">
                     <button class="react-btn" id="react-heart-${slug}" onclick="toggleReact('${m.name}','heart')">
                         <span class="emoji">❤️</span><span class="count" id="count-heart-${slug}">0</span>
