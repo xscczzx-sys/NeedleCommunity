@@ -810,22 +810,22 @@
                 }
             }
             
-            return `https://img.pokemondb.net/sprites/scarlet-violet/normal/${pokemonName}.png`;
+            // Start with sword-shield which has best overall coverage
+            return `https://img.pokemondb.net/sprites/sword-shield/normal/${pokemonName}.png`;
         }
 
         // Image fallback handler with extended version support
         function setupImageFallbacks() {
             const versions = [
-                'scarlet-violet',           // Gen 9
-                'sword-shield',             // Gen 8 - most pokemon
+                'sword-shield',             // Gen 8 - best pokemon coverage
                 'ultra-sun-ultra-moon',     // Gen 7 - good coverage
                 'sun-moon',                 // Gen 7
+                'scarlet-violet',           // Gen 9
                 'legends-arceus',           // Legends
                 'brilliant-diamond-shining-pearl', // Gen 4 remakes
                 "let's-go-pikachu-eevee",   // Gen 1 remakes
                 'diamond-pearl',            // Gen 4
-                'emerald',                  // Gen 3
-                'bank'                      // Bank sprites (fallback)
+                'emerald'                   // Gen 3
             ];
             
             document.querySelectorAll('.pokemon-img img').forEach(img => {
