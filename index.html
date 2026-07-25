@@ -720,19 +720,28 @@
             'wooper': 194, 'mimikyu': 778, 'frigibax': 958, 'gothita': 633, 'greavard': 955,
             'joltik': 595, 'shroodle': 950, 'impadimp': 876, 'dedenne': 702, 'aurorus': 460,
             'vulpix': 37, 'growlithe': 58, 'dratini': 147, 'dragonair': 148, 'umbreon': 197,
-            'absol': 359, 'amaura': 698, 'chikorita': 152, 'clefairy': 35, 'oddish': 69,
+            'absol': 359, 'amaura': 698, 'chikorita': 152, 'clefairy': 35, 'oddish': 43,
             'zapdos': 145, 'shuckle': 213, 'pikachu': 25, 'ninetales': 38, 'ditto': 132,
             'sprigatito': 906, 'hoothoot': 163, 'trubbish': 568, 'garbodor': 569,
-            'mankey': 56, 'maril': 183, 'blitzle': 522, 'milotic': 350,
+            'mankey': 56, 'marill': 183, 'maril': 183, 'blitzle': 522, 'milotic': 350,
             'tynamo': 602, 'snivy': 495, 'snom': 873, 'glaceon': 471,
-            'vaporeon': 134, 'espeon': 196, 'miltank': 241, 'cubone': 104, 'tangela': 69,
-            'leafeon': 470, 'wailmer': 320, 'lampent': 561, 'litwick': 607, 'sylveon': 700,
+            'vaporeon': 134, 'espeon': 196, 'miltank': 241, 'cubone': 104, 'tangela': 114,
+            'leafeon': 470, 'wailmer': 320, 'lampent': 608, 'litwick': 607, 'sylveon': 700,
             'giratina': 487, 'charizard': 6, 'rayquaza': 384, 'ceruledge': 911, 'squirtle': 7,
             'wartortle': 8, 'blastoise': 9, 'mantine': 226, 'dewgong': 87, 'psyduck': 54,
-            'munchlax': 446, 'lapras': 131, 'mew': 151, 'riolu': 406, 'lucario': 445,
+            'munchlax': 446, 'lapras': 131, 'mew': 151, 'riolu': 447, 'lucario': 448,
             'lycanroc': 745, 'togepi': 175, 'igglybuff': 174, 'diancie': 719, 'reuniclus': 579,
-            'wigglytuff': 40, 'herdier': 507, 'lillipup': 506, 'toedscool': 285, 'sudowoodo': 185,
-            'pyukumuku': 771
+            'wigglytuff': 40, 'herdier': 507, 'lillipup': 506, 'toedscool': 950, 'sudowoodo': 185,
+            'pyukumuku': 771, 'raticate': 20, 'rattata': 19, 'clefairy': 35, 'clefable': 36,
+            'jigglypuff': 39, 'wigglytuff': 40, 'meowth': 52, 'persian': 53,
+            'growlithe': 58, 'arcanine': 59, 'poliwag': 60, 'abra': 63,
+            'machop': 66, 'geodude': 74, 'slowpoke': 79, 'magnemite': 81,
+            'gastly': 92, 'onix': 95, 'drowzee': 96, 'krabby': 98,
+            'exeggutor': 103, 'lickitung': 108, 'chansey': 113,
+            'kangaskhan': 115, 'horsea': 116, 'goldeen': 118, 'staryu': 120,
+            'scyther': 123, 'electabuzz': 125, 'magmar': 126, 'pinsir': 127,
+            'tauros': 128, 'gyarados': 130, 'aerodactyl': 142,
+            'snorlax': 143, 'articuno': 144, 'moltres': 146, 'dragonite': 149, 'mewtwo': 150
         };
 
         // Fetch using Google Visualization API
@@ -817,59 +826,28 @@
             return `https://img.pokemondb.net/sprites/sword-shield/normal/${pokemonName}.png`;
         }
 
-        // Image fallback handler with extended version support
+        // Image fallback - tries sword-shield first, then immediately PokeAPI
         function setupImageFallbacks() {
-            const versions = [
-                'home',                     // Home - widest coverage, try first!
-                'sword-shield',             // Gen 8
-                'ultra-sun-ultra-moon',     // Gen 7
-                'sun-moon',                 // Gen 7
-                'X-Y',                      // Gen 6
-                'omega-ruby-alpha-sapphire', // Gen 6 remakes
-                'black-2-white-2',          // Gen 5
-                'black-white',              // Gen 5 - has Blitzle
-                'diamond-pearl',            // Gen 4
-                'platinum',                 // Gen 4
-                'heartgold-soulsilver',     // Gen 4 remakes - has Mankey, Raticate
-                'emerald',                  // Gen 3
-                'ruby-sapphire',            // Gen 3
-                'firered-leafgreen',        // Gen 3 remakes - has Gen 1
-                'crystal',                  // Gen 2 - has Mankey, Raticate
-                'gold-silver',              // Gen 2
-                'yellow',                   // Gen 1 - has all Gen 1
-                'blue',                     // Gen 1 - has all Gen 1
-                'red',                      // Gen 1 - has all Gen 1
-                'scarlet-violet',           // Gen 9
-                'legends-arceus',           // Legends
-                'brilliant-diamond-shining-pearl' // Gen 4 remakes
-            ];
-            
             document.querySelectorAll('.pokemon-img img').forEach(img => {
-                let attemptCount = 0;
-                
+                let triedPokeAPI = false;
+
                 img.addEventListener('error', function() {
-                    const currentSrc = this.src;
-                    let pokemonName = currentSrc.split('/').pop().replace('.png', '');
-                    
-                    // Extract base pokemon name (remove -mega, -origin, etc)
-                    const baseName = pokemonName.split('-').slice(0, 1).join('-');
-                    
-                    // If it's a special form that failed, try normal version first
-                    if (pokemonName.includes('mega') || pokemonName.includes('origin') || pokemonName.includes('shiny')) {
-                        this.src = `https://img.pokemondb.net/sprites/sword-shield/normal/${baseName}.png`;
-                        attemptCount = 0;
+                    if (triedPokeAPI) {
+                        this.parentElement.style.display = 'none';
                         return;
                     }
-                    
-                    // Try next version in the list
-                    if (attemptCount < versions.length) {
-                        const nextVersion = versions[attemptCount];
-                        this.src = `https://img.pokemondb.net/sprites/${nextVersion}/normal/${baseName}.png`;
-                        attemptCount++;
-                    } else {
-                        // All versions failed, try PokeAPI
-                        const pokemonId = pokemonIds[baseName] || 25;
+
+                    // Get clean base name
+                    let pokemonName = this.src.split('/').pop().replace('.png', '').split('-')[0];
+
+                    // If pokemondb failed, go straight to PokeAPI
+                    const pokemonId = pokemonIds[pokemonName];
+                    if (pokemonId) {
+                        triedPokeAPI = true;
                         this.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+                    } else {
+                        // Name not in our ID map - hide it
+                        this.parentElement.style.display = 'none';
                     }
                 });
             });
