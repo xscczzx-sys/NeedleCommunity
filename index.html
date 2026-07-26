@@ -1096,6 +1096,22 @@
                 <button class="react-btn" id="react-wow-${slug}" onclick="toggleReact('${m.name}','wow')">
                     <span class="emoji">🤩</span><span class="count" id="count-wow-${slug}">0</span>
                 </button>
+                ${(() => {
+                    const bday = birthdays.find(b =>
+                        b.name.toLowerCase() === m.name.toLowerCase() ||
+                        m.name.toLowerCase().includes(b.name.toLowerCase()) ||
+                        b.name.toLowerCase().includes(m.name.toLowerCase())
+                    );
+                    if (!bday) return '';
+                    const now = new Date();
+                    const isToday = bday.month === now.getMonth()+1 && bday.day === now.getDate();
+                    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                    return `<span style="margin-left:auto;font-size:0.68rem;color:var(--text-muted);
+                        display:flex;align-items:center;gap:0.2rem;opacity:0.7;
+                        ${isToday ? 'color:#a855f7;font-weight:700;opacity:1;' : ''}">
+                        ${isToday ? '🎂' : '🎈'} ${monthNames[bday.month-1]} ${bday.day}
+                    </span>`;
+                })()}
             </div>
         </div>`;
     }
