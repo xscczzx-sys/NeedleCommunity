@@ -431,7 +431,9 @@
             document.getElementById(`view-${t}`).style.display = tab === t ? '' : 'none';
             document.getElementById(`tab-${t}`).classList.toggle('active', tab === t);
         });
-        if (tab === 'birthdays') renderBirthdayList();
+        if (tab === 'birthdays') {
+            fetchBirthdays().then(() => renderBirthdayList());
+        }
         if (tab === 'mods') renderMods();
     }
 
@@ -500,36 +502,44 @@
         loadUnknownPokemonImages();
     }
 
-    // ── BIRTHDAY DATA ─────────────────────────────────────────────────
-    const birthdays = [
-        {name:'Malakai',month:1,day:1},{name:'Davi',month:1,day:8},{name:'LouBear',month:1,day:10},
-        {name:'Moon',month:1,day:12},{name:'Tamsyn',month:1,day:13},{name:'Wizhorse',month:1,day:21},
-        {name:'Brock',month:1,day:29},{name:'Hayley',month:2,day:7},{name:'Heidi',month:2,day:13},
-        {name:'Catarina',month:2,day:16},{name:'Ombeod',month:3,day:1},{name:'Kristy',month:3,day:7},
-        {name:'Ren',month:3,day:9},{name:'Bella',month:3,day:12},{name:'Namelessss',month:3,day:12},
-        {name:'Minnie',month:3,day:16},{name:'Lexi',month:3,day:15},{name:'Chrissy',month:3,day:19},
-        {name:'Krystal',month:3,day:21},{name:'Kayla M',month:3,day:31},{name:'Rin',month:4,day:3},
-        {name:'Jess',month:4,day:4},{name:'Mario',month:4,day:5},{name:'Taylor',month:4,day:27},
-        {name:'Sarah',month:4,day:30},{name:'Juliet',month:5,day:3},{name:'Manda',month:5,day:22},
-        {name:'Rockii',month:6,day:9},{name:'Kayla',month:6,day:11},{name:'Boesman',month:6,day:14},
-        {name:'Adam',month:6,day:22},{name:'Noogz',month:6,day:24},{name:'Beaa',month:6,day:23},
-        {name:'Tyler B',month:6,day:28},{name:'Gummy',month:6,day:29},{name:'Miffy',month:6,day:29},
-        {name:'Elly',month:6,day:30},{name:'Mads',month:7,day:13},{name:'Victoria',month:7,day:17},
-        {name:'Rae',month:7,day:18},{name:'Rosie',month:7,day:19},{name:'OGAnt',month:7,day:27},
-        {name:'Pokeducks',month:7,day:28},{name:'Jobsss',month:7,day:29},{name:'Campie',month:7,day:29},
-        {name:'MK',month:7,day:30},{name:'Sand',month:7,day:31},{name:'Mini',month:8,day:6},
-        {name:'Alice',month:8,day:8},{name:'Skillar',month:8,day:18},{name:'Aoife Princess',month:8,day:23},
-        {name:'Monique',month:8,day:24},{name:'Kaitlyn',month:8,day:25},{name:'Flem',month:9,day:7},
-        {name:'Meganlilley',month:9,day:7},{name:'Hokey',month:9,day:23},{name:'Lillyara',month:9,day:24},
-        {name:'Soberman',month:9,day:28},{name:'J',month:10,day:1},{name:'Kees',month:10,day:8},
-        {name:'Slime',month:10,day:14},{name:'Cadbrielle',month:10,day:23},{name:'AG',month:10,day:24},
-        {name:'Kspin',month:10,day:26},{name:'Mushroombat',month:10,day:31},{name:'Braeden',month:11,day:2},
-        {name:'Aaron',month:11,day:4},{name:'Jayda',month:11,day:7},{name:'Ro',month:11,day:10},
-        {name:'Skullqueen',month:11,day:11},{name:'Mouse',month:11,day:13},{name:'Formula',month:11,day:17},
-        {name:'M61',month:11,day:24},{name:'Nic',month:11,day:25},{name:'Emma',month:12,day:8},
-        {name:'German',month:12,day:12},{name:'Bethechange',month:12,day:18},{name:'Audette',month:12,day:18},
-        {name:'Chrisrutter5',month:12,day:21},{name:'Rachel',month:12,day:23},{name:'Clare',month:12,day:28}
-    ];
+    // ── BIRTHDAY DATA - fetched from Google Sheet ─────────────────────
+    let birthdays = [];
+
+    async function fetchBirthdays() {
+        try {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Birthdays`;
+            const res = await fetch(url);
+            const text = await res.text();
+            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+
+            if (!json.table?.rows) return;
+
+            const months = {
+                'january':1,'february':2,'march':3,'april':4,'may':5,'june':6,
+                'july':7,'august':8,'september':9,'october':10,'november':11,'december':12
+            };
+
+            birthdays = [];
+            json.table.rows.forEach((row, i) => {
+                if (i === 0) return; // skip header
+                const name   = row.c[0]?.v || '';
+                const month  = row.c[1]?.v || '';
+                const day    = row.c[2]?.v || row.c[2]?.f || '';
+
+                if (name && month && day) {
+                    const monthNum = months[month.toLowerCase().trim()];
+                    const dayNum = parseInt(day);
+                    if (monthNum && dayNum) {
+                        birthdays.push({ name: name.trim(), month: monthNum, day: dayNum });
+                    }
+                }
+            });
+
+            console.log(`Loaded ${birthdays.length} birthdays from sheet`);
+        } catch(e) {
+            console.log('Could not load birthdays from sheet:', e);
+        }
+    }
 
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -1024,7 +1034,9 @@
     // ── INIT ──────────────────────────────────────────────────────────
     loadPokemonIds().then(() => {
         fetchSheetData();
+        fetchBirthdays();
         setInterval(fetchSheetData, 30000);
+        setInterval(fetchBirthdays, 30000);
     });
 
     // ── SCROLL TO TOP ─────────────────────────────────────────────────
