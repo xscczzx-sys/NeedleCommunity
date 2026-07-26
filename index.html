@@ -403,6 +403,7 @@
     // ── MODS DATA ─────────────────────────────────────────────────────
     const TIKTOK_MODS = ['Ducks','Wiz','German','Formula','Kaitlyn','Kees','Chrissy','Moon'];
     const TWITCH_MODS = ['Kees','Clare'];
+    const DISCORD_MODS = ['Ducks','Wiz','German','Formula','Kaitlyn','Kees','Chrissy','Moon'];
 
     function renderMods() {
         const container = document.getElementById('mods-list');
@@ -412,9 +413,10 @@
         const allMods = {};
         TIKTOK_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('TikTok'); });
         TWITCH_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('Twitch'); });
+        DISCORD_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('Discord'); });
 
-        const platformColors = { TikTok: '#69C9D0', Twitch: '#9147ff' };
-        const platformEmojis = { TikTok: '', Twitch: '' };
+        const platformColors = { TikTok: '#010101', Twitch: '#9147ff', Discord: '#5865F2' };
+        const platformEmojis = { TikTok: '', Twitch: '', Discord: '' };
 
         const modEntries = Object.entries(allMods).map(([name, platforms]) => {
             const member = data.find(d =>
