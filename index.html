@@ -10,92 +10,39 @@
 
         /* ── THEMES ── */
         body.theme-light {
-            --bg: #faf5ff;
-            --bg2: rgba(220,180,255,0.3);
-            --card-bg: rgba(240,220,255,0.8);
-            --card-hover: rgba(220,180,255,0.9);
-            --text: #3d2363;
-            --text-muted: #7c5aa0;
-            --border: rgba(124,58,237,0.2);
-            --search-bg: rgba(220,180,255,0.5);
-            --badge-bg: rgba(255,255,255,0.7);
-            --react-bg: rgba(255,255,255,0.6);
-            --section-title: #9333ea;
-            --divider: rgba(124,58,237,0.15);
+            --bg: #faf5ff; --bg2: rgba(220,180,255,0.3); --card-bg: rgba(240,220,255,0.8);
+            --card-hover: rgba(220,180,255,0.9); --text: #3d2363; --text-muted: #7c5aa0;
+            --border: rgba(124,58,237,0.2); --search-bg: rgba(220,180,255,0.5);
+            --badge-bg: rgba(255,255,255,0.7); --react-bg: rgba(255,255,255,0.6);
+            --section-title: #9333ea; --divider: rgba(124,58,237,0.15);
         }
         body.theme-medium {
-            --bg: #e9d8fd;
-            --bg2: rgba(180,130,255,0.25);
-            --card-bg: rgba(210,170,255,0.7);
-            --card-hover: rgba(190,140,255,0.85);
-            --text: #2d1b4e;
-            --text-muted: #6b3fa0;
-            --border: rgba(124,58,237,0.3);
-            --search-bg: rgba(190,140,255,0.4);
-            --badge-bg: rgba(255,255,255,0.6);
-            --react-bg: rgba(255,255,255,0.5);
-            --section-title: #7c3aed;
-            --divider: rgba(124,58,237,0.2);
+            --bg: #e9d8fd; --bg2: rgba(180,130,255,0.25); --card-bg: rgba(210,170,255,0.7);
+            --card-hover: rgba(190,140,255,0.85); --text: #2d1b4e; --text-muted: #6b3fa0;
+            --border: rgba(124,58,237,0.3); --search-bg: rgba(190,140,255,0.4);
+            --badge-bg: rgba(255,255,255,0.6); --react-bg: rgba(255,255,255,0.5);
+            --section-title: #7c3aed; --divider: rgba(124,58,237,0.2);
         }
         body.theme-dark {
-            --bg: #2a1f40;
-            --bg2: rgba(60,30,100,0.4);
-            --card-bg: rgba(50,30,80,0.8);
-            --card-hover: rgba(70,40,110,0.9);
-            --text: #e9d5ff;
-            --text-muted: #c4b5fd;
-            --border: rgba(168,85,247,0.3);
-            --search-bg: rgba(60,30,100,0.6);
-            --badge-bg: rgba(80,40,120,0.6);
-            --react-bg: rgba(80,40,120,0.5);
-            --section-title: #c084fc;
-            --divider: rgba(168,85,247,0.2);
+            --bg: #2a1f40; --bg2: rgba(60,30,100,0.4); --card-bg: rgba(50,30,80,0.8);
+            --card-hover: rgba(70,40,110,0.9); --text: #e9d5ff; --text-muted: #c4b5fd;
+            --border: rgba(168,85,247,0.3); --search-bg: rgba(60,30,100,0.6);
+            --badge-bg: rgba(80,40,120,0.6); --react-bg: rgba(80,40,120,0.5);
+            --section-title: #c084fc; --divider: rgba(168,85,247,0.2);
         }
         body.theme-darker {
-            --bg: #0f0a1a;
-            --bg2: rgba(30,10,60,0.5);
-            --card-bg: rgba(25,10,50,0.9);
-            --card-hover: rgba(40,15,80,0.95);
-            --text: #f3e8ff;
-            --text-muted: #d8b4fe;
-            --border: rgba(168,85,247,0.25);
-            --search-bg: rgba(30,10,60,0.7);
-            --badge-bg: rgba(50,20,90,0.7);
-            --react-bg: rgba(50,20,90,0.6);
-            --section-title: #e879f9;
-            --divider: rgba(168,85,247,0.15);
+            --bg: #0f0a1a; --bg2: rgba(30,10,60,0.5); --card-bg: rgba(25,10,50,0.9);
+            --card-hover: rgba(40,15,80,0.95); --text: #f3e8ff; --text-muted: #d8b4fe;
+            --border: rgba(168,85,247,0.25); --search-bg: rgba(30,10,60,0.7);
+            --badge-bg: rgba(50,20,90,0.7); --react-bg: rgba(50,20,90,0.6);
+            --section-title: #e879f9; --divider: rgba(168,85,247,0.15);
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            transition: background 0.4s, color 0.4s;
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.4s, color 0.4s; }
 
         /* ── THEME SWITCHER ── */
-        .theme-switcher {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: 0.4rem;
-            z-index: 999;
-            background: var(--card-bg);
-            padding: 0.4rem;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-        .theme-btn {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .theme-switcher { position: fixed; top: 1rem; right: 1rem; display: flex; gap: 0.4rem; z-index: 999; background: var(--card-bg); padding: 0.4rem; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
+        .theme-btn { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
         .theme-btn:hover, .theme-btn.active { border-color: #7c3aed; transform: scale(1.2); }
         .theme-btn.t-light  { background: #faf5ff; box-shadow: 0 0 0 1px #ccc; }
         .theme-btn.t-medium { background: #e9d8fd; box-shadow: 0 0 0 1px #b48fe8; }
@@ -105,11 +52,7 @@
         /* ── HEADER ── */
         .header { text-align: center; padding: 3rem 1rem 1.5rem; }
         .header h1 { font-size: 3rem; font-weight: 800; letter-spacing: -1px; }
-        .header h1 .poke { 
-            background: linear-gradient(90deg, #7c3aed, #a855f7, #7c3aed);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 200% auto; animation: gradientFlow 3s linear infinite;
-        }
+        .header h1 .poke { background: linear-gradient(90deg,#7c3aed,#a855f7,#7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: gradientFlow 3s linear infinite; }
         .header h1 .needle { color: var(--text); font-weight: 300; }
         @keyframes gradientFlow { to { background-position: 200% center; } }
         .header-line { width: 60px; height: 2px; background: linear-gradient(90deg,#7c3aed,#a855f7); margin: 1rem auto; border-radius: 2px; }
@@ -119,13 +62,7 @@
         .search-wrap { max-width: 500px; margin: 1.5rem auto 2rem; padding: 0 1rem; }
         .search-box { position: relative; }
         .search-box svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        .search-box input {
-            width: 100%; padding: 0.9rem 1rem 0.9rem 3rem;
-            font-size: 0.95rem; font-family: 'Inter', sans-serif;
-            background: var(--search-bg); color: var(--text);
-            border: 1.5px solid var(--border); border-radius: 50px;
-            outline: none; transition: all 0.3s;
-        }
+        .search-box input { width: 100%; padding: 0.9rem 1rem 0.9rem 3rem; font-size: 0.95rem; font-family: 'Inter', sans-serif; background: var(--search-bg); color: var(--text); border: 1.5px solid var(--border); border-radius: 50px; outline: none; transition: all 0.3s; }
         .search-box input::placeholder { color: var(--text-muted); }
         .search-box input:focus { border-color: #7c3aed; }
 
@@ -133,249 +70,53 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 1.2rem; padding: 0 1.5rem 4rem; max-width: 1400px; margin: 0 auto; }
 
         /* ── CARD ── */
-        .card {
-            background: var(--card-bg);
-            border: 1.5px solid var(--border);
-            border-radius: 16px;
-            padding: 1.2rem;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-        }
+        .card { cursor: pointer; position: relative; overflow: hidden; background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem; transition: all 0.3s; backdrop-filter: blur(10px); display: flex; flex-direction: column; }
         .card:hover { background: var(--card-hover); border-color: #7c3aed; transform: translateY(-4px); box-shadow: 0 10px 30px rgba(124,58,237,0.15); }
-        .card-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        .card.active { border-color: #7c3aed !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important; }
 
-        /* Creator card */
-        .creator-card {
-            border-color: #0ea5e9 !important;
-            box-shadow: 0 0 12px rgba(14,165,233,0.4), 0 0 24px rgba(14,165,233,0.2);
-            animation: creatorGlow 3s ease-in-out infinite;
-        }
-        @keyframes creatorGlow {
-            0%,100% { box-shadow: 0 0 12px rgba(14,165,233,0.4), 0 0 24px rgba(14,165,233,0.2); }
-            50%      { box-shadow: 0 0 18px rgba(14,165,233,0.7), 0 0 36px rgba(14,165,233,0.35); }
-        }
+        /* ── SILHOUETTE ── */
+        .card-silhouette { position: absolute; bottom: -10px; right: -10px; width: 160px; height: 160px; opacity: 0.06; filter: grayscale(100%) brightness(0); pointer-events: none; z-index: 0; transition: opacity 0.3s; }
+        body.theme-dark .card-silhouette, body.theme-darker .card-silhouette { filter: grayscale(100%) brightness(10); opacity: 0.05; }
+        .card:hover .card-silhouette { opacity: 0.1; }
+        .card-body { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+        .reaction-bar { position: relative; z-index: 1; }
 
-        /* Light/medium themes — darker creator card & name */
-        body.theme-light .creator-card,
-        body.theme-medium .creator-card {
-            border-color: #1e3a5f !important;
-            box-shadow: 0 0 12px rgba(30,58,95,0.5), 0 0 24px rgba(30,58,95,0.3);
-            animation: creatorGlowLight 3s ease-in-out infinite;
-        }
-        @keyframes creatorGlowLight {
-            0%,100% { box-shadow: 0 0 12px rgba(30,58,95,0.5), 0 0 24px rgba(30,58,95,0.3); }
-            50%      { box-shadow: 0 0 20px rgba(30,58,95,0.8), 0 0 36px rgba(30,58,95,0.5); }
-        }
-        body.theme-light .creator-name,
-        body.theme-medium .creator-name {
-            color: #1e3a5f !important;
-            text-shadow: 0 0 8px rgba(30,58,95,0.4);
-            animation: creatorNameGlowLight 2s ease-in-out infinite;
-        }
-        @keyframes creatorNameGlowLight {
-            0%,100% { text-shadow: 0 0 8px rgba(30,58,95,0.4); color: #1e3a5f; }
-            50%      { text-shadow: 0 0 14px rgba(30,58,95,0.7); color: #2a4a7f; }
-        }
-        body.theme-light .footer span,
-        body.theme-medium .footer span {
-            color: #1e3a5f !important;
-            text-shadow: 0 0 8px rgba(30,58,95,0.4);
-            animation: creatorNameGlowLight 2s ease-in-out infinite;
-        }
+        /* ── CREATOR CARD ── */
+        .creator-card { border-color: #0ea5e9 !important; box-shadow: 0 0 12px rgba(14,165,233,0.4), 0 0 24px rgba(14,165,233,0.2); animation: creatorGlow 3s ease-in-out infinite; }
+        @keyframes creatorGlow { 0%,100% { box-shadow: 0 0 12px rgba(14,165,233,0.4), 0 0 24px rgba(14,165,233,0.2); } 50% { box-shadow: 0 0 18px rgba(14,165,233,0.7), 0 0 36px rgba(14,165,233,0.35); } }
+        body.theme-light .creator-card, body.theme-medium .creator-card { border-color: #1e3a5f !important; animation: creatorGlowLight 3s ease-in-out infinite; }
+        @keyframes creatorGlowLight { 0%,100% { box-shadow: 0 0 12px rgba(30,58,95,0.5), 0 0 24px rgba(30,58,95,0.3); } 50% { box-shadow: 0 0 20px rgba(30,58,95,0.8), 0 0 36px rgba(30,58,95,0.5); } }
 
         /* ── POKEMON IMAGES ── */
-        .pokemon-images {
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 1rem;
-            background: var(--bg2);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            height: 100px;
-        }
-        /* Single pokemon - big centered */
-        .pokemon-images.single {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            height: 160px;
-        }
-        .pokemon-images.single .pokemon-img {
-            width: 140px;
-            height: 140px;
-            background: transparent;
-            border: none;
-        }
-        .pokemon-images.single .pokemon-img img {
-            width: 100%;
-            height: 100%;
-        }
-        /* When only one visible image remains after failed loads */
-        .pokemon-images.auto-single {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            height: 160px;
-        }
-        .pokemon-images.auto-single .pokemon-img {
-            width: 140px;
-            height: 140px;
-            background: transparent;
-            border: none;
-        }
-        .pokemon-images.auto-single .pokemon-img img {
-            width: 100%;
-            height: 100%;
-        }
-        /* Carousel track - static by default */
-        .pokemon-track {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.7rem;
-            will-change: transform;
-        }
-        /* Infinite scroll - only when card is active */
-        .pokemon-track.scrolling {
-            animation: infiniteScroll var(--scroll-duration, 6s) linear infinite;
-        }
-        @keyframes infiniteScroll {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(var(--scroll-dist, -300px)); }
-        }
-        .pokemon-img {
-            min-width: 85px; width: 85px; height: 85px; flex-shrink: 0;
-            background: var(--badge-bg); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border); overflow: hidden; transition: border-color 0.3s;
-        }
+        .pokemon-images { position: relative; overflow: hidden; margin-bottom: 1rem; background: var(--bg2); border-radius: 12px; border: 1px solid var(--border); height: 100px; }
+        .pokemon-images.single { display: flex; align-items: center; justify-content: center; padding: 0.5rem; height: 160px; }
+        .pokemon-images.single .pokemon-img { width: 140px; height: 140px; background: transparent; border: none; }
+        .pokemon-images.single .pokemon-img img { width: 100%; height: 100%; }
+        .pokemon-images.auto-single { display: flex; align-items: center; justify-content: center; padding: 0.5rem; height: 160px; }
+        .pokemon-images.auto-single .pokemon-img { width: 140px; height: 140px; background: transparent; border: none; }
+        .pokemon-images.auto-single .pokemon-img img { width: 100%; height: 100%; }
+        .pokemon-track { display: flex; gap: 0.5rem; padding: 0.7rem; will-change: transform; }
+        .pokemon-img { min-width: 85px; width: 85px; height: 85px; flex-shrink: 0; background: var(--badge-bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); overflow: hidden; transition: border-color 0.3s; }
         .pokemon-img:hover { border-color: #7c3aed; }
         .pokemon-img img { width: 85%; height: 85%; object-fit: contain; }
-        /* ── CARD SILHOUETTE BACKGROUND ── */
-        .card {
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .card-silhouette {
-            position: absolute;
-            bottom: -10px;
-            right: -10px;
-            width: 160px;
-            height: 160px;
-            opacity: 0.06;
-            filter: grayscale(100%) brightness(0);
-            pointer-events: none;
-            z-index: 0;
-            transition: opacity 0.3s;
-        }
-        body.theme-dark .card-silhouette,
-        body.theme-darker .card-silhouette {
-            filter: grayscale(100%) brightness(10);
-            opacity: 0.05;
-        }
-        .card:hover .card-silhouette {
-            opacity: 0.1;
-        }
-        .card-body { position: relative; z-index: 1; }
-        .reaction-bar { position: relative; z-index: 1; }
-        /* Card active/selected state */
-        .card.active {
-            border-color: #7c3aed !important;
-            box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
-        }
-            border-color: #7c3aed !important;
-            box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 12px 32px rgba(124,58,237,0.2) !important;
-        }
-
-        /* ── SKELETON LOADING ── */
-        .skeleton {
-            background: var(--card-bg);
-            border: 1.5px solid var(--border);
-            border-radius: 16px;
-            padding: 1.2rem;
-            display: flex;
-            flex-direction: column;
-            min-height: 280px;
-        }
-        .skeleton-img {
-            width: 100%; height: 100px;
-            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-        }
-        .skeleton-name {
-            width: 55%; height: 16px;
-            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
-        }
-        .skeleton-line {
-            width: 80%; height: 11px;
-            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-        }
-        .skeleton-line.short { width: 55%; }
-        .skeleton-react {
-            width: 45%; height: 30px;
-            background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
-            border-radius: 20px;
-            margin-top: auto;
-            padding-top: 0.8rem;
-        }
-        @keyframes shimmer {
-            0%   { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
 
         /* ── MEMBER NAME ── */
         .member-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; color: #c2185b; }
-        .creator-name {
-            color: #0ea5e9 !important;
-            text-shadow: 0 0 8px rgba(14,165,233,0.6);
-            animation: creatorNameGlow 2s ease-in-out infinite;
-        }
-        @keyframes creatorNameGlow {
-            0%,100% { text-shadow: 0 0 8px rgba(14,165,233,0.6); }
-            50%      { text-shadow: 0 0 14px rgba(14,165,233,0.9), 0 0 24px rgba(14,165,233,0.4); }
-        }
+        .creator-name { color: #0ea5e9 !important; text-shadow: 0 0 8px rgba(14,165,233,0.6); animation: creatorNameGlow 2s ease-in-out infinite; }
+        @keyframes creatorNameGlow { 0%,100% { text-shadow: 0 0 8px rgba(14,165,233,0.6); } 50% { text-shadow: 0 0 14px rgba(14,165,233,0.9), 0 0 24px rgba(14,165,233,0.4); } }
+        body.theme-light .creator-name, body.theme-medium .creator-name { color: #1e3a5f !important; text-shadow: 0 0 8px rgba(30,58,95,0.4); animation: creatorNameGlowLight 2s ease-in-out infinite; }
+        @keyframes creatorNameGlowLight { 0%,100% { text-shadow: 0 0 8px rgba(30,58,95,0.4); color: #1e3a5f; } 50% { text-shadow: 0 0 14px rgba(30,58,95,0.7); color: #2a4a7f; } }
 
         /* ── SECTIONS ── */
         .section { margin-bottom: 0.8rem; }
         .section-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; color: var(--section-title); margin-bottom: 0.5rem; text-transform: uppercase; }
         .badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-        .badge {
-            padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.78rem;
-            background: var(--badge-bg); border: 1px solid var(--border); color: var(--text);
-        }
+        .badge { padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.78rem; background: var(--badge-bg); border: 1px solid var(--border); color: var(--text); }
         .badge.artist { color: var(--text-muted); }
 
         /* ── REACTIONS ── */
         .reaction-bar { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--divider); }
-        .react-btn {
-            display: flex; align-items: center; gap: 0.3rem;
-            padding: 0.28rem 0.65rem; border-radius: 20px;
-            border: 1.5px solid var(--border);
-            background: var(--react-bg); cursor: pointer;
-            font-size: 0.82rem; font-weight: 600; color: var(--text);
-            transition: all 0.2s; user-select: none; font-family: 'Inter', sans-serif;
-        }
+        .react-btn { display: flex; align-items: center; gap: 0.3rem; padding: 0.28rem 0.65rem; border-radius: 20px; border: 1.5px solid var(--border); background: var(--react-bg); cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--text); transition: all 0.2s; user-select: none; font-family: 'Inter', sans-serif; }
         .react-btn:hover { border-color: #7c3aed; transform: scale(1.08); }
         .react-btn.reacted { background: rgba(124,58,237,0.2); border-color: #7c3aed; }
         .react-btn .emoji { font-size: 0.95rem; }
@@ -384,6 +125,7 @@
         /* ── FOOTER ── */
         .footer { text-align: center; padding: 2rem 1rem; margin-top: 2rem; font-size: 0.8rem; color: rgba(125,107,176,0.3); letter-spacing: 1px; border-top: 1px solid transparent; }
         .footer span { color: #0ea5e9; font-weight: 600; text-shadow: 0 0 8px rgba(14,165,233,0.5); animation: creatorNameGlow 2s ease-in-out infinite; }
+        body.theme-light .footer span, body.theme-medium .footer span { color: #1e3a5f !important; text-shadow: 0 0 8px rgba(30,58,95,0.4); animation: creatorNameGlowLight 2s ease-in-out infinite; }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
@@ -395,12 +137,11 @@
 </head>
 <body class="theme-light">
 
-<!-- Theme switcher -->
 <div class="theme-switcher">
-    <div class="theme-btn t-light  active" title="Light"  onclick="setTheme('light')"></div>
-    <div class="theme-btn t-medium"        title="Medium" onclick="setTheme('medium')"></div>
-    <div class="theme-btn t-dark"          title="Dark"   onclick="setTheme('dark')"></div>
-    <div class="theme-btn t-darker"        title="Darker" onclick="setTheme('darker')"></div>
+    <div class="theme-btn t-light active" title="Light" onclick="setTheme('light')"></div>
+    <div class="theme-btn t-medium" title="Medium" onclick="setTheme('medium')"></div>
+    <div class="theme-btn t-dark" title="Dark" onclick="setTheme('dark')"></div>
+    <div class="theme-btn t-darker" title="Darker" onclick="setTheme('darker')"></div>
 </div>
 
 <div class="header">
@@ -423,17 +164,10 @@
 <div class="footer">Created by <span>German</span></div>
 
 <script>
-    // ── CONFIG ──────────────────────────────────────────────────────
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
     const GID = '0';
-    // JSONBin for synced reactions (free, no auth needed for public bins)
-    // We'll create the bin on first load
-    const JSONBIN_API = 'https://api.jsonbin.io/v3/b';
-    const JSONBIN_KEY = '$2a$10$placeholder'; // will be replaced after first save
-
     let data = [];
-    let reactions = {}; // { memberName: { heart: 0, wow: 0 } }
-    let binId = localStorage.getItem('pokeneedle_bin_id') || null;
+    let reactions = {};
 
     // ── THEME ────────────────────────────────────────────────────────
     function setTheme(t) {
@@ -442,228 +176,157 @@
         document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.t-' + t).classList.add('active');
     }
-    const savedTheme = localStorage.getItem('pokeneedle_theme') || 'light';
-    setTheme(savedTheme);
+    setTheme(localStorage.getItem('pokeneedle_theme') || 'light');
 
-    // ── POKEMON DATA ─────────────────────────────────────────────────
-    const pokemonIds = {
-        'wooper':194,'mimikyu':778,'frigibax':958,'gothita':574,'greavard':955,
-        'joltik':595,'shroodle':950,'impadimp':876,'dedenne':702,'aurorus':699,
-        'vulpix':37,'growlithe':58,'dratini':147,'dragonair':148,'umbreon':197,
-        'absol':359,'amaura':698,'chikorita':152,'clefairy':35,'oddish':43,
-        'zapdos':145,'shuckle':213,'pikachu':25,'ninetales':38,'ditto':132,
-        'sprigatito':906,'hoothoot':163,'trubbish':568,'garbodor':569,
-        'mankey':56,'marill':183,'maril':183,'blitzle':522,'milotic':350,
-        'tynamo':602,'snivy':495,'snom':872,'glaceon':471,
-        'vaporeon':134,'espeon':196,'miltank':241,'cubone':104,'tangela':114,
-        'leafeon':470,'wailmer':320,'lampent':608,'litwick':607,'sylveon':700,
-        'giratina':487,'charizard':6,'rayquaza':384,'squirtle':7,
-        'wartortle':8,'blastoise':9,'mantine':226,'dewgong':87,'psyduck':54,
-        'munchlax':446,'lapras':131,'mew':151,'riolu':447,'lucario':448,
-        'lycanroc':745,'togepi':175,'igglybuff':174,'diancie':719,'reuniclus':579,
-        'wigglytuff':40,'herdier':507,'lillipup':506,'toedscool':950,'sudowoodo':185,
-        'pyukumuku':771,'raticate':20,'rattata':19,'clefable':36,
-        'jigglypuff':39,'meowth':52,'persian':53,'arcanine':59,'poliwag':60,
-        'abra':63,'machop':66,'geodude':74,'slowpoke':79,'magnemite':81,
-        'gastly':92,'onix':95,'drowzee':96,'krabby':98,'exeggutor':103,
-        'lickitung':108,'chansey':113,'kangaskhan':115,'horsea':116,
-        'goldeen':118,'staryu':120,'scyther':123,'electabuzz':125,'magmar':126,
-        'pinsir':127,'tauros':128,'gyarados':130,'aerodactyl':142,
-        'snorlax':143,'articuno':144,'moltres':146,'dragonite':149,'mewtwo':150,
-        'pidgey':16,'pidgeotto':17,'pidgeot':18,'lopunny':428,'buneary':427,
-        'exeggutor':103,'exeggcute':102,'deino':633,
-        'eevee':133,'flareon':136,'jolteon':135,'vaporeon':134,'espeon':196,
-        'umbreon':197,'leafeon':470,'glaceon':471,'sylveon':700,
-        'maushold':925,'tandemaus':924,'tande':924,'tauros':128,'miltank':241
-    };
+    // ── POKEMON IDs - loaded from Firebase ───────────────────────────
+    let pokemonIds = {};
 
-    // ── POKEMON TYPE COLORS ──────────────────────────────────────────
+    async function loadPokemonIds() {
+        // Fallback minimal map in case Firebase is slow
+        pokemonIds = {
+            'wooper':194,'mimikyu':778,'frigibax':996,'gothita':574,'greavard':971,
+            'joltik':595,'shroodle':944,'dedenne':702,'aurorus':699,'vulpix':37,
+            'growlithe':58,'dratini':147,'dragonair':148,'umbreon':197,'absol':359,
+            'amaura':698,'chikorita':152,'clefairy':35,'oddish':43,'zapdos':145,
+            'shuckle':213,'pikachu':25,'ninetales':38,'ditto':132,'sprigatito':906,
+            'hoothoot':163,'trubbish':568,'garbodor':569,'mankey':56,'marill':183,
+            'maril':183,'blitzle':522,'milotic':350,'tynamo':602,'snivy':495,
+            'snom':872,'glaceon':471,'vaporeon':134,'espeon':196,'miltank':241,
+            'cubone':104,'tangela':114,'leafeon':470,'wailmer':320,'lampent':608,
+            'litwick':607,'sylveon':700,'giratina':487,'charizard':6,'rayquaza':384,
+            'squirtle':7,'wartortle':8,'blastoise':9,'mantine':226,'dewgong':87,
+            'psyduck':54,'munchlax':446,'lapras':131,'mew':151,'riolu':447,
+            'lucario':448,'lycanroc':745,'togepi':175,'igglybuff':174,'diancie':719,
+            'reuniclus':579,'wigglytuff':40,'herdier':507,'lillipup':506,'sudowoodo':185,
+            'pyukumuku':771,'raticate':20,'rattata':19,'eevee':133,'flareon':136,
+            'jolteon':135,'maushold':925,'tandemaus':924,'tande':924,'pidgey':16,
+            'lopunny':428,'buneary':427,'exeggutor':103,'deino':633,'impadimp':859,
+            'ceruledge':937,'zekrom':644,'reshiram':643,'suicune':245,'chandelure':609
+        };
+        try {
+            const res = await fetch('https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app/pokemon_ids.json');
+            const d = await res.json();
+            if (d && typeof d === 'object') {
+                pokemonIds = { ...pokemonIds, ...d }; // merge with fallback
+                console.log(`Loaded ${Object.keys(d).length} Pokémon IDs from Firebase`);
+            }
+        } catch(e) {
+            console.log('Using fallback Pokemon IDs');
+        }
+    }
+
+    // ── POKEMON TYPE COLORS ───────────────────────────────────────────
     const typeColors = {
-        normal: '#A8A878', fire: '#F08030', water: '#6890F0', electric: '#F8D030',
-        grass: '#78C850', ice: '#98D8D8', fighting: '#C03028', poison: '#A040A0',
-        ground: '#E0C068', flying: '#A890F0', psychic: '#F85888', bug: '#A8B820',
-        rock: '#B8A038', ghost: '#705898', dragon: '#7038F8', dark: '#705848',
-        steel: '#B8B8D0', fairy: '#EE99AC'
+        normal:'#A8A878',fire:'#F08030',water:'#6890F0',electric:'#F8D030',
+        grass:'#78C850',ice:'#98D8D8',fighting:'#C03028',poison:'#A040A0',
+        ground:'#E0C068',flying:'#A890F0',psychic:'#F85888',bug:'#A8B820',
+        rock:'#B8A038',ghost:'#705898',dragon:'#7038F8',dark:'#705848',
+        steel:'#B8B8D0',fairy:'#EE99AC'
     };
-
-    const pokemonTypeCache = {}; // name -> color
+    const pokemonTypeCache = {};
+    const imageCache = {};
 
     async function fetchPokemonTypeColor(name) {
         if (pokemonTypeCache[name]) return pokemonTypeCache[name];
         try {
             const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
             const d = await res.json();
-            const primaryType = d.types[0]?.type?.name;
-            const color = typeColors[primaryType] || '#9933cc';
+            const color = typeColors[d.types[0]?.type?.name] || '#9933cc';
             pokemonTypeCache[name] = color;
             return color;
-        } catch(e) {
-            pokemonTypeCache[name] = '#9933cc';
-            return '#9933cc';
-        }
+        } catch(e) { pokemonTypeCache[name] = '#9933cc'; return '#9933cc'; }
     }
 
     function getPokemonBadgeColor(name) {
         const { base } = cleanPokemonName(name);
         if (pokemonTypeCache[base]) return pokemonTypeCache[base];
         const fallback = {
-            'wooper':'#6890F0','mimikyu':'#705898','frigibax':'#6890F0',
-            'gothita':'#705898','greavard':'#705848','joltik':'#F8D030',
-            'shroodle':'#A040A0','impadimp':'#A040A0','dedenne':'#F8D030',
-            'aurorus':'#98D8D8','vulpix':'#F08030','growlithe':'#F08030',
-            'dratini':'#7038F8','dragonair':'#7038F8','umbreon':'#705848',
-            'absol':'#705848','amaura':'#98D8D8','chikorita':'#78C850',
-            'clefairy':'#EE99AC','oddish':'#78C850','zapdos':'#F8D030',
-            'shuckle':'#C03028','pikachu':'#F8D030','ninetales':'#F08030',
-            'ditto':'#A890F0','sprigatito':'#78C850','hoothoot':'#A8A878',
-            'trubbish':'#A040A0','garbodor':'#A040A0','mankey':'#C03028',
-            'marill':'#6890F0','blitzle':'#F8D030','milotic':'#6890F0',
-            'sylveon':'#EE99AC','giratina':'#705898','charizard':'#F08030',
-            'rayquaza':'#7038F8','squirtle':'#6890F0','lapras':'#6890F0',
-            'eevee':'#A8A878','leafeon':'#78C850','glaceon':'#98D8D8',
-            'espeon':'#F85888','vaporeon':'#6890F0','togepi':'#EE99AC',
-            'lycanroc':'#B8A038','miltank':'#A8A878','cubone':'#E0C068',
+            'wooper':'#6890F0','mimikyu':'#705898','frigibax':'#6890F0','gothita':'#705898',
+            'greavard':'#705848','joltik':'#F8D030','shroodle':'#A040A0','impadimp':'#A040A0',
+            'dedenne':'#F8D030','aurorus':'#98D8D8','vulpix':'#F08030','growlithe':'#F08030',
+            'dratini':'#7038F8','dragonair':'#7038F8','umbreon':'#705848','absol':'#705848',
+            'amaura':'#98D8D8','chikorita':'#78C850','clefairy':'#EE99AC','oddish':'#78C850',
+            'zapdos':'#F8D030','shuckle':'#C03028','pikachu':'#F8D030','ninetales':'#F08030',
+            'ditto':'#A890F0','sprigatito':'#78C850','hoothoot':'#A8A878','trubbish':'#A040A0',
+            'garbodor':'#A040A0','mankey':'#C03028','marill':'#6890F0','blitzle':'#F8D030',
+            'milotic':'#6890F0','sylveon':'#EE99AC','giratina':'#705898','charizard':'#F08030',
+            'rayquaza':'#7038F8','squirtle':'#6890F0','lapras':'#6890F0','eevee':'#A8A878',
+            'leafeon':'#78C850','glaceon':'#98D8D8','espeon':'#F85888','vaporeon':'#6890F0',
+            'togepi':'#EE99AC','lycanroc':'#B8A038','miltank':'#A8A878','cubone':'#E0C068',
             'tangela':'#78C850','mew':'#F85888',
         };
         return fallback[base] || '#9933cc';
     }
 
-    // ── POKEMON IMAGE - Dynamic lookup, handles shiny automatically ──
-    const imageCache = {};
-
-
     function cleanPokemonName(raw) {
         const lower = raw.toLowerCase().trim();
         const isShiny = /shiny/i.test(lower);
-
-        // Detect mega forms
         const isMegaX = /mega.*\bx\b/.test(lower);
         const isMegaY = /mega.*\by\b/.test(lower);
         const isMega  = /mega/.test(lower);
-
-        // Extract base name — remove keywords
         const base = lower
-            .replace(/shiny/gi, '')
-            .replace(/mega/gi, '')
-            .replace(/\bx\b/gi, '')
-            .replace(/\by\b/gi, '')
-            .replace(/altered/gi, '')
-            .replace(/origin/gi, '')
-            .replace(/\s+/g, '-')
-            .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
-            .replace(/-+/g, '-').replace(/^-|-$/g, '')
-            .split('-')[0];
-
+            .replace(/shiny/gi,'').replace(/mega/gi,'')
+            .replace(/\bx\b/gi,'').replace(/\by\b/gi,'')
+            .replace(/altered/gi,'').replace(/origin/gi,'')
+            .replace(/\s+/g,'-').replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g,'')
+            .replace(/-+/g,'-').replace(/^-|-$/g,'').split('-')[0];
         return { base, isShiny, isMega, isMegaX, isMegaY };
     }
 
     function getPokemonImageUrl(name, memberName = '') {
-        // Special Giratina forms — check FIRST before anything else
-        if (/giratina.*origin|origin.*giratina/i.test(name)) {
+        if (/giratina.*origin|origin.*giratina/i.test(name))
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10007.png`;
-        }
-        if (/giratina.*altered|altered.*giratina/i.test(name)) {
+        if (/giratina.*altered|altered.*giratina/i.test(name))
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/487.png`;
-        }
 
         const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(name);
 
-        // Build pokemondb form suffix
-        if (isMegaX) {
-            const url = `https://img.pokemondb.net/sprites/home/normal/${base}-mega-x.png`;
-            return url;
-        }
-        if (isMegaY) {
-            return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-y.png`;
-        }
-        if (isMega && isShiny) {
-            return `https://img.pokemondb.net/sprites/home/shiny/${base}-mega.png`;
-        }
-        if (isMega) {
-            return `https://img.pokemondb.net/sprites/home/normal/${base}-mega.png`;
-        }
+        if (isMegaX) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-x.png`;
+        if (isMegaY) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-y.png`;
+        if (isMega && isShiny) return `https://img.pokemondb.net/sprites/home/shiny/${base}-mega.png`;
+        if (isMega) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega.png`;
 
-        // Check manual ID map
         const id = pokemonIds[base];
-        if (id) {
-            return isShiny
-                ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`
-                : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-        }
+        if (id) return isShiny
+            ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`
+            : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
-        // Check prefetched cache
         const cacheKey = (isShiny ? 'shiny_' : '') + base;
-        if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') {
-            return imageCache[cacheKey];
-        }
-
+        if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') return imageCache[cacheKey];
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
     }
 
-    // Dynamically fetch unknown Pokemon from PokeAPI by name
     async function loadUnknownPokemonImages() {
         const imgs = document.querySelectorAll('.pokemon-img img');
         const promises = [];
-
         imgs.forEach(img => {
-            if (img.src.includes('/0.png') || img.dataset.loaded === 'false') {
-                const rawName = img.alt; // original name from sheet
-                const isShiny = /shiny/i.test(rawName);
-
-                const pokemonName = rawName.toLowerCase()
-                    .replace(/shiny/gi, '')
-                    .replace(/\s+/g, '-')
-                    .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
-                    .replace(/-+/g, '-').replace(/^-|-$/g, '')
-                    .split('-')[0];
-
-                const cacheKey = (isShiny ? 'shiny_' : '') + pokemonName;
-
-                if (!pokemonName || imageCache[cacheKey] === 'missing') {
-                    img.parentElement.style.display = 'none';
-                    return;
-                }
-
-                if (imageCache[cacheKey]) {
-                    img.src = imageCache[cacheKey];
-                    return;
-                }
-
-                const p = fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        let url;
-                        if (isShiny) {
-                            url = data.sprites?.other?.['official-artwork']?.front_shiny
-                                || data.sprites?.front_shiny
-                                || data.sprites?.other?.['official-artwork']?.front_default;
-                        } else {
-                            url = data.sprites?.other?.['official-artwork']?.front_default
-                                || data.sprites?.front_default;
-                        }
-
-                        if (url) {
-                            imageCache[cacheKey] = url;
-                            img.src = url;
-                        } else {
-                            imageCache[cacheKey] = 'missing';
-                            img.parentElement.style.display = 'none';
-                        }
-                    })
-                    .catch(() => {
-                        imageCache[cacheKey] = 'missing';
-                        img.parentElement.style.display = 'none';
-                    });
-                promises.push(p);
-            }
+            if (!img.src.includes('/0.png') && img.dataset.loaded !== 'false') return;
+            const rawName = img.alt;
+            const isShiny = /shiny/i.test(rawName);
+            const pokemonName = rawName.toLowerCase()
+                .replace(/shiny/gi,'').replace(/\s+/g,'-')
+                .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g,'')
+                .replace(/-+/g,'-').replace(/^-|-$/g,'').split('-')[0];
+            const cacheKey = (isShiny ? 'shiny_' : '') + pokemonName;
+            if (!pokemonName || imageCache[cacheKey] === 'missing') { img.parentElement.style.display='none'; return; }
+            if (imageCache[cacheKey]) { img.src = imageCache[cacheKey]; return; }
+            const p = fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+                .then(r => r.json())
+                .then(d => {
+                    const url = isShiny
+                        ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
+                        : d.sprites?.other?.['official-artwork']?.front_default;
+                    if (url) { imageCache[cacheKey]=url; img.src=url;
+                        const t = d.types[0]?.type?.name; if(t) pokemonTypeCache[pokemonName]=typeColors[t]||'#9933cc';
+                    } else { imageCache[cacheKey]='missing'; img.parentElement.style.display='none'; }
+                })
+                .catch(() => { imageCache[cacheKey]='missing'; img.parentElement.style.display='none'; });
+            promises.push(p);
         });
-
         await Promise.all(promises);
     }
 
-    // SETUP: Go to https://console.firebase.google.com
-
-    // ── CAROUSEL - click to activate infinite scroll ─────────────────
+    // ── CAROUSEL ─────────────────────────────────────────────────────
     const carouselTimers = {};
     let activeCard = null;
 
@@ -671,258 +334,114 @@
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', function(e) {
                 if (e.target.closest('.react-btn')) return;
-
                 const slug = this.dataset.slug;
                 const track = document.getElementById(`track-${slug}`);
                 if (!track) return;
-
                 const isActive = this.classList.contains('active');
-
-                // Deactivate previous card
                 if (activeCard && activeCard !== this) {
                     activeCard.classList.remove('active');
-                    const prevSlug = activeCard.dataset.slug;
-                    const prevTrack = document.getElementById(`track-${prevSlug}`);
-                    if (prevTrack) {
-                        cancelAnimationFrame(carouselTimers[prevSlug]);
-                        prevTrack.style.transform = 'translateX(0)';
-                    }
+                    const prevTrack = document.getElementById(`track-${activeCard.dataset.slug}`);
+                    if (prevTrack) { cancelAnimationFrame(carouselTimers[activeCard.dataset.slug]); prevTrack.style.transform='translateX(0)'; }
                 }
-
                 if (isActive) {
-                    // Deactivate
                     this.classList.remove('active');
                     cancelAnimationFrame(carouselTimers[slug]);
-                    track.style.transform = 'translateX(0)';
-                    activeCard = null;
+                    track.style.transform='translateX(0)';
+                    activeCard=null;
                 } else {
-                    // Activate - start infinite smooth scroll
                     this.classList.add('active');
-                    activeCard = this;
-
-                    const pokemon = track.querySelectorAll('.pokemon-img');
-                    if (pokemon.length <= 1) return;
-
-                    // Duplicate for seamless loop
-                    if (!track.dataset.duped) {
-                        track.innerHTML += track.innerHTML;
-                        track.dataset.duped = '1';
-                    }
-
-                    const itemWidth = 85 + 8;
-                    const totalWidth = itemWidth * (pokemon.length);
-                    let pos = 0;
-
-                    function scroll() {
-                        pos += 0.6;
-                        if (pos >= totalWidth) pos = 0;
-                        track.style.transform = `translateX(-${pos}px)`;
-                        carouselTimers[slug] = requestAnimationFrame(scroll);
-                    }
-                    carouselTimers[slug] = requestAnimationFrame(scroll);
+                    activeCard=this;
+                    const items = track.querySelectorAll('.pokemon-img');
+                    if (items.length <= 1) return;
+                    if (!track.dataset.duped) { track.innerHTML += track.innerHTML; track.dataset.duped='1'; }
+                    const itemWidth = 85+8;
+                    const totalWidth = itemWidth * items.length;
+                    let pos=0;
+                    function scroll() { pos+=0.6; if(pos>=totalWidth) pos=0; track.style.transform=`translateX(-${pos}px)`; carouselTimers[slug]=requestAnimationFrame(scroll); }
+                    carouselTimers[slug]=requestAnimationFrame(scroll);
                 }
             });
         });
     }
-    // ── END CAROUSEL ─────────────────────────────────────────────────
 
-    // 1. Create project "pokeneedle"
-    // 2. Build > Realtime Database > Create > Start in test mode
-    // 3. Copy your DB URL and replace the one below
+    // ── FIREBASE REACTIONS ────────────────────────────────────────────
     const FB_URL = 'https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app/reactions';
 
     async function loadReactions() {
-        try {
-            const res = await fetch(`${FB_URL}.json`);
-            const data = await res.json();
-            reactions = data || {};
-        } catch(e) { reactions = {}; }
+        try { const res=await fetch(`${FB_URL}.json`); reactions=await res.json()||{}; } catch(e) { reactions={}; }
     }
 
     async function saveReaction(memberName) {
         try {
-            await fetch(`${FB_URL}/${encodeURIComponent(memberName)}.json`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reactions[memberName])
+            await fetch(`${FB_URL}/${encodeURIComponent(memberName)}.json`,{
+                method:'PUT', headers:{'Content-Type':'application/json'},
+                body:JSON.stringify(reactions[memberName])
             });
         } catch(e) {}
     }
 
     async function toggleReact(memberName, type) {
         const slug = memberName.replace(/\s+/g,'-');
-        const myKey = 'pokeneedle_my_' + memberName + '_' + type;
+        const myKey = 'pokeneedle_my_'+memberName+'_'+type;
         const already = localStorage.getItem(myKey);
-
-        if (!reactions[memberName]) reactions[memberName] = { heart: 0, wow: 0 };
-
-        if (already) {
-            reactions[memberName][type] = Math.max(0, (reactions[memberName][type] || 0) - 1);
-            localStorage.removeItem(myKey);
-        } else {
-            reactions[memberName][type] = (reactions[memberName][type] || 0) + 1;
-            localStorage.setItem(myKey, '1');
-        }
-
-        updateReactUI(memberName, slug);
+        if (!reactions[memberName]) reactions[memberName]={heart:0,wow:0};
+        if (already) { reactions[memberName][type]=Math.max(0,(reactions[memberName][type]||0)-1); localStorage.removeItem(myKey); }
+        else { reactions[memberName][type]=(reactions[memberName][type]||0)+1; localStorage.setItem(myKey,'1'); }
+        updateReactUI(memberName,slug);
         await saveReaction(memberName);
     }
 
     function updateReactUI(memberName, slug) {
-        const counts = reactions[memberName] || { heart: 0, wow: 0 };
+        const counts = reactions[memberName]||{heart:0,wow:0};
         ['heart','wow'].forEach(type => {
-            const btn   = document.getElementById(`react-${type}-${slug}`);
-            const count = document.getElementById(`count-${type}-${slug}`);
-            if (!btn || !count) return;
-            count.textContent = counts[type] || 0;
-            const myKey = 'my_' + memberName + '_' + type;
-            btn.classList.toggle('reacted', !!localStorage.getItem(myKey));
+            const btn=document.getElementById(`react-${type}-${slug}`);
+            const count=document.getElementById(`count-${type}-${slug}`);
+            if(!btn||!count) return;
+            count.textContent=counts[type]||0;
+            btn.classList.toggle('reacted',!!localStorage.getItem('pokeneedle_my_'+memberName+'_'+type));
         });
     }
 
-    function loadAllReactUI() {
-        data.forEach(m => updateReactUI(m.name, m.name.replace(/\s+/g,'-')));
-    }
+    function loadAllReactUI() { data.forEach(m=>updateReactUI(m.name,m.name.replace(/\s+/g,'-'))); }
 
-    // ── SHEET DATA ───────────────────────────────────────────────────
-    async function fetchSheetData() {
-        try {
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
-            const res = await fetch(url);
-            const text = await res.text();
-            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-            parseGoogleData(json);
-
-            // Step 1: Show skeleton cards immediately
-            renderSkeletons();
-
-            // Step 2: Load reactions in background
-            loadReactions().then(() => loadAllReactUI());
-
-            // Step 3: Load each card individually as its images resolve
-            await renderCardsProgressively();
-
-            initCarousels();
-
-        } catch(e) {
-            document.getElementById('grid').innerHTML = `<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
-        }
-    }
-
-    // Show skeleton placeholders immediately
-    function renderSkeletons() {
-        const grid = document.getElementById('grid');
-        grid.innerHTML = data.map((m, i) => `
-            <div class="skeleton" id="skeleton-${i}">
-                <div class="skeleton-img"></div>
-                <div class="skeleton-name"></div>
-                <div class="skeleton-line"></div>
-                <div class="skeleton-line short"></div>
-                <div class="skeleton-react"></div>
-            </div>
-        `).join('');
-    }
-
-    // Render each card as soon as its images are ready
-    async function renderCardsProgressively() {
-        const promises = data.map(async (m, i) => {
-            // Pre-fetch unknown images for this specific member
-            await prefetchMemberImages(m);
-
-            // Replace skeleton with real card
-            const skeleton = document.getElementById(`skeleton-${i}`);
-            if (skeleton) {
-                skeleton.outerHTML = renderCard(m);
-            }
-
-            // Load reactions for this card
-            const counts = reactions[m.name] || { heart: 0, wow: 0 };
-            const myList = [];
-            ['heart','wow'].forEach(type => {
-                if (localStorage.getItem('pokeneedle_my_' + m.name + '_' + type)) myList.push(type);
-            });
-            updateReactUI(m.name, m.name.replace(/\s+/g,'-'));
-        });
-
-        await Promise.all(promises);
-    }
-
-    async function prefetchMemberImages(m) {
-        const pokemon = m.pokemon.split(/[,\/]/).map(p => p.trim()).filter(p => p);
-        const promises = pokemon.map(async p => {
-            const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(p);
-            if (!base) return;
-
-            // Mega forms use pokemondb directly - no prefetch needed
-            if (isMega || isMegaX || isMegaY) return;
-
-            const cacheKey = (isShiny ? 'shiny_' : '') + base;
-            if (imageCache[cacheKey] || pokemonIds[base]) {
-                // Fetch type color if not cached
-                if (!pokemonTypeCache[base]) fetchPokemonTypeColor(base);
-                return;
-            }
-
-            try {
-                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${base}`);
-                const d = await res.json();
-                const url = isShiny
-                    ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
-                    : d.sprites?.other?.['official-artwork']?.front_default;
-                imageCache[cacheKey] = url || 'missing';
-                const primaryType = d.types[0]?.type?.name;
-                pokemonTypeCache[base] = typeColors[primaryType] || '#9933cc';
-            } catch(e) {
-                imageCache[cacheKey] = 'missing';
-                pokemonTypeCache[base] = '#9933cc';
-            }
-        });
-        await Promise.all(promises);
-    }
-
-    // Render a single card HTML
+    // ── RENDER CARD ───────────────────────────────────────────────────
     function renderCard(m) {
         const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p);
         const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
-        const isCreator = m.name === 'German';
+        const isCreator = m.name==='German';
         const slug = m.name.replace(/\s+/g,'-');
-        const firstPokemon = pokemon[0] || '';
-        const silhouetteUrl = firstPokemon ? getPokemonImageUrl(firstPokemon, m.name) : '';
+        const silhouetteUrl = pokemon[0] ? getPokemonImageUrl(pokemon[0],m.name) : '';
         return `
-        <div class="card ${isCreator ? 'creator-card' : ''}" data-slug="${slug}">
-            ${silhouetteUrl ? `<img class="card-silhouette" src="${silhouetteUrl}" alt="">` : ''}
+        <div class="card ${isCreator?'creator-card':''}" data-slug="${slug}">
+            ${silhouetteUrl?`<img class="card-silhouette" src="${silhouetteUrl}" alt="">`:''}
             <div class="card-body">
-            ${pokemon.length ? `
-            <div class="pokemon-images ${pokemon.length === 1 ? 'single' : ''}" id="carousel-${slug}">
+            ${pokemon.length?`
+            <div class="pokemon-images ${pokemon.length===1?'single':''}" id="carousel-${slug}">
                 <div class="pokemon-track" id="track-${slug}">
                     ${pokemon.map(p=>`
                     <div class="pokemon-img" title="${p}">
-                        <img src="${getPokemonImageUrl(p, m.name)}" alt="${p}" onerror="
-                            const src=this.src;
-                            if(src.includes('home/normal')){this.src=src.replace('home/normal','sword-shield/normal');}
-                            else if(src.includes('home/shiny')){this.src=src.replace('home/shiny','sword-shield/normal');}
+                        <img src="${getPokemonImageUrl(p,m.name)}" alt="${p}" onerror="
+                            const s=this.src;
+                            if(s.includes('home/normal')){this.src=s.replace('home/normal','sword-shield/normal');}
+                            else if(s.includes('home/shiny')){this.src=s.replace('home/shiny','sword-shield/normal');}
                             else{this.parentElement.style.display='none';
                             const c=this.closest('.pokemon-images');
                             if(c){const v=c.querySelectorAll('.pokemon-img:not([style*=none])');if(v.length===1)c.classList.add('auto-single');}}
                         ">
                     </div>`).join('')}
                 </div>
-            </div>` : ''}
-            <div class="member-name ${isCreator ? 'creator-name' : ''}">${m.name}</div>
-            ${pokemon.length ? `
+            </div>`:''}
+            <div class="member-name ${isCreator?'creator-name':''}">${m.name}</div>
+            ${pokemon.length?`
             <div class="section">
                 <div class="section-title">Favorite Pokémon</div>
-                <div class="badges">
-                    ${pokemon.map(p=>`<span class="badge" style="color:${getPokemonBadgeColor(p)};font-weight:600">${p}</span>`).join('')}
-                </div>
-            </div>` : ''}
-            ${artists.length ? `
+                <div class="badges">${pokemon.map(p=>`<span class="badge" style="color:${getPokemonBadgeColor(p)};font-weight:600">${p}</span>`).join('')}</div>
+            </div>`:''}
+            ${artists.length?`
             <div class="section">
                 <div class="section-title">Favorite Artists</div>
-                <div class="badges">
-                    ${artists.map(a=>`<span class="badge artist">${a}</span>`).join('')}
-                </div>
-            </div>` : ''}
+                <div class="badges">${artists.map(a=>`<span class="badge artist">${a}</span>`).join('')}</div>
+            </div>`:''}
             </div>
             <div class="reaction-bar">
                 <button class="react-btn" id="react-heart-${slug}" onclick="toggleReact('${m.name}','heart')">
@@ -935,78 +454,47 @@
         </div>`;
     }
 
-    // Pre-fetch all unknown pokemon BEFORE rendering so images are ready
-    async function prefetchAllImages() {
-        const allPokemon = new Set();
+    function renderCards(members) {
+        const grid = document.getElementById('grid');
+        if (!members.length) { grid.innerHTML=`<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">No results found.</div>`; return; }
+        grid.innerHTML = members.map(m=>renderCard(m)).join('');
+    }
 
-        data.forEach(m => {
-            m.pokemon.split(/[,\/]/).map(p => p.trim()).filter(p => p).forEach(p => {
-                const isShiny = /shiny/i.test(p);
-                const clean = p.toLowerCase()
-                    .replace(/shiny/gi, '')
-                    .replace(/\s+/g, '-')
-                    .replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g, '')
-                    .replace(/-+/g, '-').replace(/^-|-$/g, '')
-                    .split('-')[0];
-
-                if (clean && !pokemonIds[clean]) {
-                    allPokemon.add((isShiny ? 'shiny_' : '') + clean);
-                }
-            });
-        });
-
-        // Fetch all unknown pokemon in parallel
-        const promises = [...allPokemon].map(async entry => {
-            const isShiny = entry.startsWith('shiny_');
-            const name = isShiny ? entry.replace('shiny_', '') : entry;
-            if (imageCache[entry]) return;
-
-            try {
-                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-                const d = await res.json();
-                let url;
-                if (isShiny) {
-                    url = d.sprites?.other?.['official-artwork']?.front_shiny
-                        || d.sprites?.other?.['official-artwork']?.front_default;
-                } else {
-                    url = d.sprites?.other?.['official-artwork']?.front_default;
-                }
-                imageCache[entry] = url || 'missing';
-            } catch(e) {
-                imageCache[entry] = 'missing';
-            }
-        });
-
-        await Promise.all(promises);
+    // ── SHEET DATA ────────────────────────────────────────────────────
+    async function fetchSheetData() {
+        try {
+            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+            const res=await fetch(url);
+            const text=await res.text();
+            const json=JSON.parse(text.substring(text.indexOf('{'),text.lastIndexOf('}')+1));
+            parseGoogleData(json);
+            renderCards(data);
+            initCarousels();
+            loadReactions().then(()=>loadAllReactUI());
+            loadUnknownPokemonImages();
+        } catch(e) {
+            document.getElementById('grid').innerHTML=`<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
+        }
     }
 
     function parseGoogleData(json) {
-        data = [];
+        data=[];
         if (!json.table?.rows) return;
-        json.table.rows.forEach((row, i) => {
-            if (i === 0) return;
-            const name = row.c[0]?.v || '';
-            const pokemon = row.c[1]?.v || '';
-            const artists = row.c[2]?.v || '';
-            if (name && name.toLowerCase() !== 'who are u') data.push({ name, pokemon, artists });
+        json.table.rows.forEach((row,i)=>{
+            if (i===0) return;
+            const name=row.c[0]?.v||'';
+            const pokemon=row.c[1]?.v||'';
+            const artists=row.c[2]?.v||'';
+            if (name && name.toLowerCase()!=='who are u') data.push({name,pokemon,artists});
         });
     }
 
-    function renderCards(members) {
-        const grid = document.getElementById('grid');
-        if (!members.length) {
-            grid.innerHTML = `<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">No results found.</div>`;
-            return;
-        }
-        grid.innerHTML = members.map(m => renderCard(m)).join('');
-    }
-
-    // ── SEARCH ───────────────────────────────────────────────────────
-    document.getElementById('searchInput').addEventListener('input', async e => {
-        const q = e.target.value.toLowerCase();
-        const filtered = data.filter(m =>
-            m.name.toLowerCase().includes(q) ||
-            m.pokemon.toLowerCase().includes(q) ||
+    // ── SEARCH ────────────────────────────────────────────────────────
+    document.getElementById('searchInput').addEventListener('input', e=>{
+        const q=e.target.value.toLowerCase();
+        const filtered=data.filter(m=>
+            m.name.toLowerCase().includes(q)||
+            m.pokemon.toLowerCase().includes(q)||
             m.artists.toLowerCase().includes(q)
         );
         renderCards(filtered);
@@ -1015,14 +503,15 @@
         loadAllReactUI();
     });
 
-    // ── INIT ─────────────────────────────────────────────────────────
-    fetchSheetData();
-    setInterval(fetchSheetData, 30000);
+    // ── INIT ──────────────────────────────────────────────────────────
+    loadPokemonIds().then(() => {
+        fetchSheetData();
+        setInterval(fetchSheetData, 30000);
+    });
 
-    // ── DISABLE RIGHT CLICK & DEV TOOLS ──────────────────────────────
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','C','J'].includes(e.key))) e.preventDefault();
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',e=>{
+        if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','C','J'].includes(e.key))) e.preventDefault();
     });
 </script>
 </body>
