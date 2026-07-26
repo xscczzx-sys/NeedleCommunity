@@ -37,17 +37,50 @@
             --badge-bg: rgba(50,20,90,0.7); --react-bg: rgba(50,20,90,0.6);
             --section-title: #e879f9; --divider: rgba(168,85,247,0.15);
         }
+        body.theme-neon {
+            --bg: #020010; --bg2: rgba(0,255,200,0.05); --card-bg: rgba(0,0,30,0.95);
+            --card-hover: rgba(0,20,50,0.98); --text: #00ffcc; --text-muted: #ff00ff;
+            --border: rgba(0,255,200,0.3); --search-bg: rgba(0,255,200,0.07);
+            --badge-bg: rgba(0,255,200,0.08); --react-bg: rgba(0,255,200,0.06);
+            --section-title: #ff00ff; --divider: rgba(0,255,200,0.2);
+        }
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.4s, color 0.4s; }
 
         /* ── THEME SWITCHER ── */
         .theme-switcher { position: fixed; top: 1rem; right: 1rem; display: flex; gap: 0.4rem; z-index: 999; background: var(--card-bg); padding: 0.4rem; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .theme-btn { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+        .theme-btn { width: 16px; height: 16px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
         .theme-btn:hover, .theme-btn.active { border-color: #7c3aed; transform: scale(1.2); }
         .theme-btn.t-light  { background: #faf5ff; box-shadow: 0 0 0 1px #ccc; }
         .theme-btn.t-medium { background: #e9d8fd; box-shadow: 0 0 0 1px #b48fe8; }
         .theme-btn.t-dark   { background: #2a1f40; box-shadow: 0 0 0 1px #7c3aed; }
         .theme-btn.t-darker { background: #0f0a1a; box-shadow: 0 0 0 1px #6d28d9; }
+        .theme-btn.t-neon   { background: #020010; box-shadow: 0 0 6px #00ffcc, 0 0 0 1px #00ffcc; }
+
+        /* Neon theme special effects */
+        body.theme-neon .card {
+            box-shadow: 0 0 8px rgba(0,255,200,0.15);
+        }
+        body.theme-neon .card:hover {
+            box-shadow: 0 0 20px rgba(0,255,200,0.4), 0 0 40px rgba(0,255,200,0.1) !important;
+            border-color: #00ffcc !important;
+        }
+        body.theme-neon .member-name {
+            color: #00ffcc !important;
+            text-shadow: 0 0 10px #00ffcc, 0 0 20px rgba(0,255,200,0.5);
+        }
+        body.theme-neon .badge {
+            border-color: rgba(0,255,200,0.25);
+            text-shadow: 0 0 6px currentColor;
+        }
+        body.theme-neon .section-title { text-shadow: 0 0 8px #ff00ff; }
+        body.theme-neon .header h1 .needle { color: #00ffcc; text-shadow: 0 0 15px #00ffcc; }
+        body.theme-neon .header-line { background: linear-gradient(90deg,#00ffcc,#ff00ff); box-shadow: 0 0 10px #00ffcc; }
+        body.theme-neon .subtitle { color: #ff00ff; text-shadow: 0 0 8px #ff00ff; }
+        body.theme-neon .react-btn:hover { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0,255,200,0.4); }
+        body.theme-neon .react-btn.reacted { border-color: #00ffcc; background: rgba(0,255,200,0.1); box-shadow: 0 0 8px rgba(0,255,200,0.3); }
+        body.theme-neon .search-box input:focus { border-color: #00ffcc; box-shadow: 0 0 15px rgba(0,255,200,0.3); }
+        body.theme-neon .card-silhouette { filter: grayscale(100%) brightness(10) sepia(1) hue-rotate(120deg); opacity: 0.04; }
 
         /* ── HEADER ── */
         .header { text-align: center; padding: 3rem 1rem 1.5rem; }
@@ -142,6 +175,7 @@
     <div class="theme-btn t-medium" title="Medium" onclick="setTheme('medium')"></div>
     <div class="theme-btn t-dark" title="Dark" onclick="setTheme('dark')"></div>
     <div class="theme-btn t-darker" title="Darker" onclick="setTheme('darker')"></div>
+    <div class="theme-btn t-neon" title="Neon" onclick="setTheme('neon')"></div>
 </div>
 
 <div class="header">
