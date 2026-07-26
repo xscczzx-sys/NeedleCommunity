@@ -1109,7 +1109,7 @@
                     return `<span style="margin-left:auto;font-size:0.68rem;color:var(--text-muted);
                         display:flex;align-items:center;gap:0.2rem;opacity:0.7;
                         ${isToday ? 'color:#a855f7;font-weight:700;opacity:1;' : ''}">
-                        ${isToday ? '🎂' : '🎈'} ${monthNames[bday.month-1]} ${bday.day}
+                        ${isToday ? '🎂' : '🎈'} ${bday.day} ${monthNames[bday.month-1]}
                     </span>`;
                 })()}
             </div>
