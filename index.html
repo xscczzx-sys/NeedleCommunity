@@ -241,7 +241,8 @@
         .birthday-month-title {
             font-size: 0.85rem; font-weight: 700; letter-spacing: 2px;
             text-transform: uppercase; padding: 0.6rem 1rem; margin-bottom: 0.8rem;
-            border-radius: 10px; display: flex; align-items: center; gap: 0.5rem; color: white;
+            border-radius: 10px; display: flex; align-items: center; gap: 0.5rem;
+            color: #3d2363;
         }
         .birthday-entries { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 0.6rem; }
         .birthday-entry {
@@ -254,7 +255,7 @@
         .birthday-entry .day-badge {
             min-width: 36px; height: 24px; border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 700; color: white;
+            font-size: 0.75rem; font-weight: 700; color: #3d2363;
             flex-shrink: 0; padding: 0 0.5rem;
         }
         .birthday-entry .entry-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
@@ -496,15 +497,34 @@
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
     const monthColors = {
-        1:'linear-gradient(135deg,#4a90d9,#6ab0f5)',2:'linear-gradient(135deg,#e8527a,#f48fb1)',
-        3:'linear-gradient(135deg,#43a047,#81c784)',4:'linear-gradient(135deg,#f9a825,#ffd54f)',
-        5:'linear-gradient(135deg,#8e24aa,#ce93d8)',6:'linear-gradient(135deg,#00897b,#4db6ac)',
-        7:'linear-gradient(135deg,#1565c0,#42a5f5)',8:'linear-gradient(135deg,#e64a19,#ff8a65)',
-        9:'linear-gradient(135deg,#6a1b9a,#ab47bc)',10:'linear-gradient(135deg,#bf360c,#ff7043)',
-        11:'linear-gradient(135deg,#558b2f,#aed581)',12:'linear-gradient(135deg,#c62828,#ef9a9a)'
+        1:'linear-gradient(135deg,#b8cce4,#d0e4f5)',   // January  - soft powder blue
+        2:'linear-gradient(135deg,#d4c5e2,#e8ddf0)',   // February - soft lavender
+        3:'linear-gradient(135deg,#c5d4c5,#dde8dd)',   // March    - soft sage
+        4:'linear-gradient(135deg,#e2d4b8,#f0e8d0)',   // April    - soft sand
+        5:'linear-gradient(135deg,#d4b8d4,#e8d0e8)',   // May      - soft mauve
+        6:'linear-gradient(135deg,#b8d4d4,#d0e8e8)',   // June     - soft mist
+        7:'linear-gradient(135deg,#b8c5d4,#d0d8e8)',   // July     - soft slate blue
+        8:'linear-gradient(135deg,#d4c5b8,#e8ddd0)',   // August   - soft linen
+        9:'linear-gradient(135deg,#c5b8d4,#ddd0e8)',   // September- soft thistle
+        10:'linear-gradient(135deg,#d4bfb8,#e8d8d0)',  // October  - soft blush
+        11:'linear-gradient(135deg,#b8c5b8,#d0d8d0)',  // November - soft silver sage
+        12:'linear-gradient(135deg,#d4b8b8,#e8d0d0)',  // December - soft rose
     };
 
-    const monthEmojis = ['🐴','💘','🌿','🌼','♉️','🌟','❄️','🍓','⚡️','🎃','🍏','🎉'];
+    const monthEmojis = [
+        '☀️',   // January   - peak summer
+        '🌊',   // February  - hot summer/beach
+        '🍂',   // March     - early autumn
+        '🍁',   // April     - autumn
+        '🌧️',  // May       - late autumn/rain
+        '❄️',   // June      - winter starts
+        '🌙',   // July      - peak winter
+        '🕯️',  // August    - late winter
+        '🌱',   // September - spring begins
+        '🌸',   // October   - spring blossom
+        '🦋',   // November  - late spring
+        '✨',   // December  - early summer/festive
+    ];
 
     const noEntryMessages = [
         '✨ A mystery trainer!','🔍 Not in the Pokédex yet!','🌀 Yet to be discovered!',
@@ -567,24 +587,24 @@
                             <img src="${pokemonImg}" style="
                                 position:absolute;right:-10px;bottom:-10px;
                                 width:70px;height:70px;object-fit:contain;
-                                opacity:0.25;filter:brightness(10);
+                                opacity:0.15;filter:brightness(0);
                                 pointer-events:none;
                             " onerror="this.style.display='none'">` : ''}
-                            <div style="font-size:${isToday?'1.5rem':'1.8rem'};font-weight:800;color:white;
+                            <div style="font-size:${isToday?'1.5rem':'1.8rem'};font-weight:800;color:${isToday?'white':'#3d2363'};
                                 line-height:1;margin-bottom:0.3rem;letter-spacing:-1px;">
                                 ${isToday ? '🎂' : `${b.day}`}
                             </div>
-                            <div style="font-size:0.65rem;color:rgba(255,255,255,0.8);
+                            <div style="font-size:0.65rem;color:${isToday?'rgba(255,255,255,0.8)':'rgba(61,35,99,0.7)'};
                                 text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem;">
                                 ${isToday ? 'TODAY!' : monthNames[b.month-1]}
                             </div>
-                            <div style="font-size:0.9rem;font-weight:700;color:white;">
+                            <div style="font-size:0.9rem;font-weight:700;color:${isToday?'white':'#3d2363'};">
                                 ${b.name}
                             </div>
-                            ${!isToday ? `<div style="font-size:0.7rem;color:rgba(255,255,255,0.75);margin-top:0.2rem;">
+                            ${!isToday ? `<div style="font-size:0.7rem;color:rgba(61,35,99,0.6);margin-top:0.2rem;">
                                 in ${b.daysUntil} day${b.daysUntil===1?'':'s'}
                             </div>` : ''}
-                            ${firstPokemon ? `<div style="font-size:0.7rem;color:rgba(255,255,255,0.75);margin-top:0.1rem;">
+                            ${firstPokemon ? `<div style="font-size:0.7rem;color:${isToday?'rgba(255,255,255,0.75)':'rgba(61,35,99,0.6)'};margin-top:0.1rem;">
                                 ⭐ ${firstPokemon}
                             </div>` : ''}
                         </div>`;
