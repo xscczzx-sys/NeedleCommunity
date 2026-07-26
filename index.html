@@ -143,6 +143,49 @@
             text-shadow: 0 0 8px #00ffcc;
         }
 
+        /* ── SHEET HINT ── */
+        .sheet-hint {
+            text-align: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.6rem;
+            line-height: 1.8;
+        }
+        .hint-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .hint-toggle:hover { border-color: #7c3aed; color: var(--text); }
+        .hint-content {
+            display: none;
+            margin-top: 0.6rem;
+            padding: 0.8rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: left;
+            line-height: 2;
+        }
+        .hint-content.open { display: block; }
+        .hint-tag {
+            display: inline-block;
+            background: var(--badge-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.68rem;
+            color: var(--section-title);
+            font-weight: 600;
+            margin: 0.1rem;
+        }
+
         /* ── SCROLL TO TOP ── */
         .scroll-top {
             position: fixed;
@@ -293,7 +336,7 @@
         }
         .birthday-entry .entry-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
         .birthday-entry .entry-pokemon { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; font-style: italic; }
-        .search-wrap { max-width: 500px; margin: 1.5rem auto 2rem; padding: 0 1rem; }
+        .search-wrap { max-width: 700px; margin: 1.5rem auto 1rem; padding: 0 1rem; }
         .search-box { position: relative; }
         .search-box svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .search-box input { width: 100%; padding: 0.9rem 1rem 0.9rem 3rem; font-size: 0.95rem; font-family: 'Inter', sans-serif; background: var(--search-bg); color: var(--text); border: 1.5px solid var(--border); border-radius: 50px; outline: none; transition: all 0.3s; }
@@ -398,6 +441,23 @@
         <div class="search-box">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input type="text" id="searchInput" placeholder="Search by name, Pokémon, or artist...">
+        </div>
+        <div class="sheet-hint">
+            <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '💡 Sheet tip — hide ▲' : '💡 Sheet tip — how to add special forms ▼'">
+                💡 Sheet tip — how to add special forms ▼
+            </button>
+            <div class="hint-content">
+                <strong style="color:var(--text);">Type these in the Google Sheet Pokémon column:</strong><br>
+                <span class="hint-tag">Shiny Mimikyu</span> → shiny version<br>
+                <span class="hint-tag">Mega Charizard</span> → mega form<br>
+                <span class="hint-tag">Mega Charizard X</span> or <span class="hint-tag">Mega Charizard Y</span> → specific mega<br>
+                <span class="hint-tag">Shiny Mega Rayquaza</span> → shiny mega<br>
+                <span class="hint-tag">Alolan Vulpix</span> → Alolan form<br>
+                <span class="hint-tag">Galarian Ponyta</span> → Galarian form<br>
+                <span class="hint-tag">Hisuian Zorua</span> → Hisuian form<br>
+                <span class="hint-tag">Paldean Wooper</span> → Paldean form<br>
+                <span class="hint-tag">Giratina Origin</span> or <span class="hint-tag">Giratina Altered</span> → Giratina forms
+            </div>
         </div>
     </div>
     <div class="grid" id="grid">
@@ -796,29 +856,67 @@
             .replace(/shiny/gi,'').replace(/mega/gi,'')
             .replace(/\bx\b/gi,'').replace(/\by\b/gi,'')
             .replace(/altered/gi,'').replace(/origin/gi,'')
+            .replace(/alolan|alola/gi,'').replace(/galarian|galar/gi,'')
+            .replace(/hisuian|hisui/gi,'').replace(/paldean|paldea/gi,'')
             .replace(/\s+/g,'-').replace(/[:'?!*&^%$#@()[\]{}<>|\\~`]/g,'')
             .replace(/-+/g,'-').replace(/^-|-$/g,'').split('-')[0];
         return { base, isShiny, isMega, isMegaX, isMegaY };
     }
 
+
     function getPokemonImageUrl(name, memberName = '') {
+        // ── Special named forms ───────────────────────────────────────
         if (/giratina.*origin|origin.*giratina/i.test(name))
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10007.png`;
         if (/giratina.*altered|altered.*giratina/i.test(name))
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/487.png`;
 
         const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(name);
+        const lower = name.toLowerCase();
 
+        // ── Regional forms ────────────────────────────────────────────
+        const isAlolan   = /alolan|alola/i.test(lower);
+        const isGalarian = /galarian|galar/i.test(lower);
+        const isHisuian  = /hisuian|hisui/i.test(lower);
+        const isPaldean  = /paldean|paldea/i.test(lower);
+
+        if (isAlolan || isGalarian || isHisuian || isPaldean) {
+            const region = isAlolan ? 'alola' : isGalarian ? 'galar' : isHisuian ? 'hisui' : 'paldea';
+            const formName = `${base}-${region}`;
+            const cacheKey = (isShiny ? 'shiny_' : '') + formName;
+            if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') return imageCache[cacheKey];
+            if (!imageCache[cacheKey]) {
+                imageCache[cacheKey] = 'loading';
+                fetch(`https://pokeapi.co/api/v2/pokemon/${formName}`)
+                    .then(r => r.json())
+                    .then(d => {
+                        const url = isShiny
+                            ? (d.sprites?.other?.['official-artwork']?.front_shiny || d.sprites?.other?.['official-artwork']?.front_default)
+                            : d.sprites?.other?.['official-artwork']?.front_default;
+                        imageCache[cacheKey] = url || 'missing';
+                        document.querySelectorAll(`img[alt="${name}"]`).forEach(img => {
+                            if (url) img.src = url;
+                            else img.parentElement.style.display = 'none';
+                        });
+                    })
+                    .catch(() => { imageCache[cacheKey] = 'missing'; });
+            }
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
+        }
+
+        // ── Mega forms ────────────────────────────────────────────────
         if (isMegaX) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-x.png`;
         if (isMegaY) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-y.png`;
         if (isMega && isShiny) return `https://img.pokemondb.net/sprites/home/shiny/${base}-mega.png`;
         if (isMega) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega.png`;
 
+        // ── Manual ID map ─────────────────────────────────────────────
         const id = pokemonIds[base];
         if (id) return isShiny
             ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`
             : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
+        // ── Cache ─────────────────────────────────────────────────────
         const cacheKey = (isShiny ? 'shiny_' : '') + base;
         if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') return imageCache[cacheKey];
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
