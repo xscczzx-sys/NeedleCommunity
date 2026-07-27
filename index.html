@@ -143,7 +143,42 @@
             text-shadow: 0 0 8px #00ffcc;
         }
 
-        /* ── SHEET HINT ── */
+        /* ── SORT CONTROLS ── */
+        .controls-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            max-width: 700px;
+            margin: 0 auto 0.5rem;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .sort-btn {
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            background: var(--badge-bg);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .sort-btn:hover { border-color: #7c3aed; color: var(--text); }
+        .sort-btn.active {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            border-color: transparent;
+        }
+        .sort-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
         .sheet-hint {
             text-align: center;
             font-size: 0.72rem;
@@ -205,6 +240,30 @@
         @keyframes fireworkParticle {
             0%   { transform: translate(-50%,-50%) translate(0,0); opacity: 1; }
             100% { transform: translate(-50%,-50%) translate(var(--dx),var(--dy)); opacity: 0; }
+        }
+
+        /* ── NEW MEMBER NOTIFICATION ── */
+        .new-member-toast {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(124,58,237,0.4);
+            z-index: 9998;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .new-member-toast.show {
+            transform: translateX(-50%) translateY(0);
         }
 
         /* ── SCROLL TO TOP ── */
@@ -546,6 +605,15 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input type="text" id="searchInput" placeholder="Search by name, Pokémon, or artist...">
         </div>
+        <div class="controls-wrap">
+            <span class="sort-label">Sort:</span>
+            <button class="sort-btn active" onclick="setSort('default')" id="sort-default">⭐ Default</button>
+            <button class="sort-btn" onclick="setSort('name')" id="sort-name">🔤 Name</button>
+            <button class="sort-btn" onclick="setSort('pokemon')" id="sort-pokemon">⚡ Pokémon</button>
+            <button class="sort-btn" onclick="setSort('birthday')" id="sort-birthday">🎂 Birthday</button>
+            <button class="sort-btn" onclick="setSort('reactions')" id="sort-reactions">❤️ Most Loved</button>
+            <button class="sort-btn" onclick="setSort('random')" id="sort-random">🎲 Random</button>
+        </div>
         <div class="sheet-hint">
             <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '💡 Sheet tip — hide ▲' : '💡 Sheet tip — how to add special forms ▼'">
                 💡 Sheet tip — how to add special forms ▼
@@ -579,6 +647,8 @@
     <div class="mods-view" id="mods-list"></div>
 </div>
 
+<div class="new-member-toast" id="newMemberToast"></div>
+
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
 <div class="footer">Created by <span>German</span></div>
@@ -587,6 +657,7 @@
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
     const GID = '0';
     let data = [];
+    let knownMembers = new Set(JSON.parse(localStorage.getItem('pokeneedle_known_members') || '[]'));
     let reactions = {};
 
     // ── TAB SWITCHING ─────────────────────────────────────────────────
@@ -1192,7 +1263,8 @@
             const text=await res.text();
             const json=JSON.parse(text.substring(text.indexOf('{'),text.lastIndexOf('}')+1));
             parseGoogleData(json);
-            renderCards(data);
+            checkForNewMembers(data);
+            applySort();
             initCarousels();
             loadReactions().then(()=>loadAllReactUI());
             loadUnknownPokemonImages();
@@ -1214,17 +1286,8 @@
     }
 
     // ── SEARCH ────────────────────────────────────────────────────────
-    document.getElementById('searchInput').addEventListener('input', e=>{
-        const q=e.target.value.toLowerCase();
-        const filtered=data.filter(m=>
-            m.name.toLowerCase().includes(q)||
-            m.pokemon.toLowerCase().includes(q)||
-            m.artists.toLowerCase().includes(q)
-        );
-        renderCards(filtered);
-        loadUnknownPokemonImages();
-        initCarousels();
-        loadAllReactUI();
+    document.getElementById('searchInput').addEventListener('input', e => {
+        applySort();
     });
 
     // ── INIT ──────────────────────────────────────────────────────────
@@ -1300,6 +1363,115 @@
         const now = new Date();
         return birthdays.some(b => b.month === now.getMonth()+1 && b.day === now.getDate());
     }
+    // ── SORT ──────────────────────────────────────────────────────────
+    let currentSort = 'default';
+
+    function setSort(type) {
+        currentSort = type;
+        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`sort-${type}`).classList.add('active');
+        applySort();
+    }
+
+    function getSortedData(members) {
+        const arr = [...members];
+        switch(currentSort) {
+            case 'name':
+                return arr.sort((a,b) => a.name.localeCompare(b.name));
+
+            case 'pokemon':
+                return arr.sort((a,b) => {
+                    const pa = a.pokemon.split(/[,\/]/)[0].trim().toLowerCase();
+                    const pb = b.pokemon.split(/[,\/]/)[0].trim().toLowerCase();
+                    return pa.localeCompare(pb);
+                });
+
+            case 'birthday':
+                return arr.sort((a,b) => {
+                    const now = new Date();
+                    const getNextBday = (name) => {
+                        const bday = birthdays.find(bd =>
+                            bd.name.toLowerCase() === name.toLowerCase() ||
+                            name.toLowerCase().includes(bd.name.toLowerCase()) ||
+                            bd.name.toLowerCase().includes(name.toLowerCase())
+                        );
+                        if (!bday) return 999;
+                        const today = now.getMonth()+1 === bday.month && now.getDate() === bday.day ? 0
+                            : ((bday.month - (now.getMonth()+1) + 12) % 12) * 31 + (bday.day - now.getDate());
+                        return today;
+                    };
+                    const noBday = !birthdays.find(bd => bd.name.toLowerCase() === a.name.toLowerCase() || a.name.toLowerCase().includes(bd.name.toLowerCase()));
+                    const noBdayB = !birthdays.find(bd => bd.name.toLowerCase() === b.name.toLowerCase() || b.name.toLowerCase().includes(bd.name.toLowerCase()));
+                    if (noBday && noBdayB) return 0;
+                    if (noBday) return 1;
+                    if (noBdayB) return -1;
+                    return getNextBday(a.name) - getNextBday(b.name);
+                });
+
+            case 'reactions':
+                return arr.sort((a,b) => {
+                    const ra = (reactions[a.name]?.heart||0) + (reactions[a.name]?.wow||0);
+                    const rb = (reactions[b.name]?.heart||0) + (reactions[b.name]?.wow||0);
+                    return rb - ra;
+                });
+
+            case 'random':
+                return arr.sort(() => Math.random() - 0.5);
+
+            default:
+                return arr; // original sheet order
+        }
+    }
+
+    function applySort() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = q ? data.filter(m =>
+            m.name.toLowerCase().includes(q) ||
+            m.pokemon.toLowerCase().includes(q) ||
+            m.artists.toLowerCase().includes(q)
+        ) : [...data];
+        filtered = getSortedData(filtered);
+        renderCards(filtered);
+        loadUnknownPokemonImages();
+        initCarousels();
+        loadAllReactUI();
+    }
+    let toastQueue = [];
+    let toastShowing = false;
+
+    function showToast(message) {
+        toastQueue.push(message);
+        if (!toastShowing) processToastQueue();
+    }
+
+    function processToastQueue() {
+        if (toastQueue.length === 0) { toastShowing = false; return; }
+        toastShowing = true;
+        const toast = document.getElementById('newMemberToast');
+        const message = toastQueue.shift();
+        toast.innerHTML = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => processToastQueue(), 500);
+        }, 4000);
+    }
+
+    function checkForNewMembers(newData) {
+        if (knownMembers.size === 0) {
+            newData.forEach(m => knownMembers.add(m.name));
+            localStorage.setItem('pokeneedle_known_members', JSON.stringify([...knownMembers]));
+            return;
+        }
+        newData.forEach(m => {
+            if (!knownMembers.has(m.name)) {
+                knownMembers.add(m.name);
+                showToast(`🎉 <strong>${m.name}</strong> just added their favourites!`);
+            }
+        });
+        localStorage.setItem('pokeneedle_known_members', JSON.stringify([...knownMembers]));
+    }
+
     window.addEventListener('scroll', () => {
         const btn = document.getElementById('scrollTop');
         if (window.scrollY > 300) {
