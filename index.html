@@ -1130,38 +1130,61 @@
     const carouselTimers = {};
     let activeCard = null;
 
+    // Use event delegation on grid - works immediately on any render
+    document.getElementById('grid').addEventListener('click', function(e) {
+        const card = e.target.closest('.card');
+        if (!card) return;
+        if (e.target.closest('.react-btn')) return;
+
+        const slug = card.dataset.slug;
+        const track = document.getElementById(`track-${slug}`);
+        if (!track) return;
+
+        const isActive = card.classList.contains('active');
+
+        // Deactivate previous card
+        if (activeCard && activeCard !== card) {
+            activeCard.classList.remove('active');
+            const prevTrack = document.getElementById(`track-${activeCard.dataset.slug}`);
+            if (prevTrack) {
+                cancelAnimationFrame(carouselTimers[activeCard.dataset.slug]);
+                prevTrack.style.transform = 'translateX(0)';
+            }
+        }
+
+        if (isActive) {
+            card.classList.remove('active');
+            cancelAnimationFrame(carouselTimers[slug]);
+            track.style.transform = 'translateX(0)';
+            activeCard = null;
+        } else {
+            card.classList.add('active');
+            activeCard = card;
+
+            const items = track.querySelectorAll('.pokemon-img');
+            if (items.length <= 1) return;
+
+            if (!track.dataset.duped) {
+                track.innerHTML += track.innerHTML;
+                track.dataset.duped = '1';
+            }
+
+            const itemWidth = 85 + 8;
+            const totalWidth = itemWidth * items.length;
+            let pos = 0;
+
+            function scroll() {
+                pos += 0.6;
+                if (pos >= totalWidth) pos = 0;
+                track.style.transform = `translateX(-${pos}px)`;
+                carouselTimers[slug] = requestAnimationFrame(scroll);
+            }
+            carouselTimers[slug] = requestAnimationFrame(scroll);
+        }
+    });
+
     function initCarousels() {
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (e.target.closest('.react-btn')) return;
-                const slug = this.dataset.slug;
-                const track = document.getElementById(`track-${slug}`);
-                if (!track) return;
-                const isActive = this.classList.contains('active');
-                if (activeCard && activeCard !== this) {
-                    activeCard.classList.remove('active');
-                    const prevTrack = document.getElementById(`track-${activeCard.dataset.slug}`);
-                    if (prevTrack) { cancelAnimationFrame(carouselTimers[activeCard.dataset.slug]); prevTrack.style.transform='translateX(0)'; }
-                }
-                if (isActive) {
-                    this.classList.remove('active');
-                    cancelAnimationFrame(carouselTimers[slug]);
-                    track.style.transform='translateX(0)';
-                    activeCard=null;
-                } else {
-                    this.classList.add('active');
-                    activeCard=this;
-                    const items = track.querySelectorAll('.pokemon-img');
-                    if (items.length <= 1) return;
-                    if (!track.dataset.duped) { track.innerHTML += track.innerHTML; track.dataset.duped='1'; }
-                    const itemWidth = 85+8;
-                    const totalWidth = itemWidth * items.length;
-                    let pos=0;
-                    function scroll() { pos+=0.6; if(pos>=totalWidth) pos=0; track.style.transform=`translateX(-${pos}px)`; carouselTimers[slug]=requestAnimationFrame(scroll); }
-                    carouselTimers[slug]=requestAnimationFrame(scroll);
-                }
-            });
-        });
+        // No-op - handled by event delegation above
     }
 
     // ── FIREBASE REACTIONS ────────────────────────────────────────────
