@@ -1302,7 +1302,8 @@
     // ── SHEET DATA ────────────────────────────────────────────────────
     async function fetchSheetData() {
         try {
-            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Fav%20Mons`;
+            // Use offset=3 to skip the title row, subtitle row, and header row
+            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Fav%20Mons&tq=SELECT%20A%2CB%2CC%20OFFSET%203`;
             const res=await fetch(url);
             const text=await res.text();
             const json=JSON.parse(text.substring(text.indexOf('{'),text.lastIndexOf('}')+1));
@@ -1320,18 +1321,18 @@
     function parseGoogleData(json) {
         data=[];
         if (!json.table?.rows) return;
-        json.table.rows.forEach((row, i) => {
-            // Skip rows without proper data or header rows
+        json.table.rows.forEach((row) => {
             if (!row.c || !row.c[0]?.v) return;
             const name = String(row.c[0].v).trim();
             const pokemon = row.c[1]?.v ? String(row.c[1].v).trim() : '';
             const artists = row.c[2]?.v ? String(row.c[2].v).trim() : '';
-            // Skip header rows
-            if (name.toLowerCase() === 'who are u' ||
-                name.toLowerCase() === 'needle community pokemon faves' ||
-                name.toLowerCase() === 'whos ur fav mon') return;
-            if (name) data.push({name, pokemon, artists});
+            if (!name) return;
+            // Skip any remaining header-like rows
+            const lower = name.toLowerCase();
+            if (lower === 'who are u' || lower === 'whos ur fav mon' || lower === 'needle community pokemon faves') return;
+            data.push({name, pokemon, artists});
         });
+        console.log(`Loaded ${data.length} members`);
     }
 
     // ── SEARCH ────────────────────────────────────────────────────────
