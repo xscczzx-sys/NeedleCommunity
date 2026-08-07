@@ -1302,8 +1302,7 @@
     // ── SHEET DATA ────────────────────────────────────────────────────
     async function fetchSheetData() {
         try {
-            // Use offset=3 to skip the title row, subtitle row, and header row
-            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Fav%20Mons&tq=SELECT%20A%2CB%2CC%20OFFSET%203`;
+            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
             const res=await fetch(url);
             const text=await res.text();
             const json=JSON.parse(text.substring(text.indexOf('{'),text.lastIndexOf('}')+1));
@@ -1321,18 +1320,13 @@
     function parseGoogleData(json) {
         data=[];
         if (!json.table?.rows) return;
-        json.table.rows.forEach((row) => {
-            if (!row.c || !row.c[0]?.v) return;
-            const name = String(row.c[0].v).trim();
-            const pokemon = row.c[1]?.v ? String(row.c[1].v).trim() : '';
-            const artists = row.c[2]?.v ? String(row.c[2].v).trim() : '';
-            if (!name) return;
-            // Skip any remaining header-like rows
-            const lower = name.toLowerCase();
-            if (lower === 'who are u' || lower === 'whos ur fav mon' || lower === 'needle community pokemon faves') return;
-            data.push({name, pokemon, artists});
+        json.table.rows.forEach((row,i)=>{
+            if (i===0) return;
+            const name=row.c[0]?.v||'';
+            const pokemon=row.c[1]?.v||'';
+            const artists=row.c[2]?.v||'';
+            if (name && name.toLowerCase()!=='who are u') data.push({name,pokemon,artists});
         });
-        console.log(`Loaded ${data.length} members`);
     }
 
     // ── SEARCH ────────────────────────────────────────────────────────
