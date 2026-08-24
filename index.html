@@ -674,7 +674,51 @@
 
 <div class="footer">Created by <span>German</span></div>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+
 <script>
+    // ── FIREBASE CONFIG & ANON AUTH ──────────────────────────────────
+    const firebaseConfig = {
+        apiKey: "AIzaSyAJ2fzvT01h-1AUpXZJT3bGKHmz6d0Wz2E",
+        authDomain: "pokeneedle-e3307.firebaseapp.com",
+        databaseURL: "https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "pokeneedle-e3307",
+        storageBucket: "pokeneedle-e3307.appspot.com",
+        messagingSenderId: "1054525654893",
+        appId: "1:1054525654893:web:8e3f8a5c6b4d2e1f0a9b8c"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    let authReady = false;
+
+    // Sign in anonymously and wait for auth
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            authReady = true;
+            console.log('✓ Firebase anonymous auth ready');
+            // Now load data with auth token
+            loadPokemonIds();
+            fetchSheetData();
+            fetchBirthdays();
+            setInterval(fetchSheetData, 30000);
+            setInterval(fetchBirthdays, 30000);
+        }
+    });
+
+    // If not already signed in, sign in now
+    if (!auth.currentUser) {
+        auth.signInAnonymously().catch(e => {
+            console.error('Auth failed:', e.message);
+            // Fallback: still try to load data (will fail with new security rules)
+        });
+    }
+
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
     const GID = '0';
     let data = [];
@@ -688,10 +732,15 @@
             document.getElementById(`tab-${t}`).classList.toggle('active', tab === t);
         });
         if (tab === 'birthdays') {
-            fetchBirthdays().then(() => {
+            if (birthdays.length === 0) {
+                fetchBirthdays().then(() => {
+                    renderBirthdayList();
+                    if (hasBirthdayToday()) launchConfetti();
+                });
+            } else {
                 renderBirthdayList();
                 if (hasBirthdayToday()) launchConfetti();
-            });
+            }
         }
         if (tab === 'mods') renderMods();
     }
@@ -705,14 +754,12 @@
         const container = document.getElementById('mods-list');
         if (!container) return;
 
-        // Build unique mod list with their platforms
         const allMods = {};
         TIKTOK_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('TikTok'); });
         TWITCH_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('Twitch'); });
         DISCORD_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('Discord'); });
 
         const platformColors = { TikTok: '#010101', Twitch: '#9147ff', Discord: '#5865F2' };
-        const platformEmojis = { TikTok: '', Twitch: '', Discord: '' };
 
         const modEntries = Object.entries(allMods).map(([name, platforms]) => {
             const member = data.find(d =>
@@ -745,7 +792,7 @@
                         <span style="font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;
                             border-radius:20px;color:white;letter-spacing:0.5px;
                             background:${platformColors[p]};">
-                            ${platformEmojis[p]} ${p} Mod
+                            ${p} Mod
                         </span>`).join('')}
                     </div>
                     ${pokemon.length ? `
@@ -761,7 +808,7 @@
         loadUnknownPokemonImages();
     }
 
-    // ── BIRTHDAY DATA - fetched from Google Sheet ─────────────────────
+    // ── BIRTHDAY DATA ────────────────────────────────────────────────
     let birthdays = [];
 
     async function fetchBirthdays() {
@@ -780,7 +827,7 @@
 
             birthdays = [];
             json.table.rows.forEach((row, i) => {
-                if (i === 0) return; // skip header
+                if (i === 0) return;
                 const name   = row.c[0]?.v || '';
                 const month  = row.c[1]?.v || '';
                 const day    = row.c[2]?.v || row.c[2]?.f || '';
@@ -794,43 +841,30 @@
                 }
             });
 
-            console.log(`Loaded ${birthdays.length} birthdays from sheet`);
+            console.log(`✓ Loaded ${birthdays.length} birthdays`);
         } catch(e) {
-            console.log('Could not load birthdays from sheet:', e);
+            console.log('Birthday fetch error:', e.message);
         }
     }
 
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
     const monthColors = {
-        1:'linear-gradient(135deg,#b8cce4,#d0e4f5)',   // January  - soft powder blue
-        2:'linear-gradient(135deg,#d4c5e2,#e8ddf0)',   // February - soft lavender
-        3:'linear-gradient(135deg,#c5d4c5,#dde8dd)',   // March    - soft sage
-        4:'linear-gradient(135deg,#e2d4b8,#f0e8d0)',   // April    - soft sand
-        5:'linear-gradient(135deg,#d4b8d4,#e8d0e8)',   // May      - soft mauve
-        6:'linear-gradient(135deg,#b8d4d4,#d0e8e8)',   // June     - soft mist
-        7:'linear-gradient(135deg,#b8c5d4,#d0d8e8)',   // July     - soft slate blue
-        8:'linear-gradient(135deg,#d4c5b8,#e8ddd0)',   // August   - soft linen
-        9:'linear-gradient(135deg,#c5b8d4,#ddd0e8)',   // September- soft thistle
-        10:'linear-gradient(135deg,#d4bfb8,#e8d8d0)',  // October  - soft blush
-        11:'linear-gradient(135deg,#b8c5b8,#d0d8d0)',  // November - soft silver sage
-        12:'linear-gradient(135deg,#d4b8b8,#e8d0d0)',  // December - soft rose
+        1:'linear-gradient(135deg,#b8cce4,#d0e4f5)',   // January
+        2:'linear-gradient(135deg,#d4c5e2,#e8ddf0)',   // February
+        3:'linear-gradient(135deg,#c5d4c5,#dde8dd)',   // March
+        4:'linear-gradient(135deg,#e2d4b8,#f0e8d0)',   // April
+        5:'linear-gradient(135deg,#d4b8d4,#e8d0e8)',   // May
+        6:'linear-gradient(135deg,#b8d4d4,#d0e8e8)',   // June
+        7:'linear-gradient(135deg,#b8c5d4,#d0d8e8)',   // July
+        8:'linear-gradient(135deg,#d4c5b8,#e8ddd0)',   // August
+        9:'linear-gradient(135deg,#c5b8d4,#ddd0e8)',   // September
+        10:'linear-gradient(135deg,#d4bfb8,#e8d8d0)',  // October
+        11:'linear-gradient(135deg,#b8c5b8,#d0d8d0)',  // November
+        12:'linear-gradient(135deg,#d4b8b8,#e8d0d0)',  // December
     };
 
-    const monthEmojis = [
-        '☀️',   // January   - peak summer
-        '🌊',   // February  - hot summer/beach
-        '🍂',   // March     - early autumn
-        '🍁',   // April     - autumn
-        '🌧️',  // May       - late autumn/rain
-        '❄️',   // June      - winter starts
-        '🌙',   // July      - peak winter
-        '🕯️',  // August    - late winter
-        '🌱',   // September - spring begins
-        '🌸',   // October   - spring blossom
-        '🦋',   // November  - late spring
-        '✨',   // December  - early summer/festive
-    ];
+    const monthEmojis = ['☀️','🌊','🍂','🍁','🌧️','❄️','🌙','🕯️','🌱','🌸','🦋','✨'];
 
     const noEntryMessages = [
         '✨ A mystery trainer!','🔍 Not in the Pokédex yet!','🌀 Yet to be discovered!',
@@ -845,7 +879,6 @@
         const todayMonth = now.getMonth() + 1;
         const todayDay = now.getDate();
 
-        // ── UPCOMING (next 30 days) ──────────────────────────────────
         const upcoming = [];
         for (let i = 0; i <= 30; i++) {
             const d = new Date(now);
@@ -932,6 +965,7 @@
         }
         container.innerHTML = html;
     }
+
     function setTheme(t) {
         document.body.className = 'theme-' + t;
         localStorage.setItem('pokeneedle_theme', t);
@@ -940,44 +974,40 @@
     }
     setTheme(localStorage.getItem('pokeneedle_theme') || 'light');
 
-    // ── POKEMON IDs - loaded from Firebase ───────────────────────────
-    let pokemonIds = {};
+    // ── POKEMON IDs ──────────────────────────────────────────────────
+    let pokemonIds = {
+        'wooper':194,'mimikyu':778,'frigibax':996,'gothita':574,'greavard':971,
+        'joltik':595,'shroodle':944,'dedenne':702,'aurorus':699,'vulpix':37,
+        'growlithe':58,'dratini':147,'dragonair':148,'umbreon':197,'absol':359,
+        'amaura':698,'chikorita':152,'clefairy':35,'oddish':43,'zapdos':145,
+        'shuckle':213,'pikachu':25,'ninetales':38,'ditto':132,'sprigatito':906,
+        'hoothoot':163,'trubbish':568,'garbodor':569,'mankey':56,'marill':183,
+        'blitzle':522,'milotic':350,'tynamo':602,'snivy':495,'snom':872,
+        'glaceon':471,'vaporeon':134,'espeon':196,'miltank':241,'cubone':104,
+        'tangela':114,'leafeon':470,'wailmer':320,'lampent':608,'litwick':607,
+        'sylveon':700,'giratina':487,'charizard':6,'rayquaza':384,'squirtle':7,
+        'mantine':226,'dewgong':87,'psyduck':54,'munchlax':446,'lapras':131,
+        'mew':151,'riolu':447,'lucario':448,'lycanroc':745,'togepi':175,
+        'igglybuff':174,'diancie':719,'reuniclus':579,'wigglytuff':40,'herdier':507,
+        'lillipup':506,'sudowoodo':185,'pyukumuku':771,'rattata':19,'eevee':133,
+        'flareon':136,'jolteon':135,'tande':924,'pidgey':16,'lopunny':428,
+        'buneary':427,'exeggutor':103,'deino':633,'impadimp':859,'ceruledge':937,
+        'zekrom':644,'reshiram':643,'suicune':245,'chandelure':609
+    };
 
     async function loadPokemonIds() {
-        // Fallback minimal map in case Firebase is slow
-        pokemonIds = {
-            'wooper':194,'mimikyu':778,'frigibax':996,'gothita':574,'greavard':971,
-            'joltik':595,'shroodle':944,'dedenne':702,'aurorus':699,'vulpix':37,
-            'growlithe':58,'dratini':147,'dragonair':148,'umbreon':197,'absol':359,
-            'amaura':698,'chikorita':152,'clefairy':35,'oddish':43,'zapdos':145,
-            'shuckle':213,'pikachu':25,'ninetales':38,'ditto':132,'sprigatito':906,
-            'hoothoot':163,'trubbish':568,'garbodor':569,'mankey':56,'marill':183,
-            'maril':183,'blitzle':522,'milotic':350,'tynamo':602,'snivy':495,
-            'snom':872,'glaceon':471,'vaporeon':134,'espeon':196,'miltank':241,
-            'cubone':104,'tangela':114,'leafeon':470,'wailmer':320,'lampent':608,
-            'litwick':607,'sylveon':700,'giratina':487,'charizard':6,'rayquaza':384,
-            'squirtle':7,'wartortle':8,'blastoise':9,'mantine':226,'dewgong':87,
-            'psyduck':54,'munchlax':446,'lapras':131,'mew':151,'riolu':447,
-            'lucario':448,'lycanroc':745,'togepi':175,'igglybuff':174,'diancie':719,
-            'reuniclus':579,'wigglytuff':40,'herdier':507,'lillipup':506,'sudowoodo':185,
-            'pyukumuku':771,'raticate':20,'rattata':19,'eevee':133,'flareon':136,
-            'jolteon':135,'maushold':925,'tandemaus':924,'tande':924,'pidgey':16,
-            'lopunny':428,'buneary':427,'exeggutor':103,'deino':633,'impadimp':859,
-            'ceruledge':937,'zekrom':644,'reshiram':643,'suicune':245,'chandelure':609
-        };
         try {
-            const res = await fetch('https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app/pokemon_ids.json');
-            const d = await res.json();
-            if (d && typeof d === 'object') {
-                pokemonIds = { ...pokemonIds, ...d }; // merge with fallback
-                console.log(`Loaded ${Object.keys(d).length} Pokémon IDs from Firebase`);
+            const ref = database.ref('pokemon_ids');
+            const snapshot = await ref.get();
+            if (snapshot.exists()) {
+                pokemonIds = { ...pokemonIds, ...snapshot.val() };
+                console.log(`✓ Loaded ${Object.keys(snapshot.val()).length} Pokémon IDs from Firebase`);
             }
         } catch(e) {
-            console.log('Using fallback Pokemon IDs');
+            console.log('Pokemon IDs fallback (using defaults):', e.message);
         }
     }
 
-    // ── POKEMON TYPE COLORS ───────────────────────────────────────────
     const typeColors = {
         normal:'#A8A878',fire:'#F08030',water:'#6890F0',electric:'#F8D030',
         grass:'#78C850',ice:'#98D8D8',fighting:'#C03028',poison:'#A040A0',
@@ -985,19 +1015,9 @@
         rock:'#B8A038',ghost:'#705898',dragon:'#7038F8',dark:'#705848',
         steel:'#B8B8D0',fairy:'#EE99AC'
     };
+
     const pokemonTypeCache = {};
     const imageCache = {};
-
-    async function fetchPokemonTypeColor(name) {
-        if (pokemonTypeCache[name]) return pokemonTypeCache[name];
-        try {
-            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-            const d = await res.json();
-            const color = typeColors[d.types[0]?.type?.name] || '#9933cc';
-            pokemonTypeCache[name] = color;
-            return color;
-        } catch(e) { pokemonTypeCache[name] = '#9933cc'; return '#9933cc'; }
-    }
 
     function getPokemonBadgeColor(name) {
         const { base } = cleanPokemonName(name);
@@ -1037,9 +1057,7 @@
         return { base, isShiny, isMega, isMegaX, isMegaY };
     }
 
-
     function getPokemonImageUrl(name, memberName = '') {
-        // ── Special named forms ───────────────────────────────────────
         if (/giratina.*origin|origin.*giratina/i.test(name))
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10007.png`;
         if (/giratina.*altered|altered.*giratina/i.test(name))
@@ -1047,8 +1065,6 @@
 
         const { base, isShiny, isMega, isMegaX, isMegaY } = cleanPokemonName(name);
         const lower = name.toLowerCase();
-
-        // ── Regional forms ────────────────────────────────────────────
         const isAlolan   = /alolan|alola/i.test(lower);
         const isGalarian = /galarian|galar/i.test(lower);
         const isHisuian  = /hisuian|hisui/i.test(lower);
@@ -1078,19 +1094,16 @@
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
         }
 
-        // ── Mega forms ────────────────────────────────────────────────
         if (isMegaX) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-x.png`;
         if (isMegaY) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega-y.png`;
         if (isMega && isShiny) return `https://img.pokemondb.net/sprites/home/shiny/${base}-mega.png`;
         if (isMega) return `https://img.pokemondb.net/sprites/home/normal/${base}-mega.png`;
 
-        // ── Manual ID map ─────────────────────────────────────────────
         const id = pokemonIds[base];
         if (id) return isShiny
             ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`
             : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
-        // ── Cache ─────────────────────────────────────────────────────
         const cacheKey = (isShiny ? 'shiny_' : '') + base;
         if (imageCache[cacheKey] && imageCache[cacheKey] !== 'missing') return imageCache[cacheKey];
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png`;
@@ -1130,7 +1143,6 @@
     const carouselTimers = {};
     let activeCard = null;
 
-    // Use event delegation on grid - works immediately on any render
     document.getElementById('grid').addEventListener('click', function(e) {
         const card = e.target.closest('.card');
         if (!card) return;
@@ -1142,7 +1154,6 @@
 
         const isActive = card.classList.contains('active');
 
-        // Deactivate previous card
         if (activeCard && activeCard !== card) {
             activeCard.classList.remove('active');
             const prevTrack = document.getElementById(`track-${activeCard.dataset.slug}`);
@@ -1184,23 +1195,32 @@
     });
 
     function initCarousels() {
-        // No-op - handled by event delegation above
+        // No-op - handled by event delegation
     }
 
     // ── FIREBASE REACTIONS ────────────────────────────────────────────
-    const FB_URL = 'https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app/reactions';
-
     async function loadReactions() {
-        try { const res=await fetch(`${FB_URL}.json`); reactions=await res.json()||{}; } catch(e) { reactions={}; }
+        if (!authReady) return;
+        try {
+            const ref = database.ref('reactions');
+            const snapshot = await ref.get();
+            reactions = snapshot.val() || {};
+            loadAllReactUI();
+            console.log('✓ Loaded reactions from Firebase');
+        } catch(e) {
+            console.log('Reactions fallback:', e.message);
+            reactions = {};
+        }
     }
 
     async function saveReaction(memberName) {
+        if (!authReady) return;
         try {
-            await fetch(`${FB_URL}/${encodeURIComponent(memberName)}.json`,{
-                method:'PUT', headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(reactions[memberName])
-            });
-        } catch(e) {}
+            const ref = database.ref(`reactions/${encodeURIComponent(memberName)}`);
+            await ref.set(reactions[memberName]);
+        } catch(e) {
+            console.error('Error saving reaction:', e.message);
+        }
     }
 
     async function toggleReact(memberName, type) {
@@ -1310,10 +1330,14 @@
             checkForNewMembers(data);
             applySort();
             initCarousels();
-            loadReactions().then(()=>loadAllReactUI());
+            if (authReady) loadReactions().then(() => loadAllReactUI());
             loadUnknownPokemonImages();
+            console.log(`✓ Loaded ${data.length} members`);
         } catch(e) {
-            document.getElementById('grid').innerHTML=`<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
+            console.error('Sheet fetch error:', e.message);
+            if (!data.length) {
+                document.getElementById('grid').innerHTML=`<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">Error loading data. Please refresh.</div>`;
+            }
         }
     }
 
@@ -1334,79 +1358,6 @@
         applySort();
     });
 
-    // ── INIT ──────────────────────────────────────────────────────────
-    loadPokemonIds().then(() => {
-        fetchSheetData();
-        fetchBirthdays();
-        setInterval(fetchSheetData, 30000);
-        setInterval(fetchBirthdays, 30000);
-    });
-
-    // ── CONFETTI + FIREWORKS ──────────────────────────────────────────
-    function launchConfetti() {
-        const colors = ['#7c3aed','#a855f7','#ec4899','#f59e0b','#10b981','#3b82f6','#f43f5e','#8b5cf6','#fbbf24','#34d399'];
-        const count = 150;
-
-        // Confetti pieces
-        for (let i = 0; i < count; i++) {
-            setTimeout(() => {
-                const piece = document.createElement('div');
-                piece.className = 'confetti-piece';
-                piece.style.left = Math.random() * 100 + 'vw';
-                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.width = (Math.random() * 8 + 5) + 'px';
-                piece.style.height = (Math.random() * 8 + 5) + 'px';
-                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                piece.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                document.body.appendChild(piece);
-                setTimeout(() => piece.remove(), 6000);
-            }, i * 25);
-        }
-
-        // Fireworks
-        for (let f = 0; f < 6; f++) {
-            setTimeout(() => launchFirework(), f * 600);
-        }
-    }
-
-    function launchFirework() {
-        const colors = ['#7c3aed','#a855f7','#ec4899','#f59e0b','#10b981','#3b82f6','#f43f5e','#fbbf24'];
-        const x = 10 + Math.random() * 80;
-        const y = 10 + Math.random() * 50;
-        const particleCount = 24;
-
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            const angle = (i / particleCount) * 360;
-            const distance = 80 + Math.random() * 80;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const size = Math.random() * 6 + 4;
-
-            particle.style.cssText = `
-                position: fixed;
-                left: ${x}vw;
-                top: ${y}vh;
-                width: ${size}px;
-                height: ${size}px;
-                border-radius: 50%;
-                background: ${color};
-                pointer-events: none;
-                z-index: 9999;
-                transform: translate(-50%, -50%);
-                box-shadow: 0 0 6px ${color};
-                animation: fireworkParticle 1.2s ease-out forwards;
-                --dx: ${Math.cos(angle * Math.PI / 180) * distance}px;
-                --dy: ${Math.sin(angle * Math.PI / 180) * distance}px;
-            `;
-            document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), 1400);
-        }
-    }
-
-    function hasBirthdayToday() {
-        const now = new Date();
-        return birthdays.some(b => b.month === now.getMonth()+1 && b.day === now.getDate());
-    }
     // ── SORT ──────────────────────────────────────────────────────────
     let currentSort = 'default';
 
@@ -1463,7 +1414,7 @@
                 return arr.sort(() => Math.random() - 0.5);
 
             default:
-                return arr; // original sheet order
+                return arr;
         }
     }
 
@@ -1480,6 +1431,7 @@
         initCarousels();
         loadAllReactUI();
     }
+
     let toastQueue = [];
     let toastShowing = false;
 
@@ -1529,6 +1481,71 @@
     document.addEventListener('keydown',e=>{
         if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','C','J'].includes(e.key))) e.preventDefault();
     });
+
+    function hasBirthdayToday() {
+        const now = new Date();
+        return birthdays.some(b => b.month === now.getMonth()+1 && b.day === now.getDate());
+    }
+
+    // ── CONFETTI ──────────────────────────────────────────────────────
+    function launchConfetti() {
+        const colors = ['#7c3aed','#a855f7','#ec4899','#f59e0b','#10b981','#3b82f6','#f43f5e','#8b5cf6','#fbbf24','#34d399'];
+        const count = 150;
+
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.width = (Math.random() * 8 + 5) + 'px';
+                piece.style.height = (Math.random() * 8 + 5) + 'px';
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                piece.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                document.body.appendChild(piece);
+                setTimeout(() => piece.remove(), 6000);
+            }, i * 25);
+        }
+
+        for (let f = 0; f < 6; f++) {
+            setTimeout(() => launchFirework(), f * 600);
+        }
+    }
+
+    function launchFirework() {
+        const colors = ['#7c3aed','#a855f7','#ec4899','#f59e0b','#10b981','#3b82f6','#f43f5e','#fbbf24'];
+        const x = 10 + Math.random() * 80;
+        const y = 10 + Math.random() * 50;
+        const particleCount = 24;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            const angle = (i / particleCount) * 360;
+            const distance = 80 + Math.random() * 80;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 6 + 4;
+
+            particle.style.cssText = `
+                position: fixed;
+                left: ${x}vw;
+                top: ${y}vh;
+                width: ${size}px;
+                height: ${size}px;
+                border-radius: 50%;
+                background: ${color};
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 6px ${color};
+                animation: fireworkParticle 1.2s ease-out forwards;
+                --dx: ${Math.cos(angle * Math.PI / 180) * distance}px;
+                --dy: ${Math.sin(angle * Math.PI / 180) * distance}px;
+            `;
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 1400);
+        }
+    }
 </script>
+
 </body>
 </html>
