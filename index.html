@@ -1239,20 +1239,53 @@
             return;
         }
         try {
+            // Load from Firebase
             const ref = database.ref('reactions');
             const snapshot = await ref.get();
-            const fbReactions = snapshot.val();
-            if (fbReactions) {
-                reactions = fbReactions;
-                console.log(`✓ Loaded ${Object.keys(reactions).length} reaction sets from Firebase`);
+            const fbReactions = snapshot.val() || {};
+            
+            // Check localStorage for old reactions to migrate
+            const allKeys = Object.keys(localStorage);
+            const oldReactions = {};
+            
+            allKeys.forEach(key => {
+                if (key.startsWith('pokeneedle_my_')) {
+                    // Format: pokeneedle_my_[memberName]_[type]
+                    const parts = key.replace('pokeneedle_my_', '').split('_');
+                    const type = parts.pop(); // last part is heart or wow
+                    const memberName = parts.join('_'); // rest is member name
+                    
+                    if (!oldReactions[memberName]) oldReactions[memberName] = { heart: 0, wow: 0 };
+                    if (type === 'heart' || type === 'wow') {
+                        oldReactions[memberName][type] = (oldReactions[memberName][type] || 0) + 1;
+                    }
+                }
+            });
+            
+            // Merge: Firebase data + old localStorage reactions
+            reactions = JSON.parse(JSON.stringify(fbReactions)); // deep copy
+            Object.keys(oldReactions).forEach(member => {
+                if (!reactions[member]) {
+                    reactions[member] = oldReactions[member];
+                }
+            });
+            
+            const totalSets = Object.keys(reactions).length;
+            if (totalSets > 0) {
+                console.log(`✓ Loaded ${totalSets} reaction sets`);
+                // Sync old reactions to Firebase
+                for (const member of Object.keys(oldReactions)) {
+                    if (!fbReactions[member]) {
+                        await saveReaction(member);
+                    }
+                }
             } else {
-                console.log('No reactions found in Firebase (first time?)');
-                reactions = {};
+                console.log('No reactions found');
             }
+            
             loadAllReactUI();
         } catch(e) {
             console.warn('Error loading reactions:', e.message);
-            // Fallback: try to use any cached reactions
             reactions = {};
         }
     }
