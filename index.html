@@ -1272,7 +1272,7 @@
             
             const totalSets = Object.keys(reactions).length;
             if (totalSets > 0) {
-                console.log(`✓ Loaded ${totalSets} reaction sets`);
+                console.log(`✓ Loaded ${totalSets} reaction sets from Firebase:`, Object.keys(reactions).slice(0, 5).join(', '));
                 // Sync old reactions to Firebase
                 for (const member of Object.keys(oldReactions)) {
                     if (!fbReactions[member]) {
@@ -1312,7 +1312,15 @@
     }
 
     function updateReactUI(memberName, slug) {
-        const counts = reactions[memberName]||{heart:0,wow:0};
+        // Try exact match first, then case-insensitive
+        let reactionData = reactions[memberName];
+        if (!reactionData) {
+            // Try case-insensitive match
+            const key = Object.keys(reactions).find(k => k.toLowerCase() === memberName.toLowerCase());
+            reactionData = key ? reactions[key] : null;
+        }
+        
+        const counts = reactionData || { heart: 0, wow: 0 };
         ['heart','wow'].forEach(type => {
             const btn=document.getElementById(`react-${type}-${slug}`);
             const count=document.getElementById(`count-${type}-${slug}`);
@@ -1322,7 +1330,16 @@
         });
     }
 
-    function loadAllReactUI() { data.forEach(m=>updateReactUI(m.name,m.name.replace(/\s+/g,'-'))); }
+    function loadAllReactUI() { 
+        if (!data || data.length === 0) {
+            console.warn('No data loaded, skipping reaction UI update');
+            return;
+        }
+        data.forEach(m => {
+            const slug = m.name.replace(/\s+/g,'-');
+            updateReactUI(m.name, slug);
+        });
+    }
 
     // ── RENDER CARD ───────────────────────────────────────────────────
     function renderCard(m) {
@@ -1407,7 +1424,8 @@
             checkForNewMembers(data);
             applySort();
             initCarousels();
-            if (authReady) loadReactions().then(() => loadAllReactUI());
+            // Update reaction UI now that data is loaded
+            loadAllReactUI();
             loadUnknownPokemonImages();
             console.log(`✓ Loaded ${data.length} members`);
         } catch(e) {
