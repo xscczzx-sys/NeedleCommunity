@@ -674,49 +674,72 @@
 
 <div class="footer">Created by <span>German</span></div>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+<!-- Firebase SDKs - load with async/defer for proper ordering -->
+<script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
 
 <script>
     // ── FIREBASE CONFIG & ANON AUTH ──────────────────────────────────
-    const firebaseConfig = {
-        apiKey: "AIzaSyAJ2fzvT01h-1AUpXZJT3bGKHmz6d0Wz2E",
-        authDomain: "pokeneedle-e3307.firebaseapp.com",
-        databaseURL: "https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "pokeneedle-e3307",
-        storageBucket: "pokeneedle-e3307.appspot.com",
-        messagingSenderId: "1054525654893",
-        appId: "1:1054525654893:web:8e3f8a5c6b4d2e1f0a9b8c"
-    };
+    let auth, database, authReady = false;
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const database = firebase.database();
-
-    let authReady = false;
-
-    // Sign in anonymously and wait for auth
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            authReady = true;
-            console.log('✓ Firebase anonymous auth ready');
-            // Now load data with auth token
-            loadPokemonIds();
-            fetchSheetData();
-            fetchBirthdays();
-            setInterval(fetchSheetData, 30000);
-            setInterval(fetchBirthdays, 30000);
+    // Wait for Firebase to load, then initialize
+    window.addEventListener('load', () => {
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase SDK not loaded, retrying...');
+            setTimeout(initFirebase, 100);
+            return;
         }
+        initFirebase();
     });
 
-    // If not already signed in, sign in now
-    if (!auth.currentUser) {
-        auth.signInAnonymously().catch(e => {
-            console.error('Auth failed:', e.message);
-            // Fallback: still try to load data (will fail with new security rules)
-        });
+    function initFirebase() {
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyAJ2fzvT01h-1AUpXZJT3bGKHmz6d0Wz2E",
+                authDomain: "pokeneedle-e3307.firebaseapp.com",
+                databaseURL: "https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "pokeneedle-e3307",
+                storageBucket: "pokeneedle-e3307.appspot.com",
+                messagingSenderId: "1054525654893",
+                appId: "1:1054525654893:web:8e3f8a5c6b4d2e1f0a9b8c"
+            };
+
+            // Check if already initialized
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            
+            auth = firebase.auth();
+            database = firebase.database();
+
+            // Sign in anonymously and wait for auth
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    authReady = true;
+                    console.log('✓ Firebase anonymous auth ready');
+                    // Now load data with auth token
+                    loadPokemonIds();
+                    fetchSheetData();
+                    fetchBirthdays();
+                    setInterval(fetchSheetData, 30000);
+                    setInterval(fetchBirthdays, 30000);
+                } else {
+                    // Sign in anonymously if needed
+                    auth.signInAnonymously().catch(e => {
+                        console.error('Auth failed:', e.message);
+                    });
+                }
+            });
+        } catch (e) {
+            console.error('Firebase init error:', e.message);
+            // Fallback: load data anyway (will fail without auth)
+            setTimeout(() => {
+                loadPokemonIds();
+                fetchSheetData();
+                fetchBirthdays();
+            }, 1000);
+        }
     }
 
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
