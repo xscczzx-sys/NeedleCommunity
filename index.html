@@ -674,26 +674,34 @@
 
 <div class="footer">Created by <span>German</span></div>
 
-<!-- Firebase SDKs - load with async/defer for proper ordering -->
-<script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
 
 <script>
     // ── FIREBASE CONFIG & ANON AUTH ──────────────────────────────────
     let auth, database, authReady = false;
-
-    // Wait for Firebase to load, then initialize
-    window.addEventListener('load', () => {
-        if (typeof firebase === 'undefined') {
-            console.warn('Firebase SDK not loaded, retrying...');
-            setTimeout(initFirebase, 100);
-            return;
-        }
-        initFirebase();
-    });
+    let firebaseInitAttempts = 0;
+    const maxFirebaseAttempts = 50;
 
     function initFirebase() {
+        firebaseInitAttempts++;
+        
+        if (typeof firebase === 'undefined') {
+            if (firebaseInitAttempts < maxFirebaseAttempts) {
+                setTimeout(initFirebase, 100);
+            } else {
+                console.warn('Firebase SDK unavailable, loading without auth');
+                loadPokemonIds();
+                fetchSheetData();
+                fetchBirthdays();
+                setInterval(fetchSheetData, 30000);
+                setInterval(fetchBirthdays, 30000);
+            }
+            return;
+        }
+
         try {
             const firebaseConfig = {
                 apiKey: "AIzaSyAJ2fzvT01h-1AUpXZJT3bGKHmz6d0Wz2E",
@@ -705,7 +713,6 @@
                 appId: "1:1054525654893:web:8e3f8a5c6b4d2e1f0a9b8c"
             };
 
-            // Check if already initialized
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
@@ -713,34 +720,38 @@
             auth = firebase.auth();
             database = firebase.database();
 
-            // Sign in anonymously and wait for auth
             auth.onAuthStateChanged(user => {
                 if (user) {
                     authReady = true;
-                    console.log('✓ Firebase anonymous auth ready');
-                    // Now load data with auth token
+                    console.log('✓ Firebase auth ready');
                     loadPokemonIds();
                     fetchSheetData();
                     fetchBirthdays();
+                    // Load reactions immediately after auth is confirmed
+                    loadReactions().then(() => {
+                        console.log('✓ Reactions loaded from Firebase');
+                    }).catch(e => {
+                        console.warn('Reactions load failed:', e.message);
+                    });
                     setInterval(fetchSheetData, 30000);
                     setInterval(fetchBirthdays, 30000);
-                } else {
-                    // Sign in anonymously if needed
-                    auth.signInAnonymously().catch(e => {
-                        console.error('Auth failed:', e.message);
-                    });
+                    setInterval(loadReactions, 60000); // Sync reactions every minute
                 }
             });
+
+            if (!auth.currentUser) {
+                auth.signInAnonymously().catch(e => console.warn('Sign-in:', e.message));
+            }
         } catch (e) {
-            console.error('Firebase init error:', e.message);
-            // Fallback: load data anyway (will fail without auth)
-            setTimeout(() => {
-                loadPokemonIds();
-                fetchSheetData();
-                fetchBirthdays();
-            }, 1000);
+            console.warn('Firebase error, loading without auth');
+            loadPokemonIds();
+            fetchSheetData();
+            fetchBirthdays();
         }
     }
+
+    // Start initialization immediately
+    initFirebase();
 
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
     const GID = '0';
@@ -1223,15 +1234,25 @@
 
     // ── FIREBASE REACTIONS ────────────────────────────────────────────
     async function loadReactions() {
-        if (!authReady) return;
+        if (!authReady || !database) {
+            console.log('Firebase not ready, skipping reactions load');
+            return;
+        }
         try {
             const ref = database.ref('reactions');
             const snapshot = await ref.get();
-            reactions = snapshot.val() || {};
+            const fbReactions = snapshot.val();
+            if (fbReactions) {
+                reactions = fbReactions;
+                console.log(`✓ Loaded ${Object.keys(reactions).length} reaction sets from Firebase`);
+            } else {
+                console.log('No reactions found in Firebase (first time?)');
+                reactions = {};
+            }
             loadAllReactUI();
-            console.log('✓ Loaded reactions from Firebase');
         } catch(e) {
-            console.log('Reactions fallback:', e.message);
+            console.warn('Error loading reactions:', e.message);
+            // Fallback: try to use any cached reactions
             reactions = {};
         }
     }
