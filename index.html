@@ -616,7 +616,6 @@
 <div class="browser-tabs">
     <button class="browser-tab active" id="tab-pokemon" onclick="switchTab('pokemon')">⭐ Fav Pokémon</button>
     <button class="browser-tab" id="tab-birthdays" onclick="switchTab('birthdays')">🎂 Birthdays</button>
-   <!-- <button class="browser-tab" id="tab-mods" onclick="switchTab('mods')">🛡️ Mods</button> -->
 </div>
 
 <!-- Pokémon Tab -->
@@ -661,11 +660,6 @@
 <!-- Birthday Tab -->
 <div id="view-birthdays" style="display:none;">
     <div class="birthday-list" id="birthday-list"></div>
-</div>
-
-<!-- Mods Tab -->
-<div id="view-mods" style="display:none;">
-    <div class="mods-view" id="mods-list"></div>
 </div>
 
 <div class="new-member-toast" id="newMemberToast"></div>
@@ -761,7 +755,7 @@
 
     // ── TAB SWITCHING ─────────────────────────────────────────────────
     function switchTab(tab) {
-        ['pokemon','birthdays','mods'].forEach(t => {
+        ['pokemon','birthdays'].forEach(t => {
             document.getElementById(`view-${t}`).style.display = tab === t ? '' : 'none';
             document.getElementById(`tab-${t}`).classList.toggle('active', tab === t);
         });
@@ -776,70 +770,6 @@
                 if (hasBirthdayToday()) launchConfetti();
             }
         }
-        if (tab === 'mods') renderMods();
-    }
-
-    // ── MODS DATA ─────────────────────────────────────────────────────
-    const TIKTOK_MODS = ['Ducks','Wiz','German','Formula','Kaitlyn','Kees','Chrissy','Moon'];
-    const TWITCH_MODS = ['Kees','Clare'];
-    const DISCORD_MODS = ['Ducks','Wiz','German','Formula','Kaitlyn','Kees','Chrissy','Moon'];
-
-    function renderMods() {
-        const container = document.getElementById('mods-list');
-        if (!container) return;
-
-        const allMods = {};
-        TIKTOK_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('TikTok'); });
-        TWITCH_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('Twitch'); });
-        DISCORD_MODS.forEach(n => { if (!allMods[n]) allMods[n]=[]; allMods[n].push('Discord'); });
-
-        const platformColors = { TikTok: '#010101', Twitch: '#9147ff', Discord: '#5865F2' };
-
-        const modEntries = Object.entries(allMods).map(([name, platforms]) => {
-            const member = data.find(d =>
-                d.name.toLowerCase() === name.toLowerCase() ||
-                d.name.toLowerCase().includes(name.toLowerCase())
-            ) || { name, pokemon: '', artists: '' };
-            return { ...member, name, platforms };
-        });
-
-        container.innerHTML = `
-        <div class="mods-header">
-            <h2>🛡️ Community Mods</h2>
-            <p>The amazing people keeping Pokeneedle safe & fun</p>
-        </div>
-        <div class="mods-grid">
-            ${modEntries.map(m => {
-                const pokemon = m.pokemon ? m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p) : [];
-                const firstPokemon = pokemon[0] || '';
-                const imgUrl = firstPokemon ? getPokemonImageUrl(firstPokemon, m.name) : '';
-                return `
-                <div class="mod-card">
-                    ${imgUrl ? `<img class="mod-silhouette" src="${imgUrl}" alt="">` : ''}
-                    ${imgUrl ? `
-                    <div class="mod-pokemon-img">
-                        <img src="${imgUrl}" alt="${firstPokemon}" onerror="this.style.display='none'">
-                    </div>` : '<div style="height:20px"></div>'}
-                    <div class="mod-name">${m.name}</div>
-                    <div style="display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.6rem;">
-                        ${m.platforms.map(p => `
-                        <span style="font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;
-                            border-radius:20px;color:white;letter-spacing:0.5px;
-                            background:${platformColors[p]};">
-                            ${p} Mod
-                        </span>`).join('')}
-                    </div>
-                    ${pokemon.length ? `
-                    <div class="mod-pokemon-badges">
-                        ${pokemon.slice(0,4).map(p => `
-                        <span class="mod-pokemon-badge" style="color:${getPokemonBadgeColor(p)}">${p}</span>
-                        `).join('')}
-                    </div>` : '<div style="color:var(--text-muted);font-size:0.75rem;font-style:italic;">No Pokémon listed yet</div>'}
-                </div>`;
-            }).join('')}
-        </div>`;
-
-        loadUnknownPokemonImages();
     }
 
     // ── BIRTHDAY DATA ────────────────────────────────────────────────
