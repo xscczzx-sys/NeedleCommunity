@@ -44,12 +44,17 @@
             --section-title: #c0c0c0;
             --divider: rgba(180,180,180,0.1);
         }
-        body.theme-neon {
-            --bg: #020010; --bg2: rgba(0,255,200,0.05); --card-bg: rgba(0,0,30,0.95);
-            --card-hover: rgba(0,20,50,0.98); --text: #00ffcc; --text-muted: #ff00ff;
-            --border: rgba(0,255,200,0.3); --search-bg: rgba(0,255,200,0.07);
-            --badge-bg: rgba(0,255,200,0.08); --react-bg: rgba(0,255,200,0.06);
-            --section-title: #ff00ff; --divider: rgba(0,255,200,0.2);
+        /* GTA VI — Vice City sunset: dusk purple, hot pink, orange, gold, ocean teal */
+        body.theme-gta {
+            --bg: #1b0a2e; --bg2: rgba(255,79,163,0.08); --card-bg: rgba(38,14,58,0.88);
+            --card-hover: rgba(58,20,80,0.94); --text: #fff0f7; --text-muted: #ffb37a;
+            --border: rgba(255,79,163,0.35); --search-bg: rgba(255,79,163,0.1);
+            --badge-bg: rgba(255,255,255,0.07); --react-bg: rgba(255,79,163,0.1);
+            --section-title: #2de2e6; --divider: rgba(255,138,61,0.25);
+            background:
+                radial-gradient(ellipse at 50% 115%, rgba(255,138,61,0.35) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 100%, rgba(255,79,163,0.3) 0%, transparent 65%),
+                linear-gradient(180deg, #120724 0%, #1b0a2e 45%, #3a0f45 100%) fixed;
         }
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.4s, color 0.4s; }
@@ -62,32 +67,49 @@
         .theme-btn.t-medium { background: #e9d8fd; box-shadow: 0 0 0 1px #b48fe8; }
         .theme-btn.t-dark   { background: #2a1f40; box-shadow: 0 0 0 1px #7c3aed; }
         .theme-btn.t-darker { background: #0f0a1a; box-shadow: 0 0 0 1px #6d28d9; }
-        .theme-btn.t-neon   { background: #020010; box-shadow: 0 0 6px #00ffcc, 0 0 0 1px #00ffcc; }
+        .theme-btn.t-gta    { background: linear-gradient(135deg,#ff4fa3,#ff8a3d 55%,#ffd23f); box-shadow: 0 0 6px #ff4fa3, 0 0 0 1px #ff8a3d; }
 
-        /* Neon theme special effects */
-        body.theme-neon .card {
-            box-shadow: 0 0 8px rgba(0,255,200,0.15);
+        /* GTA VI theme special effects */
+        body.theme-gta .card {
+            box-shadow: 0 4px 18px rgba(255,79,163,0.12);
         }
-        body.theme-neon .card:hover {
-            box-shadow: 0 0 20px rgba(0,255,200,0.4), 0 0 40px rgba(0,255,200,0.1) !important;
-            border-color: #00ffcc !important;
+        body.theme-gta .card:hover {
+            box-shadow: 0 0 22px rgba(255,79,163,0.45), 0 10px 40px rgba(255,138,61,0.2) !important;
+            border-color: #ff4fa3 !important;
         }
-        body.theme-neon .member-name {
-            color: #00ffcc !important;
-            text-shadow: 0 0 10px #00ffcc, 0 0 20px rgba(0,255,200,0.5);
+        body.theme-gta .member-name {
+            background: linear-gradient(90deg,#ff4fa3,#ff8a3d,#ffd23f);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px rgba(255,79,163,0.45));
         }
-        body.theme-neon .badge {
-            border-color: rgba(0,255,200,0.25);
-            text-shadow: 0 0 6px currentColor;
+        body.theme-gta .creator-name {
+            background: linear-gradient(90deg,#2de2e6,#7cf7ff);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none; animation: none;
+            filter: drop-shadow(0 0 8px rgba(45,226,230,0.6));
         }
-        body.theme-neon .section-title { text-shadow: 0 0 8px #ff00ff; }
-        body.theme-neon .header h1 .needle { color: #00ffcc; text-shadow: 0 0 15px #00ffcc; }
-        body.theme-neon .header-line { background: linear-gradient(90deg,#00ffcc,#ff00ff); box-shadow: 0 0 10px #00ffcc; }
-        body.theme-neon .subtitle { color: #ff00ff; text-shadow: 0 0 8px #ff00ff; }
-        body.theme-neon .react-btn:hover { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0,255,200,0.4); }
-        body.theme-neon .react-btn.reacted { border-color: #00ffcc; background: rgba(0,255,200,0.1); box-shadow: 0 0 8px rgba(0,255,200,0.3); }
-        body.theme-neon .search-box input:focus { border-color: #00ffcc; box-shadow: 0 0 15px rgba(0,255,200,0.3); }
-        body.theme-neon .card-silhouette { filter: grayscale(100%) brightness(10) sepia(1) hue-rotate(120deg); opacity: 0.04; }
+        body.theme-gta .creator-card { border-color: #2de2e6 !important; }
+        body.theme-gta .badge { border-color: rgba(255,138,61,0.3); }
+        body.theme-gta .section-title { text-shadow: 0 0 8px rgba(45,226,230,0.6); }
+        body.theme-gta .header h1 .poke {
+            background: linear-gradient(90deg,#ff4fa3,#ff8a3d,#ffd23f,#ff8a3d,#ff4fa3);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; background-size: 200% auto;
+            filter: drop-shadow(0 0 12px rgba(255,79,163,0.5));
+        }
+        body.theme-gta .header h1 .needle { color: #fff0f7; text-shadow: 0 0 14px rgba(45,226,230,0.7); }
+        body.theme-gta .header-line { background: linear-gradient(90deg,#ff4fa3,#ff8a3d,#ffd23f); box-shadow: 0 0 10px #ff4fa3; }
+        body.theme-gta .subtitle { color: #ffb37a; }
+        body.theme-gta .sort-btn.active { background: linear-gradient(135deg,#ff4fa3,#ff8a3d); }
+        body.theme-gta .sort-btn:hover, body.theme-gta .hint-toggle:hover { border-color: #ff4fa3; }
+        body.theme-gta .react-btn:hover { border-color: #ff4fa3; box-shadow: 0 0 10px rgba(255,79,163,0.45); }
+        body.theme-gta .react-btn.reacted { border-color: #ff8a3d; background: rgba(255,138,61,0.18); box-shadow: 0 0 8px rgba(255,138,61,0.35); }
+        body.theme-gta .search-box input:focus { border-color: #ff4fa3; box-shadow: 0 0 15px rgba(255,79,163,0.3); }
+        body.theme-gta .card-silhouette { filter: grayscale(100%) brightness(10) sepia(1) hue-rotate(290deg); opacity: 0.05; }
+        body.theme-gta .new-member-toast { background: linear-gradient(135deg,#ff4fa3,#ff8a3d); }
+        body.theme-gta .footer span { color: #2de2e6 !important; text-shadow: 0 0 8px rgba(45,226,230,0.6); }
 
         /* ── HEADER ── */
         .header { text-align: center; padding: 3rem 1rem 1.5rem; }
@@ -143,11 +165,11 @@
             border-bottom-color: var(--card-bg);
             z-index: 2;
         }
-        body.theme-neon .browser-tab.active {
-            border-color: rgba(0,255,200,0.3);
+        body.theme-gta .browser-tab.active {
+            border-color: rgba(255,79,163,0.4);
             border-bottom-color: var(--card-bg);
-            color: #00ffcc;
-            text-shadow: 0 0 8px #00ffcc;
+            color: #ff8a3d;
+            text-shadow: 0 0 8px rgba(255,138,61,0.7);
         }
 
         /* ── SORT CONTROLS ── */
@@ -303,9 +325,9 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(124,58,237,0.5);
         }
-        body.theme-neon .scroll-top {
-            background: linear-gradient(135deg, #00ffcc, #00ccaa);
-            box-shadow: 0 4px 15px rgba(0,255,200,0.4);
+        body.theme-gta .scroll-top {
+            background: linear-gradient(135deg, #ff4fa3, #ff8a3d);
+            box-shadow: 0 4px 15px rgba(255,79,163,0.45);
         }
         .mods-view {
             max-width: 900px;
@@ -574,12 +596,20 @@
         .badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
         .badge { padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.78rem; background: var(--badge-bg); border: 1px solid var(--border); color: var(--text); }
         .badge.artist { color: var(--text-muted); }
+        .collector-note {
+            font-size: 0.8rem; line-height: 1.5; color: var(--text);
+            background: var(--badge-bg); border: 1px solid var(--border);
+            border-left: 3px solid var(--section-title);
+            border-radius: 8px; padding: 0.5rem 0.7rem;
+            white-space: pre-line; overflow-wrap: anywhere; font-style: italic;
+        }
 
         /* ── REACTIONS ── */
         .reaction-bar { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--divider); }
         .react-btn { display: flex; align-items: center; gap: 0.3rem; padding: 0.28rem 0.65rem; border-radius: 20px; border: 1.5px solid var(--border); background: var(--react-bg); cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--text); transition: all 0.2s; user-select: none; font-family: 'Inter', sans-serif; }
         .react-btn:hover { border-color: #7c3aed; transform: scale(1.08); }
         .react-btn.reacted { background: rgba(124,58,237,0.2); border-color: #7c3aed; }
+        .react-btn.saving { opacity: 0.6; pointer-events: none; }
         .react-btn .emoji { font-size: 0.95rem; }
         .react-btn .count { font-size: 0.78rem; min-width: 10px; }
 
@@ -603,7 +633,7 @@
     <div class="theme-btn t-medium" title="Medium" onclick="setTheme('medium')"></div>
     <div class="theme-btn t-dark" title="Dark" onclick="setTheme('dark')"></div>
     <div class="theme-btn t-darker" title="Darker" onclick="setTheme('darker')"></div>
-    <div class="theme-btn t-neon" title="Neon" onclick="setTheme('neon')"></div>
+    <div class="theme-btn t-gta" title="GTA VI" onclick="setTheme('gta')"></div>
 </div>
 
 <div class="header">
@@ -623,7 +653,7 @@
     <div class="search-wrap">
         <div class="search-box">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" id="searchInput" placeholder="Search by name, Pokémon, or artist...">
+            <input type="text" id="searchInput" placeholder="Search by name, Pokémon, artist, or notes...">
         </div>
         <div class="controls-wrap">
             <span class="sort-label">Sort:</span>
@@ -668,87 +698,15 @@
 
 <div class="footer">Created by <span>German</span></div>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
-
 <script>
-    // ── FIREBASE CONFIG & ANON AUTH ──────────────────────────────────
-    let auth, database, authReady = false;
-    let firebaseInitAttempts = 0;
-    const maxFirebaseAttempts = 50;
-
-    function initFirebase() {
-        firebaseInitAttempts++;
-        
-        if (typeof firebase === 'undefined') {
-            if (firebaseInitAttempts < maxFirebaseAttempts) {
-                setTimeout(initFirebase, 100);
-            } else {
-                console.warn('Firebase SDK unavailable, loading without auth');
-                loadPokemonIds();
-                fetchSheetData();
-                fetchBirthdays();
-                setInterval(fetchSheetData, 30000);
-                setInterval(fetchBirthdays, 30000);
-            }
-            return;
-        }
-
-        try {
-            const firebaseConfig = {
-                apiKey: "AIzaSyAJ2fzvT01h-1AUpXZJT3bGKHmz6d0Wz2E",
-                authDomain: "pokeneedle-e3307.firebaseapp.com",
-                databaseURL: "https://pokeneedle-e3307-default-rtdb.asia-southeast1.firebasedatabase.app",
-                projectId: "pokeneedle-e3307",
-                storageBucket: "pokeneedle-e3307.appspot.com",
-                messagingSenderId: "1054525654893",
-                appId: "1:1054525654893:web:8e3f8a5c6b4d2e1f0a9b8c"
-            };
-
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            
-            auth = firebase.auth();
-            database = firebase.database();
-
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    authReady = true;
-                    console.log('✓ Firebase auth ready');
-                    loadPokemonIds();
-                    fetchSheetData();
-                    fetchBirthdays();
-                    // Load reactions immediately after auth is confirmed
-                    loadReactions().then(() => {
-                        console.log('✓ Reactions loaded from Firebase');
-                    }).catch(e => {
-                        console.warn('Reactions load failed:', e.message);
-                    });
-                    setInterval(fetchSheetData, 30000);
-                    setInterval(fetchBirthdays, 30000);
-                    setInterval(loadReactions, 60000); // Sync reactions every minute
-                }
-            });
-
-            if (!auth.currentUser) {
-                auth.signInAnonymously().catch(e => console.warn('Sign-in:', e.message));
-            }
-        } catch (e) {
-            console.warn('Firebase error, loading without auth');
-            loadPokemonIds();
-            fetchSheetData();
-            fetchBirthdays();
-        }
-    }
-
-    // Start initialization immediately
-    initFirebase();
-
+    // ── CONFIG ───────────────────────────────────────────────────────
     const SHEET_ID = '11Ii7AaTSHk-T8gEdGBH0UqKfB6Qj11hjDntSaF-miOQ';
-    const GID = '0';
+    const GID = '0'; // the "Fave mons" tab
+
+    // Paste the Apps Script Web App URL here (Deploy → New deployment → Web app → /exec URL).
+    // Reactions are stored as JSON in cell Z1 of the "Fave mons" sheet.
+    const REACTIONS_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
     let data = [];
     let knownMembers = new Set(JSON.parse(localStorage.getItem('pokeneedle_known_members') || '[]'));
     let reactions = {};
@@ -930,7 +888,10 @@
         container.innerHTML = html;
     }
 
+    const THEMES = ['light','medium','dark','darker','gta'];
     function setTheme(t) {
+        if (t === 'neon') t = 'gta'; // people who had the old Neon theme saved
+        if (!THEMES.includes(t)) t = 'light';
         document.body.className = 'theme-' + t;
         localStorage.setItem('pokeneedle_theme', t);
         document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
@@ -939,6 +900,7 @@
     setTheme(localStorage.getItem('pokeneedle_theme') || 'light');
 
     // ── POKEMON IDs ──────────────────────────────────────────────────
+    // Unknown names fall back to a live PokéAPI lookup (loadUnknownPokemonImages).
     let pokemonIds = {
         'wooper':194,'mimikyu':778,'frigibax':996,'gothita':574,'greavard':971,
         'joltik':595,'shroodle':944,'dedenne':702,'aurorus':699,'vulpix':37,
@@ -958,19 +920,6 @@
         'buneary':427,'exeggutor':103,'deino':633,'impadimp':859,'ceruledge':937,
         'zekrom':644,'reshiram':643,'suicune':245,'chandelure':609
     };
-
-    async function loadPokemonIds() {
-        try {
-            const ref = database.ref('pokemon_ids');
-            const snapshot = await ref.get();
-            if (snapshot.exists()) {
-                pokemonIds = { ...pokemonIds, ...snapshot.val() };
-                console.log(`✓ Loaded ${Object.keys(snapshot.val()).length} Pokémon IDs from Firebase`);
-            }
-        } catch(e) {
-            console.log('Pokemon IDs fallback (using defaults):', e.message);
-        }
-    }
 
     const typeColors = {
         normal:'#A8A878',fire:'#F08030',water:'#6890F0',electric:'#F8D030',
@@ -1103,14 +1052,19 @@
         await Promise.all(promises);
     }
 
-    // ── CAROUSEL ─────────────────────────────────────────────────────
+    // ── CAROUSEL + REACTION CLICKS ───────────────────────────────────
     const carouselTimers = {};
     let activeCard = null;
 
     document.getElementById('grid').addEventListener('click', function(e) {
+        const reactBtn = e.target.closest('.react-btn');
+        if (reactBtn) {
+            toggleReact(reactBtn.dataset.name, reactBtn.dataset.type);
+            return;
+        }
+
         const card = e.target.closest('.card');
         if (!card) return;
-        if (e.target.closest('.react-btn')) return;
 
         const slug = card.dataset.slug;
         const track = document.getElementById(`track-${slug}`);
@@ -1162,113 +1116,87 @@
         // No-op - handled by event delegation
     }
 
-    // ── FIREBASE REACTIONS ────────────────────────────────────────────
-    async function loadReactions() {
-        if (!authReady || !database) {
-            console.log('Firebase not ready, skipping reactions load');
-            return;
-        }
-        try {
-            // Load from Firebase
-            const ref = database.ref('reactions');
-            const snapshot = await ref.get();
-            const fbReactions = snapshot.val() || {};
-            
-            // Check localStorage for old reactions to migrate
-            const allKeys = Object.keys(localStorage);
-            const oldReactions = {};
-            
-            allKeys.forEach(key => {
-                if (key.startsWith('pokeneedle_my_')) {
-                    // Format: pokeneedle_my_[memberName]_[type]
-                    const parts = key.replace('pokeneedle_my_', '').split('_');
-                    const type = parts.pop(); // last part is heart or wow
-                    const memberName = parts.join('_'); // rest is member name
-                    
-                    if (!oldReactions[memberName]) oldReactions[memberName] = { heart: 0, wow: 0 };
-                    if (type === 'heart' || type === 'wow') {
-                        oldReactions[memberName][type] = (oldReactions[memberName][type] || 0) + 1;
-                    }
-                }
-            });
-            
-            // Merge: Firebase data + old localStorage reactions
-            reactions = JSON.parse(JSON.stringify(fbReactions)); // deep copy
-            Object.keys(oldReactions).forEach(member => {
-                if (!reactions[member]) {
-                    reactions[member] = oldReactions[member];
-                }
-            });
-            
-            const totalSets = Object.keys(reactions).length;
-            if (totalSets > 0) {
-                console.log(`✓ Loaded ${totalSets} reaction sets from Firebase:`, Object.keys(reactions).slice(0, 5).join(', '));
-                // Sync old reactions to Firebase
-                for (const member of Object.keys(oldReactions)) {
-                    if (!fbReactions[member]) {
-                        await saveReaction(member);
-                    }
-                }
-            } else {
-                console.log('No reactions found');
-            }
-            
-            loadAllReactUI();
-        } catch(e) {
-            console.warn('Error loading reactions:', e.message);
-            reactions = {};
-        }
-    }
+    // ── REACTIONS (Google Sheet cell Z1 via Apps Script) ─────────────
+    const reactionsEnabled = REACTIONS_URL.startsWith('https://');
+    const savingReactions = new Set();
 
-    async function saveReaction(memberName) {
-        if (!authReady) return;
+    function slugFor(name) { return name.replace(/[^a-zA-Z0-9_-]/g, '-'); }
+    function escAttr(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function myKey(memberName, type) { return 'pokeneedle_my_' + memberName + '_' + type; }
+
+    async function loadReactions() {
+        if (!reactionsEnabled || savingReactions.size) return;
         try {
-            const ref = database.ref(`reactions/${encodeURIComponent(memberName)}`);
-            await ref.set(reactions[memberName]);
-        } catch(e) {
-            console.error('Error saving reaction:', e.message);
+            const res = await fetch(REACTIONS_URL + '?t=' + Date.now());
+            const json = await res.json();
+            if (json.ok && json.reactions && typeof json.reactions === 'object') {
+                reactions = json.reactions;
+                if (currentSort === 'reactions') applySort();
+                else loadAllReactUI();
+            }
+        } catch (e) {
+            console.warn('Reactions load failed:', e.message);
         }
     }
 
     async function toggleReact(memberName, type) {
-        const slug = memberName.replace(/\s+/g,'-');
-        const myKey = 'pokeneedle_my_'+memberName+'_'+type;
-        const already = localStorage.getItem(myKey);
-        if (!reactions[memberName]) reactions[memberName]={heart:0,wow:0};
-        if (already) { reactions[memberName][type]=Math.max(0,(reactions[memberName][type]||0)-1); localStorage.removeItem(myKey); }
-        else { reactions[memberName][type]=(reactions[memberName][type]||0)+1; localStorage.setItem(myKey,'1'); }
-        updateReactUI(memberName,slug);
-        await saveReaction(memberName);
+        if (!reactionsEnabled) { showToast('Reactions are not set up yet'); return; }
+        const busyKey = memberName + '|' + type;
+        if (savingReactions.has(busyKey)) return;
+
+        const key = myKey(memberName, type);
+        const already = !!localStorage.getItem(key);
+        const delta = already ? -1 : 1;
+        const slug = slugFor(memberName);
+
+        // Optimistic update so the click feels instant
+        if (!reactions[memberName]) reactions[memberName] = { heart: 0, wow: 0 };
+        reactions[memberName][type] = Math.max(0, (reactions[memberName][type] || 0) + delta);
+        if (already) localStorage.removeItem(key); else localStorage.setItem(key, '1');
+        updateReactUI(memberName, slug);
+
+        savingReactions.add(busyKey);
+        const btn = document.getElementById(`react-${type}-${slug}`);
+        if (btn) btn.classList.add('saving');
+        try {
+            // text/plain avoids a CORS preflight, which Apps Script can't answer
+            const res = await fetch(REACTIONS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ name: memberName, type, delta })
+            });
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.error || 'save failed');
+            reactions = json.reactions; // authoritative counts from the sheet
+        } catch (e) {
+            console.warn('Reaction save failed:', e.message);
+            // Roll back
+            reactions[memberName][type] = Math.max(0, (reactions[memberName][type] || 0) - delta);
+            if (already) localStorage.setItem(key, '1'); else localStorage.removeItem(key);
+            showToast('😢 Could not save reaction, try again');
+        } finally {
+            savingReactions.delete(busyKey);
+            const b = document.getElementById(`react-${type}-${slug}`);
+            if (b) b.classList.remove('saving');
+            loadAllReactUI();
+        }
     }
 
     function updateReactUI(memberName, slug) {
-        // Try exact match first, then case-insensitive
-        let reactionData = reactions[memberName];
-        if (!reactionData) {
-            // Try case-insensitive match
-            const key = Object.keys(reactions).find(k => k.toLowerCase() === memberName.toLowerCase());
-            reactionData = key ? reactions[key] : null;
-        }
-        
-        const counts = reactionData || { heart: 0, wow: 0 };
+        const counts = reactions[memberName] || { heart: 0, wow: 0 };
         ['heart','wow'].forEach(type => {
-            const btn=document.getElementById(`react-${type}-${slug}`);
-            const count=document.getElementById(`count-${type}-${slug}`);
-            if(!btn||!count) return;
-            count.textContent=counts[type]||0;
-            btn.classList.toggle('reacted',!!localStorage.getItem('pokeneedle_my_'+memberName+'_'+type));
+            const btn = document.getElementById(`react-${type}-${slug}`);
+            const count = document.getElementById(`count-${type}-${slug}`);
+            if (!btn || !count) return;
+            count.textContent = counts[type] || 0;
+            btn.classList.toggle('reacted', !!localStorage.getItem(myKey(memberName, type)));
         });
     }
 
-    function loadAllReactUI() { 
-        if (!data || data.length === 0) {
-            console.warn('No data loaded, skipping reaction UI update');
-            return;
-        }
-        data.forEach(m => {
-            const slug = m.name.replace(/\s+/g,'-');
-            updateReactUI(m.name, slug);
-        });
+    function loadAllReactUI() {
+        data.forEach(m => updateReactUI(m.name, slugFor(m.name)));
     }
 
     // ── RENDER CARD ───────────────────────────────────────────────────
@@ -1276,7 +1204,8 @@
         const pokemon = m.pokemon.split(/[,\/]/).map(p=>p.trim()).filter(p=>p);
         const artists = m.artists.split(',').map(a=>a.trim()).filter(a=>a).slice(0,4);
         const isCreator = m.name==='German';
-        const slug = m.name.replace(/\s+/g,'-');
+        const slug = slugFor(m.name);
+        const nameAttr = escAttr(m.name);
         const silhouetteUrl = pokemon[0] ? getPokemonImageUrl(pokemon[0],m.name) : '';
         return `
         <div class="card ${isCreator?'creator-card':''}" data-slug="${slug}">
@@ -1309,12 +1238,17 @@
                 <div class="section-title">Favorite Artists</div>
                 <div class="badges">${artists.map(a=>`<span class="badge artist">${a}</span>`).join('')}</div>
             </div>`:''}
+            ${m.notes?`
+            <div class="section">
+                <div class="section-title">Collector Notes</div>
+                <div class="collector-note">${escAttr(m.notes)}</div>
+            </div>`:''}
             </div>
             <div class="reaction-bar">
-                <button class="react-btn" id="react-heart-${slug}" onclick="toggleReact('${m.name}','heart')">
+                <button class="react-btn" id="react-heart-${slug}" data-name="${nameAttr}" data-type="heart">
                     <span class="emoji">❤️</span><span class="count" id="count-heart-${slug}">0</span>
                 </button>
-                <button class="react-btn" id="react-wow-${slug}" onclick="toggleReact('${m.name}','wow')">
+                <button class="react-btn" id="react-wow-${slug}" data-name="${nameAttr}" data-type="wow">
                     <span class="emoji">🤩</span><span class="count" id="count-wow-${slug}">0</span>
                 </button>
                 ${(() => {
@@ -1339,6 +1273,7 @@
 
     function renderCards(members) {
         const grid = document.getElementById('grid');
+        activeCard = null;
         if (!members.length) { grid.innerHTML=`<div style="text-align:center;padding:3rem;grid-column:1/-1;color:var(--text-muted);">No results found.</div>`; return; }
         grid.innerHTML = members.map(m=>renderCard(m)).join('');
     }
@@ -1346,17 +1281,15 @@
     // ── SHEET DATA ────────────────────────────────────────────────────
     async function fetchSheetData() {
         try {
-            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+            // Only pull columns A–D so the reactions JSON in Z1 never shows up here
+            const tq = encodeURIComponent('select A, B, C, D');
+            const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}&tq=${tq}`;
             const res=await fetch(url);
             const text=await res.text();
             const json=JSON.parse(text.substring(text.indexOf('{'),text.lastIndexOf('}')+1));
             parseGoogleData(json);
             checkForNewMembers(data);
             applySort();
-            initCarousels();
-            // Update reaction UI now that data is loaded
-            loadAllReactUI();
-            loadUnknownPokemonImages();
             console.log(`✓ Loaded ${data.length} members`);
         } catch(e) {
             console.error('Sheet fetch error:', e.message);
@@ -1371,10 +1304,11 @@
         if (!json.table?.rows) return;
         json.table.rows.forEach((row,i)=>{
             if (i===0) return;
-            const name=row.c[0]?.v||'';
-            const pokemon=row.c[1]?.v||'';
-            const artists=row.c[2]?.v||'';
-            if (name && name.toLowerCase()!=='who are u') data.push({name,pokemon,artists});
+            const name=String(row.c[0]?.v||'').trim();
+            const pokemon=String(row.c[1]?.v||'');
+            const artists=String(row.c[2]?.v||'');
+            const notes=String(row.c[3]?.v||'').trim();
+            if (name && name.toLowerCase()!=='who are u') data.push({name,pokemon,artists,notes});
         });
     }
 
@@ -1448,7 +1382,8 @@
         let filtered = q ? data.filter(m =>
             m.name.toLowerCase().includes(q) ||
             m.pokemon.toLowerCase().includes(q) ||
-            m.artists.toLowerCase().includes(q)
+            m.artists.toLowerCase().includes(q) ||
+            m.notes.toLowerCase().includes(q)
         ) : [...data];
         filtered = getSortedData(filtered);
         renderCards(filtered);
@@ -1570,6 +1505,15 @@
             setTimeout(() => particle.remove(), 1400);
         }
     }
+
+    // ── START ─────────────────────────────────────────────────────────
+    (async function start() {
+        await Promise.all([fetchBirthdays(), loadReactions()]);
+        await fetchSheetData();
+        setInterval(fetchSheetData, 30000);
+        setInterval(fetchBirthdays, 30000);
+        setInterval(loadReactions, 20000);
+    })();
 </script>
 
 </body>
